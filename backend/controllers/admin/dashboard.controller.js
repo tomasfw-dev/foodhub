@@ -1,20 +1,19 @@
-const categoriasService = require('../../services/admin/categorias.service');
-const productosService = require('../../services/admin/productos.service');
+const dashboardService = require('../../services/admin/dashboard.service');
+const logger = require('../../utils/logger');
 
-exports.index = (req, res) => {
-  const categorias = categoriasService.listar();
-  const productos = productosService.listar();
+exports.index = async (req, res, next) => {
+  try {
+    const stats = await dashboardService.getEstadisticas();
 
-  res.render('layouts/admin', {
-    title: 'Dashboard',
-    activeMenu: 'dashboard',
-    contentPartial: '../admin/dashboard',
-    stats: {
-      categorias: categorias.length,
-      categoriasActivas: categorias.filter((c) => c.activo).length,
-      productos: productos.length,
-      productosActivos: productos.filter((p) => p.activo).length,
-    },
-    flash: res.locals.flash,
-  });
+    res.render('layouts/admin', {
+      title: 'Dashboard',
+      activeMenu: 'dashboard',
+      contentPartial: '../admin/dashboard',
+      stats,
+      flash: res.locals.flash,
+    });
+  } catch (err) {
+    logger.error('Error al cargar dashboard administrativo', err);
+    next(err);
+  }
 };

@@ -11,6 +11,10 @@ module.exports = {
   DB_USER: process.env.DB_USER || '',
   DB_PASSWORD: process.env.DB_PASSWORD || '',
   DB_ENCRYPT: process.env.DB_ENCRYPT !== 'false',
-  DB_TRUST_SERVER_CERTIFICATE: process.env.DB_TRUST_SERVER_CERTIFICATE === 'true',
+  // En desarrollo local, confiar en certificado autofirmado de SQL Server (si no se define en .env)
+  DB_TRUST_SERVER_CERTIFICATE:
+    process.env.DB_TRUST_SERVER_CERTIFICATE === 'true' ||
+    (process.env.DB_TRUST_SERVER_CERTIFICATE !== 'false' &&
+      (process.env.NODE_ENV || 'development') === 'development'),
   MENU_FEATURED_LIMIT: parseInt(process.env.MENU_FEATURED_LIMIT, 10) || 4,
 };

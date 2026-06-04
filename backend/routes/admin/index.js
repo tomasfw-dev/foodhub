@@ -1,11 +1,11 @@
 const { Router } = require('express');
-const dashboardController = require('../../controllers/admin/dashboard.controller');
+const dashboardRoutes = require('./dashboard.routes');
 const categoriasRoutes = require('./categorias.routes');
 const productosRoutes = require('./productos.routes');
 
 const router = Router();
 
-router.get('/', dashboardController.index);
+router.use('/', dashboardRoutes);
 router.use('/categorias', categoriasRoutes);
 router.use('/productos', productosRoutes);
 

@@ -7,35 +7,69 @@
 
 <div class="row g-4">
   <div class="col-sm-6 col-xl-3">
-    <div class="card admin-stat-card h-100">
+    <div class="card admin-stat-card h-100 border-0 shadow-sm">
       <div class="card-body">
         <div class="d-flex justify-content-between align-items-start">
           <div>
-            <p class="text-muted small mb-1">Categorías</p>
-            <h2 class="h3 mb-0"><%= stats.categorias %></h2>
+            <p class="text-muted small mb-1">Total categorías</p>
+            <h2 class="h3 mb-0"><%= stats.totalCategorias %></h2>
           </div>
           <span class="admin-stat-card__icon bg-primary-subtle text-primary">
             <i class="bi bi-folder"></i>
           </span>
         </div>
-        <p class="small text-muted mt-2 mb-0"><%= stats.categoriasActivas %> activas</p>
+        <p class="small text-muted mt-2 mb-0">Registradas (sin baja)</p>
       </div>
     </div>
   </div>
 
   <div class="col-sm-6 col-xl-3">
-    <div class="card admin-stat-card h-100">
+    <div class="card admin-stat-card h-100 border-0 shadow-sm">
       <div class="card-body">
         <div class="d-flex justify-content-between align-items-start">
           <div>
-            <p class="text-muted small mb-1">Productos</p>
-            <h2 class="h3 mb-0"><%= stats.productos %></h2>
+            <p class="text-muted small mb-1">Total productos</p>
+            <h2 class="h3 mb-0"><%= stats.totalProductos %></h2>
           </div>
-          <span class="admin-stat-card__icon bg-success-subtle text-success">
+          <span class="admin-stat-card__icon bg-secondary-subtle text-secondary">
             <i class="bi bi-basket"></i>
           </span>
         </div>
-        <p class="small text-muted mt-2 mb-0"><%= stats.productosActivos %> activos</p>
+        <p class="small text-muted mt-2 mb-0">En catálogo (sin baja)</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-sm-6 col-xl-3">
+    <div class="card admin-stat-card h-100 border-0 shadow-sm">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-start">
+          <div>
+            <p class="text-muted small mb-1">Productos activos</p>
+            <h2 class="h3 mb-0 text-success"><%= stats.productosActivos %></h2>
+          </div>
+          <span class="admin-stat-card__icon bg-success-subtle text-success">
+            <i class="bi bi-check-circle"></i>
+          </span>
+        </div>
+        <p class="small text-muted mt-2 mb-0">Visibles en el menú público</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-sm-6 col-xl-3">
+    <div class="card admin-stat-card h-100 border-0 shadow-sm">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-start">
+          <div>
+            <p class="text-muted small mb-1">Productos inactivos</p>
+            <h2 class="h3 mb-0 text-warning"><%= stats.productosInactivos %></h2>
+          </div>
+          <span class="admin-stat-card__icon bg-warning-subtle text-warning">
+            <i class="bi bi-pause-circle"></i>
+          </span>
+        </div>
+        <p class="small text-muted mt-2 mb-0">Ocultos del menú público</p>
       </div>
     </div>
   </div>
@@ -43,17 +77,49 @@
 
 <div class="row g-4 mt-2">
   <div class="col-md-6">
-    <div class="card h-100">
+    <div class="card h-100 border-0 shadow-sm">
       <div class="card-body">
         <h2 class="h5 card-title">Accesos rápidos</h2>
         <div class="d-grid gap-2">
+          <a href="<%= adminRoutes.CATEGORIAS %>" class="btn btn-outline-secondary">
+            <i class="bi bi-folder me-1"></i>Gestionar categorías
+          </a>
           <a href="<%= adminRoutes.CATEGORIAS_CREATE %>" class="btn btn-outline-primary">
             <i class="bi bi-plus-lg me-1"></i>Nueva categoría
+          </a>
+          <a href="<%= adminRoutes.PRODUCTOS %>" class="btn btn-outline-secondary">
+            <i class="bi bi-basket me-1"></i>Gestionar productos
           </a>
           <a href="<%= adminRoutes.PRODUCTOS_CREATE %>" class="btn btn-outline-primary">
             <i class="bi bi-plus-lg me-1"></i>Nuevo producto
           </a>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="card h-100 border-0 shadow-sm">
+      <div class="card-body">
+        <h2 class="h5 card-title">Resumen del catálogo</h2>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item d-flex justify-content-between px-0">
+            <span>Categorías</span>
+            <strong><%= stats.totalCategorias %></strong>
+          </li>
+          <li class="list-group-item d-flex justify-content-between px-0">
+            <span>Productos totales</span>
+            <strong><%= stats.totalProductos %></strong>
+          </li>
+          <li class="list-group-item d-flex justify-content-between px-0">
+            <span class="text-success">Activos</span>
+            <strong class="text-success"><%= stats.productosActivos %></strong>
+          </li>
+          <li class="list-group-item d-flex justify-content-between px-0">
+            <span class="text-warning">Inactivos</span>
+            <strong class="text-warning"><%= stats.productosInactivos %></strong>
+          </li>
+        </ul>
       </div>
     </div>
   </div>
