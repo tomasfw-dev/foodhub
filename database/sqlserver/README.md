@@ -4,6 +4,8 @@
 
 1. Crear la base (opcional, descomentar en el script).
 2. Ejecutar `001_schema_bendita_comida.sql` en SSMS o Azure Data Studio.
+3. Opcional: `003_seed_menu_ejemplo.sql` para datos de prueba del menú.
+4. Consultas de referencia del menú: `002_menu_queries.sql`.
 
 ## Modelo
 

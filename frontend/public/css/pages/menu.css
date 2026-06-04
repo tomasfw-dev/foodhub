@@ -44,3 +44,19 @@
   font-family: var(--font-display);
   color: var(--color-primary-light);
 }
+
+.menu-category__title {
+  font-family: var(--font-display);
+  color: var(--color-text);
+  margin-bottom: 0.35rem;
+}
+
+.menu-category__description {
+  font-size: 0.95rem;
+}
+
+.menu-section .alert-secondary {
+  background: var(--color-bg-card);
+  border-color: var(--color-border);
+  color: var(--color-text-muted);
+}

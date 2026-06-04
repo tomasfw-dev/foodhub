@@ -1,68 +1,87 @@
 /**
- * Servicio de menú — datos estáticos (reemplazar por BD en el futuro).
+ * Servicio de menú público — datos desde SQL Server.
  */
-const FEATURED_ITEMS = [
-  {
-    id: 1,
-    name: 'Milanesas caseras',
-    description: 'Crocantes por fuera, jugosas por dentro. Con guarnición a elección.',
-    price: 4500,
-    image:
-      'https://images.unsplash.com/photo-1604908176997-431637744861?w=800&q=80',
-    badge: 'Popular',
-  },
-  {
-    id: 2,
-    name: 'Lasagna de la casa',
-    description: 'Capas de pasta fresca, ragú lentamente cocinado y bechamel sedosa.',
-    price: 5200,
-    image:
-      'https://images.unsplash.com/photo-1574894709920-11b28e736d90?w=800&q=80',
+const db = require('../database/connection');
+const queries = require('../database/queries/menu.queries');
+const logger = require('../utils/logger');
+const config = require('../config');
+
+const PLACEHOLDER_IMAGE = '/images/placeholder-food.svg';
+
+/**
+ * Mapea fila de Productos al formato de las vistas (food-card).
+ */
+function mapProductoParaVista(row) {
+  return {
+    id: row.id,
+    categoriaId: row.categoria_id,
+    name: row.nombre,
+    description: row.descripcion || '',
+    price: row.precio != null ? Number(row.precio) : null,
+    image: row.imagen || PLACEHOLDER_IMAGE,
     badge: null,
-  },
-  {
-    id: 3,
-    name: 'Tarta de verduras',
-    description: 'Masa casera, vegetales de estación y queso gratinado al horno.',
-    price: 3800,
-    image:
-      'https://images.unsplash.com/photo-1547592166-23ac45744acd?w=800&q=80',
-    badge: 'Vegetariano',
-  },
-  {
-    id: 4,
-    name: 'Pollo al horno',
-    description: 'Marinado con hierbas aromáticas, papas doradas y ensalada fresca.',
-    price: 4900,
-    image:
-      'https://images.unsplash.com/photo-1598103442097-9b5a6156b5f5?w=800&q=80',
-    badge: null,
-  },
-];
+  };
+}
 
-const PROMOTIONS = [
-  {
-    id: 1,
-    title: 'Combo familiar',
-    description: 'Elegí 3 platos + postre casero. Ideal para compartir en casa.',
-    tag: '15% OFF',
-    image:
-      'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=900&q=80',
-  },
-  {
-    id: 2,
-    title: 'Menú del día',
-    description: 'Plato principal + bebida. Consultá las opciones del día por WhatsApp.',
-    tag: 'Desde $3.800',
-    image:
-      'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=900&q=80',
-  },
-];
+/**
+ * Obtiene todas las categorías activas.
+ */
+exports.getCategoriasActivas = async () => {
+  logger.info('Consultando categorías activas');
+  const rows = await db.query(queries.CATEGORIAS_ACTIVAS);
+  return rows;
+};
 
-const PLACEHOLDER_ITEMS = FEATURED_ITEMS;
+/**
+ * Obtiene todos los productos activos.
+ */
+exports.getProductosActivos = async () => {
+  logger.info('Consultando productos activos');
+  const rows = await db.query(queries.PRODUCTOS_ACTIVOS);
+  return rows.map(mapProductoParaVista);
+};
 
-exports.getItems = () => PLACEHOLDER_ITEMS;
+/**
+ * Agrupa productos activos por categoría activa.
+ */
+exports.getMenuAgrupado = async () => {
+  const [categorias, productos] = await Promise.all([
+    exports.getCategoriasActivas(),
+    exports.getProductosActivos(),
+  ]);
 
-exports.getFeaturedItems = () => FEATURED_ITEMS;
+  const menu = categorias.map((categoria) => ({
+    id: categoria.id,
+    nombre: categoria.nombre,
+    descripcion: categoria.descripcion,
+    productos: productos.filter((p) => p.categoriaId === categoria.id),
+  }));
 
-exports.getPromotions = () => PROMOTIONS;
+  logger.info('Menú agrupado generado', {
+    categorias: menu.length,
+    productos: productos.length,
+  });
+
+  return menu;
+};
+
+/**
+ * Productos destacados para la landing.
+ */
+exports.getFeaturedItems = async (limite = config.menuFeaturedLimit) => {
+  logger.info('Consultando productos destacados', { limite });
+
+  const rows = await db.query(queries.PRODUCTOS_DESTACADOS, {
+    limite,
+  });
+
+  return rows.map(mapProductoParaVista);
+};
+
+/**
+ * Promociones (sin tabla en BD por ahora).
+ */
+exports.getPromotions = async () => {
+  logger.warn('Promociones no configuradas en base de datos');
+  return [];
+};
