@@ -1,0 +1,57 @@
+<footer class="site-footer" id="contacto">
+  <div class="site-footer__glow" aria-hidden="true"></div>
+  <div class="container">
+    <div class="site-footer__grid">
+      <div class="site-footer__brand">
+        <a href="<%= routes.HOME %>" class="site-footer__logo"><%= appName %></a>
+        <p class="site-footer__tagline"><%= site.tagline %></p>
+      </div>
+
+      <div class="site-footer__col">
+        <h3 class="site-footer__heading">Contacto</h3>
+        <ul class="site-footer__list">
+          <% if (whatsapp && whatsapp.phone) { %>
+          <li>
+            <a
+              href="https://wa.me/<%= whatsapp.phone %>"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="site-footer__link"
+            >
+              WhatsApp
+            </a>
+          </li>
+          <% } %>
+          <li>
+            <a href="mailto:<%= site.email %>" class="site-footer__link"><%= site.email %></a>
+          </li>
+          <li>
+            <a
+              href="<%= site.instagram %>"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="site-footer__link"
+            >
+              Instagram · <%= site.instagramHandle %>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <div class="site-footer__col">
+        <h3 class="site-footer__heading">Horarios</h3>
+        <p class="site-footer__text"><%= site.hours %></p>
+      </div>
+
+      <div class="site-footer__col">
+        <h3 class="site-footer__heading">Ubicación</h3>
+        <p class="site-footer__text"><%= site.location %></p>
+        <p class="site-footer__note">Retiro y envíos por zona — consultá por WhatsApp</p>
+      </div>
+    </div>
+
+    <div class="site-footer__bottom">
+      <p>&copy; <%= new Date().getFullYear() %> <%= appName %>. Hecho con amor en casa.</p>
+    </div>
+  </div>
+</footer>

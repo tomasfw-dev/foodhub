@@ -1,0 +1,54 @@
+.section {
+  padding: 5rem 0;
+}
+
+.section__header {
+  text-align: center;
+  max-width: 560px;
+  margin: 0 auto 3rem;
+}
+
+.section__eyebrow {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--color-primary);
+  margin-bottom: 0.75rem;
+}
+
+.section__title {
+  margin-bottom: 0.75rem;
+}
+
+.section__subtitle {
+  font-size: 1rem;
+  line-height: 1.65;
+}
+
+.section__cta {
+  text-align: center;
+  margin-top: 3rem;
+}
+
+.section--menu {
+  background: var(--color-bg);
+}
+
+.section--promos {
+  background: var(--color-bg-elevated);
+  position: relative;
+}
+
+.section--promos::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse 80% 50% at 50% 0%,
+    rgba(212, 165, 116, 0.06) 0%,
+    transparent 60%
+  );
+  pointer-events: none;
+}

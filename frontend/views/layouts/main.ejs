@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <%- include('../partials/head') %>
+</head>
+<body
+  data-page="<%= typeof page !== 'undefined' ? page : '' %>"
+  class="<%= typeof bodyClass !== 'undefined' ? bodyClass : '' %>"
+>
+  <% if (page === 'home') { %>
+    <%- include('../partials/navbar') %>
+  <% } else { %>
+    <%- include('../partials/header') %>
+  <% } %>
+
+  <main class="main-content">
+    <%- include(contentPartial) %>
+  </main>
+
+  <% if (page === 'home') { %>
+    <%- include('../partials/footer') %>
+  <% } else { %>
+    <%- include('../partials/footer-simple') %>
+  <% } %>
+
+  <%- include('../partials/whatsapp-button') %>
+
+  <script src="/js/vendor/jquery.min.js"></script>
+  <script src="/js/core/app.js"></script>
+  <% if (typeof page !== 'undefined' && page) { %>
+  <script src="/js/pages/<%= page %>.js"></script>
+  <% } %>
+</body>
+</html>

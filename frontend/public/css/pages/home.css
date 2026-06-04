@@ -1,0 +1,195 @@
+/* Landing home — layout fullscreen y hero */
+
+.page-home {
+  scroll-behavior: smooth;
+}
+
+.page-home .main-content {
+  padding: 0;
+}
+
+/* Hero fullscreen */
+.hero {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding: calc(var(--navbar-height) + 2rem) 0 4rem;
+  overflow: hidden;
+}
+
+.hero__bg {
+  position: absolute;
+  inset: 0;
+  background-image: url('https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=1920&q=85');
+  background-size: cover;
+  background-position: center;
+  transform: scale(1.02);
+  animation: heroKenBurns 20s ease-in-out infinite alternate;
+}
+
+@keyframes heroKenBurns {
+  from {
+    transform: scale(1.02);
+  }
+  to {
+    transform: scale(1.08);
+  }
+}
+
+.hero__overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(13, 11, 10, 0.55) 0%,
+    rgba(13, 11, 10, 0.75) 45%,
+    rgba(13, 11, 10, 0.92) 100%
+  );
+}
+
+.hero__content {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  max-width: 720px;
+}
+
+.hero__eyebrow {
+  font-size: 0.8rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.25em;
+  color: var(--color-primary);
+  margin-bottom: 1.25rem;
+}
+
+.hero__title {
+  margin-bottom: 1.25rem;
+  text-shadow: 0 4px 30px rgba(0, 0, 0, 0.4);
+}
+
+.hero__title em {
+  display: inline;
+}
+
+.hero__subtitle {
+  font-size: clamp(1rem, 2.5vw, 1.15rem);
+  line-height: 1.7;
+  max-width: 52ch;
+  margin: 0 auto 2.5rem;
+  color: var(--color-text-muted);
+}
+
+.hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+}
+
+/* Scroll indicator */
+.hero__scroll {
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.5rem;
+  animation: heroBounce 2s ease-in-out infinite;
+}
+
+.hero__scroll-line {
+  display: block;
+  width: 1px;
+  height: 48px;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    var(--color-primary) 40%,
+    transparent
+  );
+}
+
+@keyframes heroBounce {
+  0%,
+  100% {
+    transform: translateX(-50%) translateY(0);
+  }
+  50% {
+    transform: translateX(-50%) translateY(8px);
+  }
+}
+
+/* Animaciones reveal */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition:
+    opacity var(--duration-slow) var(--ease-out),
+    transform var(--duration-slow) var(--ease-out);
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Stagger food cards */
+.food-grid .food-card.reveal:nth-child(1) {
+  transition-delay: 0.05s;
+}
+.food-grid .food-card.reveal:nth-child(2) {
+  transition-delay: 0.1s;
+}
+.food-grid .food-card.reveal:nth-child(3) {
+  transition-delay: 0.15s;
+}
+.food-grid .food-card.reveal:nth-child(4) {
+  transition-delay: 0.2s;
+}
+
+.promo-grid .promo-card.reveal:nth-child(2) {
+  transition-delay: 0.12s;
+}
+
+/* WhatsApp flotante en landing */
+.page-home .whatsapp-float {
+  bottom: 1.75rem;
+  right: 1.75rem;
+  width: 58px;
+  height: 58px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border-radius: 50%;
+  background: var(--color-whatsapp);
+  color: #fff;
+  box-shadow: 0 6px 24px rgba(37, 211, 102, 0.4);
+  transition:
+    transform var(--duration-fast),
+    box-shadow var(--duration-normal);
+  z-index: 900;
+}
+
+.page-home .whatsapp-float:hover {
+  transform: scale(1.08);
+  box-shadow: 0 10px 32px rgba(37, 211, 102, 0.5);
+}
+
+@media (max-width: 768px) {
+  .hero__actions .btn {
+    width: 100%;
+    max-width: 300px;
+  }
+
+  .hero__scroll {
+    display: none;
+  }
+}

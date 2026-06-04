@@ -1,0 +1,103 @@
+/* Panel administrativo — complemento mínimo a Bootstrap 5 */
+
+.admin-body {
+  min-height: 100vh;
+  background-color: #f4f6f9;
+}
+
+.admin-wrapper {
+  min-height: 100vh;
+}
+
+@media (min-width: 992px) {
+  .admin-wrapper {
+    margin-left: 260px;
+  }
+}
+
+/* Sidebar */
+.admin-sidebar {
+  width: 260px;
+  background: #1a1d21;
+  color: #e9ecef;
+  border-right: 0;
+}
+
+@media (min-width: 992px) {
+  .admin-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    z-index: 1040;
+    transform: none !important;
+    visibility: visible !important;
+    display: block !important;
+  }
+}
+
+.admin-sidebar__brand .admin-sidebar__logo {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #fff;
+}
+
+.admin-sidebar__nav .nav-link {
+  color: #adb5bd;
+  border-radius: 0.5rem;
+  padding: 0.65rem 1rem;
+  margin-bottom: 0.25rem;
+}
+
+.admin-sidebar__nav .nav-link:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.admin-sidebar__nav .nav-link.active {
+  color: #fff;
+  background: #0d6efd;
+}
+
+.admin-sidebar__footer .nav-link {
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+}
+
+/* Topbar mobile */
+.admin-topbar {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem 1rem;
+  background: #fff;
+  border-bottom: 1px solid #dee2e6;
+  position: sticky;
+  top: 0;
+  z-index: 1030;
+}
+
+.admin-topbar__title {
+  font-weight: 600;
+}
+
+/* Cards */
+.admin-stat-card__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 0.5rem;
+  font-size: 1.1rem;
+}
+
+.admin-table-card,
+.admin-form-card {
+  border: 0;
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.06);
+}
+
+.admin-main {
+  max-width: 1400px;
+}

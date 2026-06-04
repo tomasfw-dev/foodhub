@@ -1,0 +1,48 @@
+<aside
+  class="admin-sidebar offcanvas-lg offcanvas-start"
+  tabindex="-1"
+  id="adminSidebar"
+  aria-labelledby="adminSidebarLabel"
+>
+  <div class="offcanvas-header d-lg-none">
+    <h5 class="offcanvas-title" id="adminSidebarLabel"><%= appName %></h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#adminSidebar" aria-label="Cerrar"></button>
+  </div>
+
+  <div class="offcanvas-body d-flex flex-column p-0">
+    <div class="admin-sidebar__brand px-4 py-4 d-none d-lg-block">
+      <span class="admin-sidebar__logo"><%= appName %></span>
+      <small class="d-block text-muted">Panel administrativo</small>
+    </div>
+
+    <nav class="admin-sidebar__nav nav flex-column px-3 flex-grow-1">
+      <a
+        href="<%= adminRoutes.DASHBOARD %>"
+        class="nav-link<%= activeMenu === 'dashboard' ? ' active' : '' %>"
+      >
+        <i class="bi bi-speedometer2 me-2"></i>Dashboard
+      </a>
+      <a
+        href="<%= adminRoutes.CATEGORIAS %>"
+        class="nav-link<%= activeMenu === 'categorias' ? ' active' : '' %>"
+      >
+        <i class="bi bi-folder me-2"></i>Categorías
+      </a>
+      <a
+        href="<%= adminRoutes.PRODUCTOS %>"
+        class="nav-link<%= activeMenu === 'productos' ? ' active' : '' %>"
+      >
+        <i class="bi bi-basket me-2"></i>Productos
+      </a>
+    </nav>
+
+    <div class="admin-sidebar__footer px-3 py-4 mt-auto">
+      <a href="<%= routes.AUTH_LOGOUT %>" class="nav-link text-danger">
+        <i class="bi bi-box-arrow-right me-2"></i>Cerrar sesión
+      </a>
+      <a href="<%= routes.HOME %>" class="nav-link small text-muted" target="_blank" rel="noopener">
+        <i class="bi bi-globe me-2"></i>Ver sitio
+      </a>
+    </div>
+  </div>
+</aside>

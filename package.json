@@ -1,0 +1,25 @@
+{
+  "name": "comida-carito",
+  "version": "1.0.0",
+  "description": "Sitio web para emprendimiento de comidas caseras",
+  "main": "backend/server.js",
+  "scripts": {
+    "start": "node backend/server.js",
+    "dev": "node --watch backend/server.js"
+  },
+  "keywords": [
+    "comidas-caseras",
+    "express",
+    "ejs"
+  ],
+  "license": "ISC",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "ejs": "^3.1.10",
+    "express": "^4.21.2",
+    "jquery": "^4.0.0"
+  }
+}

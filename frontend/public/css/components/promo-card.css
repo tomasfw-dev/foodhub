@@ -1,0 +1,113 @@
+.promo-grid {
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 768px) {
+  .promo-grid {
+    grid-template-columns: 1.2fr 1fr;
+    gap: 1.75rem;
+  }
+}
+
+.promo-card {
+  display: flex;
+  flex-direction: column;
+  background: var(--color-bg-card);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+  transition:
+    transform var(--duration-normal) var(--ease-out),
+    box-shadow var(--duration-normal);
+}
+
+.promo-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+}
+
+.promo-card--featured .promo-card__media {
+  min-height: 280px;
+}
+
+@media (min-width: 768px) {
+  .promo-card--featured {
+    grid-row: span 1;
+  }
+
+  .promo-card--featured .promo-card__media {
+    min-height: 320px;
+  }
+}
+
+.promo-card__media {
+  position: relative;
+  min-height: 200px;
+  overflow: hidden;
+}
+
+.promo-card__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  min-height: inherit;
+  transition: transform var(--duration-slow) var(--ease-out);
+}
+
+.promo-card:hover .promo-card__image {
+  transform: scale(1.05);
+}
+
+.promo-card__overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(13, 11, 10, 0.75) 0%,
+    rgba(196, 92, 62, 0.15) 100%
+  );
+}
+
+.promo-card__tag {
+  position: absolute;
+  top: 1.25rem;
+  right: 1.25rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-text);
+  background: var(--color-accent);
+  border-radius: var(--radius-full);
+  box-shadow: var(--shadow-sm);
+}
+
+.promo-card__body {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  flex: 1;
+}
+
+.promo-card__title {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.promo-card__text {
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--color-text-muted);
+  flex: 1;
+}
+
+.promo-card__body .btn {
+  align-self: flex-start;
+  margin-top: 0.5rem;
+}

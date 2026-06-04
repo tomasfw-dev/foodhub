@@ -1,0 +1,11 @@
+const path = require('path');
+
+const rootDir = path.join(__dirname, '..', '..');
+const frontendDir = path.join(rootDir, 'frontend');
+
+module.exports = {
+  rootDir,
+  frontendDir,
+  viewsDir: path.join(frontendDir, 'views'),
+  publicDir: path.join(frontendDir, 'public'),
+};

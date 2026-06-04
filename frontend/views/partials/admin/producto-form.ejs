@@ -1,0 +1,88 @@
+<div class="row g-3">
+  <div class="col-md-8">
+    <label for="nombre" class="form-label">Nombre <span class="text-danger">*</span></label>
+    <input
+      type="text"
+      class="form-control"
+      id="nombre"
+      name="nombre"
+      value="<%= producto ? producto.nombre : '' %>"
+      required
+      maxlength="160"
+    >
+  </div>
+  <div class="col-md-4">
+    <label for="categoriaId" class="form-label">Categoría <span class="text-danger">*</span></label>
+    <select class="form-select" id="categoriaId" name="categoriaId" required>
+      <option value="">Seleccionar...</option>
+      <% categorias.forEach(function(cat) { %>
+      <option
+        value="<%= cat.id %>"
+        <%= producto && producto.categoriaId === cat.id ? 'selected' : '' %>
+      >
+        <%= cat.nombre %>
+      </option>
+      <% }); %>
+    </select>
+  </div>
+  <div class="col-12">
+    <label for="descripcion" class="form-label">Descripción</label>
+    <textarea
+      class="form-control"
+      id="descripcion"
+      name="descripcion"
+      rows="3"
+      maxlength="1000"
+    ><%= producto ? producto.descripcion : '' %></textarea>
+  </div>
+  <div class="col-md-4">
+    <label for="precio" class="form-label">Precio</label>
+    <div class="input-group">
+      <span class="input-group-text">$</span>
+      <input
+        type="number"
+        class="form-control"
+        id="precio"
+        name="precio"
+        value="<%= producto && producto.precio != null ? producto.precio : '' %>"
+        min="0"
+        step="0.01"
+      >
+    </div>
+  </div>
+  <div class="col-md-4">
+    <label for="badge" class="form-label">Etiqueta (badge)</label>
+    <input
+      type="text"
+      class="form-control"
+      id="badge"
+      name="badge"
+      value="<%= producto && producto.badge ? producto.badge : '' %>"
+      placeholder="Ej: Popular"
+      maxlength="40"
+    >
+  </div>
+  <div class="col-md-4 d-flex align-items-end">
+    <div class="form-check form-switch">
+      <input
+        class="form-check-input"
+        type="checkbox"
+        id="activo"
+        name="activo"
+        <%= !producto || producto.activo ? 'checked' : '' %>
+      >
+      <label class="form-check-label" for="activo">Producto activo</label>
+    </div>
+  </div>
+  <div class="col-12">
+    <label for="imagen" class="form-label">URL de imagen</label>
+    <input
+      type="url"
+      class="form-control"
+      id="imagen"
+      name="imagen"
+      value="<%= producto && producto.imagen ? producto.imagen : '' %>"
+      placeholder="https://..."
+    >
+  </div>
+</div>

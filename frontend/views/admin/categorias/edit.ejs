@@ -1,0 +1,21 @@
+<div class="mb-4">
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="<%= adminRoutes.CATEGORIAS %>">Categorías</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Editar</li>
+    </ol>
+  </nav>
+  <h1 class="h3 mb-1">Editar categoría</h1>
+</div>
+
+<div class="card admin-form-card">
+  <div class="card-body p-4">
+    <form action="/admin/categorias/<%= categoria.id %>/edit" method="post">
+      <%- include('../../partials/admin/categoria-form', { categoria: categoria }) %>
+      <div class="d-flex gap-2 mt-4">
+        <button type="submit" class="btn btn-primary">Actualizar</button>
+        <a href="<%= adminRoutes.CATEGORIAS %>" class="btn btn-outline-secondary">Cancelar</a>
+      </div>
+    </form>
+  </div>
+</div>

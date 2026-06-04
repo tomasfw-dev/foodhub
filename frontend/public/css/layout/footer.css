@@ -1,0 +1,113 @@
+.site-footer {
+  position: relative;
+  padding: 4rem 0 2rem;
+  background: var(--color-bg-elevated);
+  border-top: 1px solid var(--color-border);
+  overflow: hidden;
+}
+
+.site-footer__glow {
+  position: absolute;
+  top: -120px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 600px;
+  height: 200px;
+  background: radial-gradient(ellipse, var(--color-accent-glow) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.site-footer__grid {
+  display: grid;
+  gap: 2.5rem;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 640px) {
+  .site-footer__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 992px) {
+  .site-footer__grid {
+    grid-template-columns: 1.4fr repeat(3, 1fr);
+    gap: 3rem;
+  }
+}
+
+.site-footer__logo {
+  font-family: var(--font-display);
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.site-footer__tagline {
+  margin-top: 0.75rem;
+  font-size: 0.95rem;
+  color: var(--color-text-muted);
+  max-width: 28ch;
+}
+
+.site-footer__heading {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--color-primary);
+  margin-bottom: 1rem;
+}
+
+.site-footer__list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.site-footer__link {
+  color: var(--color-text-muted);
+  font-size: 0.95rem;
+  transition: color var(--duration-fast);
+}
+
+.site-footer__link:hover {
+  color: var(--color-primary-light);
+}
+
+.site-footer__text,
+.site-footer__note {
+  font-size: 0.95rem;
+  color: var(--color-text-muted);
+  line-height: 1.6;
+}
+
+.site-footer__note {
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+  color: var(--color-text-subtle);
+}
+
+.site-footer__bottom {
+  margin-top: 3rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--color-border);
+  text-align: center;
+}
+
+.site-footer__bottom p {
+  font-size: 0.85rem;
+  color: var(--color-text-subtle);
+}
+
+.site-footer--simple {
+  padding: 2rem 0;
+  text-align: center;
+}
+
+.site-footer--simple p {
+  font-size: 0.875rem;
+  color: var(--color-text-subtle);
+}

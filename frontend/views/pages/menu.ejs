@@ -1,0 +1,15 @@
+<section class="menu-section">
+  <div class="container">
+    <header class="section__header">
+      <span class="section__eyebrow">Carta completa</span>
+      <h1 class="section__title">Menú</h1>
+      <p class="section__subtitle">Todos nuestros platos caseros, listos para pedir.</p>
+    </header>
+
+    <div class="food-grid">
+      <% items.forEach(function(item) { %>
+        <%- include('../partials/food-card', { item: item }) %>
+      <% }); %>
+    </div>
+  </div>
+</section>

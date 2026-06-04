@@ -1,0 +1,60 @@
+<div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-2">
+  <div>
+    <h1 class="h3 mb-1">Dashboard</h1>
+    <p class="text-muted mb-0">Resumen general de Bendita-Comida</p>
+  </div>
+</div>
+
+<div class="row g-4">
+  <div class="col-sm-6 col-xl-3">
+    <div class="card admin-stat-card h-100">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-start">
+          <div>
+            <p class="text-muted small mb-1">Categorías</p>
+            <h2 class="h3 mb-0"><%= stats.categorias %></h2>
+          </div>
+          <span class="admin-stat-card__icon bg-primary-subtle text-primary">
+            <i class="bi bi-folder"></i>
+          </span>
+        </div>
+        <p class="small text-muted mt-2 mb-0"><%= stats.categoriasActivas %> activas</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-sm-6 col-xl-3">
+    <div class="card admin-stat-card h-100">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-start">
+          <div>
+            <p class="text-muted small mb-1">Productos</p>
+            <h2 class="h3 mb-0"><%= stats.productos %></h2>
+          </div>
+          <span class="admin-stat-card__icon bg-success-subtle text-success">
+            <i class="bi bi-basket"></i>
+          </span>
+        </div>
+        <p class="small text-muted mt-2 mb-0"><%= stats.productosActivos %> activos</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-4 mt-2">
+  <div class="col-md-6">
+    <div class="card h-100">
+      <div class="card-body">
+        <h2 class="h5 card-title">Accesos rápidos</h2>
+        <div class="d-grid gap-2">
+          <a href="<%= adminRoutes.CATEGORIAS_CREATE %>" class="btn btn-outline-primary">
+            <i class="bi bi-plus-lg me-1"></i>Nueva categoría
+          </a>
+          <a href="<%= adminRoutes.PRODUCTOS_CREATE %>" class="btn btn-outline-primary">
+            <i class="bi bi-plus-lg me-1"></i>Nuevo producto
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

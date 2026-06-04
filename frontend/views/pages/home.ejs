@@ -1,0 +1,87 @@
+<section class="hero" id="inicio">
+  <div class="hero__bg" aria-hidden="true"></div>
+  <div class="hero__overlay" aria-hidden="true"></div>
+
+  <div class="hero__content container reveal">
+    <p class="hero__eyebrow"><%= site.tagline %></p>
+    <h1 class="hero__title">Sabores que<br><em>abrazan</em> el alma</h1>
+    <p class="hero__subtitle">
+      Cocina casera premium, ingredientes seleccionados y el cariño de siempre en cada plato.
+    </p>
+    <div class="hero__actions">
+      <a href="<%= routes.MENU %>" class="btn btn--primary btn--lg">Ver menú completo</a>
+      <% if (whatsapp && whatsapp.phone) { %>
+      <a
+        href="<%= whatsappUrl %>"
+        class="btn btn--outline btn--lg"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Pedir por WhatsApp
+      </a>
+      <% } %>
+    </div>
+  </div>
+
+  <a href="#menu-destacado" class="hero__scroll" data-scroll aria-label="Ir al menú destacado">
+    <span class="hero__scroll-line"></span>
+  </a>
+</section>
+
+<section class="section section--menu" id="menu-destacado">
+  <div class="container">
+    <header class="section__header reveal">
+      <span class="section__eyebrow">Nuestra carta</span>
+      <h2 class="section__title">Platos destacados</h2>
+      <p class="section__subtitle">
+        Los favoritos de la casa, preparados al momento con recetas de autor.
+      </p>
+    </header>
+
+    <div class="food-grid">
+      <% featuredItems.forEach(function(item) { %>
+        <%- include('../partials/food-card', { item: item }) %>
+      <% }); %>
+    </div>
+
+    <div class="section__cta reveal">
+      <a href="<%= routes.MENU %>" class="btn btn--ghost">Explorar menú completo</a>
+    </div>
+  </div>
+</section>
+
+<section class="section section--promos" id="promociones">
+  <div class="container">
+    <header class="section__header reveal">
+      <span class="section__eyebrow">Ofertas</span>
+      <h2 class="section__title">Promociones</h2>
+      <p class="section__subtitle">Aprovechá nuestras propuestas especiales de la semana.</p>
+    </header>
+
+    <div class="promo-grid">
+      <% promotions.forEach(function(promo, index) { %>
+      <article class="promo-card reveal<%= index === 0 ? ' promo-card--featured' : '' %>">
+        <div class="promo-card__media">
+          <img src="<%= promo.image %>" alt="<%= promo.title %>" loading="lazy" class="promo-card__image">
+          <div class="promo-card__overlay"></div>
+          <span class="promo-card__tag"><%= promo.tag %></span>
+        </div>
+        <div class="promo-card__body">
+          <h3 class="promo-card__title"><%= promo.title %></h3>
+          <p class="promo-card__text"><%= promo.description %></p>
+          <% if (whatsapp && whatsapp.phone) { %>
+          <a
+            href="https://wa.me/<%= whatsapp.phone %>?text=<%= encodeURIComponent('Hola! Quiero consultar por: ' + promo.title) %>"
+            class="btn btn--primary btn--sm"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Consultar promo
+          </a>
+          <% } %>
+        </div>
+      </article>
+      <% }); %>
+    </div>
+  </div>
+</section>
