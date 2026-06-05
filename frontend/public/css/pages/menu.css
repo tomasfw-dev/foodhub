@@ -1,62 +1,76 @@
+/**
+ * Página menú — Bendita-Comida
+ * Categorías dinámicas + food-card (presentación visual)
+ */
+
 .menu-section {
-  padding: 2rem 0 4rem;
+  padding: var(--bc-space-6) 0 var(--bc-space-7);
+  background: var(--bc-bg);
 }
 
-.menu-section h1 {
-  margin-bottom: 2rem;
-  text-align: center;
+.menu-section .section__header {
+  margin-bottom: var(--bc-space-6);
 }
 
-.menu-grid {
-  display: grid;
-  gap: 1.75rem;
-  grid-template-columns: 1fr;
+.menu-section .section__eyebrow {
+  color: var(--bc-text-subtle);
 }
 
-@media (min-width: 600px) {
-  .menu-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
+.menu-section .section__title {
+  color: var(--bc-ink);
 }
 
-@media (min-width: 1024px) {
-  .menu-grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
+.menu-section .section__subtitle {
+  color: var(--bc-text-muted);
 }
 
-.menu-card {
-  background: var(--color-bg-card);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
+/* Categorías dinámicas */
+.menu-category {
+  margin-bottom: var(--bc-space-7);
 }
 
-.menu-card__title {
-  font-family: var(--font-display);
-  color: var(--color-text);
+.menu-category:last-child {
+  margin-bottom: 0;
 }
 
-.menu-card__description {
-  color: var(--color-text-muted);
-}
-
-.menu-card__price {
-  font-family: var(--font-display);
-  color: var(--color-primary-light);
+.menu-category__header {
+  margin-bottom: var(--bc-space-5);
+  padding-bottom: var(--bc-space-3);
+  border-bottom: 1px solid var(--bc-ink);
 }
 
 .menu-category__title {
-  font-family: var(--font-display);
-  color: var(--color-text);
-  margin-bottom: 0.35rem;
+  font-family: var(--bc-font-display);
+  font-size: var(--bc-text-xl);
+  font-weight: 700;
+  letter-spacing: var(--bc-tracking-display);
+  text-transform: uppercase;
+  color: var(--bc-ink);
+  margin-bottom: var(--bc-space-2);
 }
 
 .menu-category__description {
-  font-size: 0.95rem;
+  font-family: var(--bc-font-body);
+  font-size: var(--bc-text-sm);
+  line-height: var(--bc-leading-body);
+  color: var(--bc-text-muted);
+  max-width: 52ch;
 }
 
-.menu-section .alert-secondary {
-  background: var(--color-bg-card);
-  border-color: var(--color-border);
-  color: var(--color-text-muted);
+.menu-category__empty {
+  font-family: var(--bc-font-body);
+  font-size: var(--bc-text-sm);
+  color: var(--bc-text-subtle);
+}
+
+/* Estado vacío */
+.menu-section__empty {
+  padding: var(--bc-space-5);
+  text-align: center;
+  font-family: var(--bc-font-body);
+  font-size: var(--bc-text-sm);
+  color: var(--bc-text-muted);
+  background: var(--bc-bg-alt);
+  border: 1px solid var(--bc-border);
+  border-radius: var(--bc-radius-md);
 }

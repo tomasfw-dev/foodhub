@@ -1,108 +1,120 @@
+/**
+ * Food card — Bendita-Comida
+ * Monocromático · mobile first · imagen + precio + CTA WhatsApp
+ */
+
 .food-grid {
   display: grid;
-  gap: 1.75rem;
+  gap: var(--bc-space-4);
   grid-template-columns: 1fr;
 }
 
 @media (min-width: 600px) {
   .food-grid {
     grid-template-columns: repeat(2, 1fr);
+    gap: var(--bc-space-4);
   }
 }
 
 @media (min-width: 1024px) {
   .food-grid {
-    grid-template-columns: repeat(4, 1fr);
-    gap: 1.5rem;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--bc-space-5);
   }
 }
 
+/* Variante compacta en home (4 columnas en pantallas grandes) */
+.section--menu .food-grid {
+  gap: var(--bc-space-4);
+}
+
+@media (min-width: 1200px) {
+  .section--menu .food-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* ── Card ── */
 .food-card {
   display: flex;
   flex-direction: column;
-  background: var(--color-bg-card);
-  border-radius: var(--radius-lg);
+  height: 100%;
+  background: var(--bc-paper);
+  border: 1px solid var(--bc-border);
+  border-radius: var(--bc-radius-lg);
   overflow: hidden;
-  border: 1px solid var(--color-border);
   transition:
-    transform var(--duration-normal) var(--ease-out),
-    box-shadow var(--duration-normal) var(--ease-out),
-    border-color var(--duration-normal);
+    transform var(--bc-duration) var(--bc-ease),
+    box-shadow var(--bc-duration) var(--bc-ease),
+    border-color var(--bc-duration-fast);
 }
 
 .food-card:hover {
-  transform: translateY(-8px);
-  box-shadow: var(--shadow-lg);
-  border-color: rgba(212, 165, 116, 0.2);
+  transform: translateY(-4px);
+  border-color: var(--bc-ink);
+  box-shadow: var(--bc-shadow-md);
 }
 
+/* Imagen protagonista */
 .food-card__media {
   position: relative;
   aspect-ratio: 4 / 3;
   overflow: hidden;
+  background: var(--bc-gray-100);
+  border-bottom: 1px solid var(--bc-border);
 }
 
 .food-card__image {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform var(--duration-slow) var(--ease-out);
+  transition: transform var(--bc-duration-slow) var(--bc-ease);
 }
 
 .food-card:hover .food-card__image {
-  transform: scale(1.08);
-}
-
-.food-card__overlay {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    to top,
-    rgba(13, 11, 10, 0.85) 0%,
-    transparent 55%
-  );
-  opacity: 0.6;
-  transition: opacity var(--duration-normal);
-}
-
-.food-card:hover .food-card__overlay {
-  opacity: 0.9;
+  transform: scale(1.04);
 }
 
 .food-card__badge {
   position: absolute;
-  top: 1rem;
-  left: 1rem;
-  padding: 0.35rem 0.75rem;
-  font-size: 0.7rem;
-  font-weight: 600;
+  top: var(--bc-space-3);
+  left: var(--bc-space-3);
+  padding: 0.3rem 0.75rem;
+  font-family: var(--bc-font-display);
+  font-size: var(--bc-text-xs);
+  font-weight: 700;
+  letter-spacing: var(--bc-tracking-ui);
   text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: #1a1410;
-  background: var(--color-primary);
-  border-radius: var(--radius-full);
+  color: var(--bc-ink);
+  background: var(--bc-paper);
+  border: 1px solid var(--bc-ink);
+  border-radius: var(--bc-radius-pill);
   z-index: 1;
 }
 
+/* Cuerpo */
 .food-card__body {
   display: flex;
   flex-direction: column;
   flex: 1;
-  padding: 1.25rem;
-  gap: 0.5rem;
+  padding: var(--bc-space-4);
+  gap: var(--bc-space-2);
 }
 
 .food-card__title {
-  font-family: var(--font-display);
-  font-size: 1.35rem;
-  font-weight: 600;
-  color: var(--color-text);
+  font-family: var(--bc-font-display);
+  font-size: var(--bc-text-lg);
+  font-weight: 700;
+  letter-spacing: var(--bc-tracking-ui);
+  line-height: var(--bc-leading-tight);
+  color: var(--bc-ink);
 }
 
 .food-card__description {
-  font-size: 0.875rem;
-  line-height: 1.55;
-  color: var(--color-text-muted);
+  font-family: var(--bc-font-body);
+  font-size: var(--bc-text-sm);
+  line-height: var(--bc-leading-body);
+  color: var(--bc-text-muted);
   flex: 1;
   display: -webkit-box;
   -webkit-line-clamp: 3;
@@ -110,19 +122,58 @@
   overflow: hidden;
 }
 
+/* Divisor — motivo línea del logo */
+.food-card__divider {
+  width: 100%;
+  height: 1px;
+  border: none;
+  background-color: var(--bc-ink);
+  margin: var(--bc-space-2) 0 0;
+  opacity: 0.85;
+}
+
 .food-card__footer {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 1rem;
-  margin-top: 0.75rem;
-  padding-top: 0.75rem;
-  border-top: 1px solid var(--color-border);
+  gap: var(--bc-space-3);
+  margin-top: var(--bc-space-2);
 }
 
 .food-card__price {
-  font-family: var(--font-display);
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: var(--color-primary-light);
+  font-family: var(--bc-font-display);
+  font-size: var(--bc-text-xl);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--bc-ink);
+  letter-spacing: 0;
+  line-height: 1;
+}
+
+.food-card__cta.btn--primary {
+  flex-shrink: 0;
+  background-color: var(--bc-ink);
+  color: #ffffff;
+  border-color: var(--bc-ink);
+}
+
+.food-card__cta.btn--primary:hover {
+  background-color: var(--bc-ink-soft);
+  border-color: var(--bc-ink-soft);
+  color: #ffffff;
+}
+
+.food-card__cta .btn__icon--whatsapp {
+  color: var(--bc-whatsapp);
+}
+
+@media (max-width: 479px) {
+  .food-card__footer {
+    flex-wrap: wrap;
+  }
+
+  .food-card__cta {
+    width: 100%;
+    justify-content: center;
+  }
 }

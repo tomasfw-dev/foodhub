@@ -7,21 +7,21 @@
     </header>
 
     <% if (menuVacio) { %>
-    <div class="alert alert-secondary text-center" role="status">
+    <div class="menu-section__empty" role="status">
       No hay platos disponibles en este momento. Volvé pronto o consultanos por WhatsApp.
     </div>
     <% } else { %>
       <% menuAgrupado.forEach(function(categoria) { %>
-      <section class="menu-category mb-5" id="categoria-<%= categoria.id %>">
-        <header class="menu-category__header mb-4">
-          <h2 class="menu-category__title h4"><%= categoria.nombre %></h2>
+      <section class="menu-category" id="categoria-<%= categoria.id %>">
+        <header class="menu-category__header">
+          <h2 class="menu-category__title"><%= categoria.nombre %></h2>
           <% if (categoria.descripcion) { %>
-          <p class="menu-category__description text-muted mb-0"><%= categoria.descripcion %></p>
+          <p class="menu-category__description"><%= categoria.descripcion %></p>
           <% } %>
         </header>
 
         <% if (categoria.productos.length === 0) { %>
-        <p class="text-muted small">Sin productos en esta categoría por ahora.</p>
+        <p class="menu-category__empty">Sin productos en esta categoría por ahora.</p>
         <% } else { %>
         <div class="food-grid">
           <% categoria.productos.forEach(function(item) { %>
