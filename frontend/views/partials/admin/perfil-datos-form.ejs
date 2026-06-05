@@ -1,0 +1,29 @@
+<div class="row g-3">
+  <div class="col-12">
+    <label for="nombre" class="form-label">Nombre <span class="text-danger">*</span></label>
+    <input
+      type="text"
+      class="form-control"
+      id="nombre"
+      name="nombre"
+      value="<%= perfil.nombre %>"
+      required
+      maxlength="120"
+      autocomplete="name"
+    >
+  </div>
+  <div class="col-12">
+    <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
+    <input
+      type="email"
+      class="form-control"
+      id="email"
+      name="email"
+      value="<%= perfil.email %>"
+      required
+      maxlength="255"
+      autocomplete="email"
+    >
+    <div class="form-text">Se usa para iniciar sesión en el panel.</div>
+  </div>
+</div>

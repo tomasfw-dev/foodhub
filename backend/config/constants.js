@@ -16,6 +16,7 @@ module.exports = {
     PRODUCTOS: '/admin/productos',
     PRODUCTOS_CREATE: '/admin/productos/create',
     CONFIGURACION: '/admin/configuracion',
+    PERFIL: '/admin/perfil',
   },
 
   SITE: {

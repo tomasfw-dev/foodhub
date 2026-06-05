@@ -1,0 +1,55 @@
+<div class="mb-4">
+  <h1 class="h3 mb-1">Mi perfil</h1>
+  <p class="text-muted mb-0">Administrá tus datos personales y la contraseña de acceso al panel.</p>
+</div>
+
+<div class="row g-4">
+  <div class="col-lg-7">
+    <div class="card admin-form-card h-100">
+      <div class="card-body p-4">
+        <h2 class="h5 mb-3">Datos personales</h2>
+        <form action="<%= adminRoutes.PERFIL %>" method="post">
+          <%- include('../../partials/admin/perfil-datos-form', { perfil: perfil }) %>
+          <div class="d-flex gap-2 mt-4">
+            <button type="submit" class="btn btn-primary">Guardar datos</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-5">
+    <div class="card admin-form-card mb-4">
+      <div class="card-body p-4">
+        <h2 class="h6 text-muted mb-3">Información de la cuenta</h2>
+        <dl class="row mb-0 small">
+          <dt class="col-sm-5 text-muted">Fecha de creación</dt>
+          <dd class="col-sm-7">
+            <% if (perfil.fecha_creacion) { %>
+            <%= new Date(perfil.fecha_creacion).toLocaleString('es-AR', { dateStyle: 'long', timeStyle: 'short' }) %>
+            <% } else { %>
+            —
+            <% } %>
+          </dd>
+          <dt class="col-sm-5 text-muted">ID de cuenta</dt>
+          <dd class="col-sm-7">#<%= perfil.id %></dd>
+        </dl>
+      </div>
+    </div>
+
+    <div class="card admin-form-card">
+      <div class="card-body p-4">
+        <h2 class="h5 mb-3">Cambiar contraseña</h2>
+        <p class="small text-muted">
+          Al cambiar la contraseña se cerrarán automáticamente las demás sesiones activas.
+        </p>
+        <form action="<%= adminRoutes.PERFIL %>/password" method="post">
+          <%- include('../../partials/admin/perfil-password-form') %>
+          <div class="d-flex gap-2 mt-4">
+            <button type="submit" class="btn btn-outline-primary">Actualizar contraseña</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

@@ -45,6 +45,29 @@ exports.requireAuth = async (req, res, next) => {
       });
     }
 
+    const sesionVersionDb = admin.sesion_version ?? 1;
+    const sesionVersionSession = req.session.sesionVersion ?? 1;
+
+    if (sesionVersionSession !== sesionVersionDb) {
+      logger.warn('Sesión invalidada por cambio de contraseña', {
+        adminId,
+        sesionVersionSession,
+        sesionVersionDb,
+      });
+
+      return req.session.destroy(() => {
+        if (req.accepts('html')) {
+          return res.redirect(
+            constants.ROUTES.AUTH_LOGIN +
+              '?error=' +
+              encodeURIComponent('Tu sesión fue cerrada por un cambio de contraseña. Iniciá sesión nuevamente.')
+          );
+        }
+
+        return res.status(401).json({ error: 'Sesión invalidada' });
+      });
+    }
+
     req.admin = {
       id: admin.id,
       nombre: admin.nombre,

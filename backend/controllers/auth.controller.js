@@ -53,6 +53,7 @@ exports.login = async (req, res, next) => {
       req.session.adminId = admin.id;
       req.session.adminNombre = admin.nombre;
       req.session.adminEmail = admin.email;
+      req.session.sesionVersion = admin.sesion_version;
 
       req.session.save((saveErr) => {
         if (saveErr) {

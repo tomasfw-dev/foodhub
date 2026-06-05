@@ -8,7 +8,8 @@ module.exports = {
       nombre,
       email,
       password_hash,
-      activo
+      activo,
+      sesion_version
     FROM dbo.Administradores
     WHERE email = @email
   `,
@@ -18,7 +19,8 @@ module.exports = {
       id,
       nombre,
       email,
-      activo
+      activo,
+      sesion_version
     FROM dbo.Administradores
     WHERE id = @id
       AND activo = 1

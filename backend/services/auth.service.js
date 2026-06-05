@@ -95,6 +95,7 @@ exports.authenticate = async (email, password) => {
     id: admin.id,
     nombre: admin.nombre,
     email: admin.email,
+    sesion_version: admin.sesion_version ?? 1,
   };
 };
 
