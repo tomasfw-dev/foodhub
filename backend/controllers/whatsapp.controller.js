@@ -6,7 +6,8 @@ const whatsappService = require('../services/whatsapp.service');
 
 exports.buildOrderLink = (req, res) => {
   const message = req.query.message || '';
-  const url = whatsappService.buildMessageUrl(message);
+  const phone = res.locals.whatsapp?.phone;
+  const url = whatsappService.buildMessageUrl(message, phone);
 
   res.json({ url });
 };

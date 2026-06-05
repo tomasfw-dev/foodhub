@@ -1,0 +1,154 @@
+<div class="row g-3">
+  <div class="col-md-6">
+    <label for="nombre_negocio" class="form-label">Nombre del negocio <span class="text-danger">*</span></label>
+    <input
+      type="text"
+      class="form-control"
+      id="nombre_negocio"
+      name="nombre_negocio"
+      value="<%= configuracion.nombre_negocio %>"
+      required
+      maxlength="120"
+    >
+  </div>
+  <div class="col-md-6">
+    <label for="slogan" class="form-label">Slogan <span class="text-danger">*</span></label>
+    <input
+      type="text"
+      class="form-control"
+      id="slogan"
+      name="slogan"
+      value="<%= configuracion.slogan %>"
+      required
+      maxlength="300"
+    >
+  </div>
+
+  <div class="col-md-6">
+    <label for="email" class="form-label">Email de contacto</label>
+    <input
+      type="email"
+      class="form-control"
+      id="email"
+      name="email"
+      value="<%= configuracion.email %>"
+      maxlength="255"
+      placeholder="hola@bendita-comida.com"
+    >
+  </div>
+  <div class="col-md-6">
+    <label for="telefono" class="form-label">Teléfono</label>
+    <input
+      type="text"
+      class="form-control"
+      id="telefono"
+      name="telefono"
+      value="<%= configuracion.telefono %>"
+      maxlength="30"
+      placeholder="011 1234-5678"
+    >
+    <div class="form-text">Solo se guardan números (sin espacios ni guiones).</div>
+  </div>
+
+  <div class="col-md-6">
+    <label for="whatsapp" class="form-label">WhatsApp</label>
+    <input
+      type="text"
+      class="form-control"
+      id="whatsapp"
+      name="whatsapp"
+      value="<%= configuracion.whatsapp %>"
+      maxlength="30"
+      placeholder="5491112345678"
+    >
+    <div class="form-text">Código de país + número, sin símbolos. Ej: 5491112345678</div>
+  </div>
+  <div class="col-md-6">
+    <label for="mensaje_whatsapp" class="form-label">Mensaje predeterminado de WhatsApp</label>
+    <input
+      type="text"
+      class="form-control"
+      id="mensaje_whatsapp"
+      name="mensaje_whatsapp"
+      value="<%= configuracion.mensaje_whatsapp %>"
+      maxlength="500"
+      placeholder="Hola! Quiero hacer un pedido."
+    >
+  </div>
+
+  <div class="col-md-6">
+    <label for="instagram" class="form-label">Instagram (URL)</label>
+    <input
+      type="url"
+      class="form-control"
+      id="instagram"
+      name="instagram"
+      value="<%= configuracion.instagram %>"
+      maxlength="500"
+      placeholder="https://instagram.com/tu_cuenta"
+    >
+  </div>
+  <div class="col-md-6">
+    <label for="facebook" class="form-label">Facebook (URL)</label>
+    <input
+      type="url"
+      class="form-control"
+      id="facebook"
+      name="facebook"
+      value="<%= configuracion.facebook %>"
+      maxlength="500"
+      placeholder="https://facebook.com/tu_pagina"
+    >
+  </div>
+
+  <div class="col-md-6">
+    <label for="direccion" class="form-label">Dirección / ubicación</label>
+    <input
+      type="text"
+      class="form-control"
+      id="direccion"
+      name="direccion"
+      value="<%= configuracion.direccion %>"
+      maxlength="300"
+      placeholder="Buenos Aires, Argentina"
+    >
+  </div>
+  <div class="col-md-6">
+    <label for="horarios" class="form-label">Horarios de atención</label>
+    <input
+      type="text"
+      class="form-control"
+      id="horarios"
+      name="horarios"
+      value="<%= configuracion.horarios %>"
+      maxlength="200"
+      placeholder="Lun – Sáb · 11:00 a 21:00"
+    >
+  </div>
+
+  <div class="col-12">
+    <label for="logo" class="form-label">Logo del negocio</label>
+    <% if (configuracion.logoUrl) { %>
+    <div class="mb-3">
+      <img
+        src="<%= configuracion.logoUrl %>"
+        alt="Logo actual"
+        class="img-thumbnail bg-white"
+        style="max-height: 120px; max-width: 240px; object-fit: contain;"
+        onerror="this.onerror=null;this.src='/images/logo-bendita-comida.png';"
+      >
+      <p class="small text-muted mt-1 mb-0">Logo actual. Subí un archivo para reemplazarlo.</p>
+    </div>
+    <% } %>
+    <input
+      type="file"
+      class="form-control"
+      id="logo"
+      name="logo"
+      accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
+    >
+    <div class="form-text">
+      JPG, JPEG, PNG o WEBP. Máximo 5 MB. Si no subís archivo, se mantiene el logo actual.
+    </div>
+  </div>
+</div>

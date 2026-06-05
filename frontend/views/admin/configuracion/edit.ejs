@@ -1,0 +1,24 @@
+<div class="mb-4">
+  <h1 class="h3 mb-1">Configuración del negocio</h1>
+  <p class="text-muted mb-0">
+    Datos generales del sitio. Los cambios se reflejan en la web pública.
+    <% if (configuracion.fecha_modificacion) { %>
+    <span class="d-block small mt-1">
+      Última modificación:
+      <%= new Date(configuracion.fecha_modificacion).toLocaleString('es-AR', { dateStyle: 'short', timeStyle: 'short' }) %>
+    </span>
+    <% } %>
+  </p>
+</div>
+
+<div class="card admin-form-card">
+  <div class="card-body p-4">
+    <form action="<%= adminRoutes.CONFIGURACION %>" method="post" enctype="multipart/form-data">
+      <%- include('../../partials/admin/configuracion-form', { configuracion: configuracion }) %>
+      <div class="d-flex gap-2 mt-4">
+        <button type="submit" class="btn btn-primary">Guardar cambios</button>
+        <a href="<%= adminRoutes.DASHBOARD %>" class="btn btn-outline-secondary">Cancelar</a>
+      </div>
+    </form>
+  </div>
+</div>

@@ -3,6 +3,7 @@ const { requireAuth } = require('../../middlewares/auth.middleware');
 const dashboardRoutes = require('./dashboard.routes');
 const categoriasRoutes = require('./categorias.routes');
 const productosRoutes = require('./productos.routes');
+const configuracionRoutes = require('./configuracion.routes');
 
 const router = Router();
 
@@ -11,5 +12,6 @@ router.use(requireAuth);
 router.use('/', dashboardRoutes);
 router.use('/categorias', categoriasRoutes);
 router.use('/productos', productosRoutes);
+router.use('/configuracion', configuracionRoutes);
 
 module.exports = router;

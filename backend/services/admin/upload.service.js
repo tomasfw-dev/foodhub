@@ -11,6 +11,13 @@ exports.ensureProductosUploadDir = () => {
   }
 };
 
+exports.ensureLogosUploadDir = () => {
+  if (!fs.existsSync(uploadConfig.LOGOS_DIR)) {
+    fs.mkdirSync(uploadConfig.LOGOS_DIR, { recursive: true });
+    logger.info('Directorio de logos creado', { dir: uploadConfig.LOGOS_DIR });
+  }
+};
+
 exports.generateUniqueFilename = (originalname) => {
   const ext = path.extname(originalname).toLowerCase();
   const uniqueId = `${Date.now()}-${crypto.randomBytes(8).toString('hex')}`;
@@ -20,6 +27,11 @@ exports.generateUniqueFilename = (originalname) => {
 exports.toPublicUrl = (filename) => {
   if (!filename) return null;
   return `${uploadConfig.PUBLIC_PREFIX}/${filename}`;
+};
+
+exports.toLogoPublicUrl = (filename) => {
+  if (!filename) return null;
+  return `${uploadConfig.LOGO_PUBLIC_PREFIX}/${filename}`;
 };
 
 exports.isAllowedExtension = (filename) => {
@@ -42,4 +54,21 @@ exports.deleteProductoImage = (publicUrl) => {
 
   fs.unlinkSync(filePath);
   logger.info('Imagen de producto eliminada', { filename });
+};
+
+exports.deleteLogoImage = (publicUrl) => {
+  if (!publicUrl || !publicUrl.startsWith(`${uploadConfig.LOGO_PUBLIC_PREFIX}/`)) {
+    return;
+  }
+
+  const filename = path.basename(publicUrl);
+  const filePath = path.join(uploadConfig.LOGOS_DIR, filename);
+
+  if (!fs.existsSync(filePath)) {
+    logger.warn('Logo a eliminar no encontrado', { filePath });
+    return;
+  }
+
+  fs.unlinkSync(filePath);
+  logger.info('Logo eliminado', { filename });
 };

@@ -1,5 +1,4 @@
 const menuService = require('../services/menu.service');
-const whatsappService = require('../services/whatsapp.service');
 const logger = require('../utils/logger');
 
 exports.getHome = async (req, res, next) => {
@@ -16,7 +15,6 @@ exports.getHome = async (req, res, next) => {
       contentPartial: '../pages/home',
       featuredItems,
       promotions,
-      whatsappUrl: whatsappService.getDefaultUrl(),
     });
   } catch (err) {
     logger.error('Error al renderizar landing', err);

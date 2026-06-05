@@ -2,6 +2,7 @@ const multer = require('multer');
 const logger = require('../utils/logger');
 
 const ADMIN_PRODUCTOS = '/admin/productos';
+const ADMIN_CONFIGURACION = '/admin/configuracion';
 
 exports.handleUploadError = (err, req, res, next) => {
   if (!err) return next();
@@ -29,10 +30,16 @@ exports.handleUploadError = (err, req, res, next) => {
 
   logger.error('Error de carga de imagen', err);
 
-  const isEdit = req.originalUrl.includes('/edit');
-  const redirectUrl = isEdit
-    ? `${ADMIN_PRODUCTOS}/${req.params.id}/edit`
-    : `${ADMIN_PRODUCTOS}/create`;
+  let redirectUrl = ADMIN_PRODUCTOS;
+
+  if (req.originalUrl.startsWith(ADMIN_CONFIGURACION)) {
+    redirectUrl = ADMIN_CONFIGURACION;
+  } else {
+    const isEdit = req.originalUrl.includes('/edit');
+    redirectUrl = isEdit
+      ? `${ADMIN_PRODUCTOS}/${req.params.id}/edit`
+      : `${ADMIN_PRODUCTOS}/create`;
+  }
 
   return res.redirect(`${redirectUrl}?error=${encodeURIComponent(message)}`);
 };

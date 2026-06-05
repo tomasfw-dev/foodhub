@@ -1,11 +1,14 @@
 const config = require('../config');
 
 /**
- * Genera URL de WhatsApp con mensaje opcional.
+ * Genera URL de WhatsApp con mensaje y teléfono opcionales.
+ * @param {string} [message]
+ * @param {string} [phoneOverride]
  */
-exports.buildMessageUrl = (message = '') => {
-  const phone = config.whatsapp.phone;
-  const text = encodeURIComponent(message || config.whatsapp.defaultMessage);
+exports.buildMessageUrl = (message = '', phoneOverride) => {
+  const phone = phoneOverride || config.whatsapp.phone;
+  const defaultMessage = config.whatsapp.defaultMessage;
+  const text = encodeURIComponent(message || defaultMessage);
 
   if (!phone) {
     return `https://wa.me/?text=${text}`;
