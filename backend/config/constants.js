@@ -1,5 +1,5 @@
 module.exports = {
-  APP_NAME: 'Comida Carito',
+  APP_NAME: 'Bendita-Comida',
 
   ROUTES: {
     HOME: '/',
@@ -18,6 +18,7 @@ module.exports = {
   },
 
   SITE: {
+    logoUrl: '/images/logo-bendita-comida.png',
     tagline: 'Sabores de casa, calidad premium',
     instagram: 'https://instagram.com/comidacarito',
     instagramHandle: '@comidacarito',

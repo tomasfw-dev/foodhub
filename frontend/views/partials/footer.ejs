@@ -1,12 +1,23 @@
 <footer class="site-footer" id="contacto">
-  <div class="site-footer__glow" aria-hidden="true"></div>
   <div class="container">
-    <div class="site-footer__grid">
-      <div class="site-footer__brand">
-        <a href="<%= routes.HOME %>" class="site-footer__logo"><%= appName %></a>
-        <p class="site-footer__tagline"><%= site.tagline %></p>
-      </div>
+    <div class="site-footer__brand">
+      <a href="<%= routes.HOME %>" class="site-footer__logo" aria-label="<%= appName %> — Inicio">
+        <img
+          src="<%= site.logoUrl %>"
+          alt="<%= appName %>"
+          class="site-footer__logo-img"
+          width="220"
+          height="220"
+          loading="lazy"
+          decoding="async"
+        >
+      </a>
+      <p class="site-footer__tagline"><%= site.tagline %></p>
+    </div>
 
+    <hr class="site-footer__divider" aria-hidden="true">
+
+    <div class="site-footer__grid">
       <div class="site-footer__col">
         <h3 class="site-footer__heading">Contacto</h3>
         <ul class="site-footer__list">
