@@ -1,30 +1,103 @@
+/**
+ * Tipografía — Bendita-Comida
+ * Display: DM Sans (BENDITA) · Body: Nunito Sans (COMIDA)
+ */
+
+body {
+  font-family: var(--bc-font-body);
+  font-size: var(--bc-text-base);
+  font-weight: 400;
+  line-height: var(--bc-leading-body);
+  color: var(--bc-text);
+  background-color: var(--bc-bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Títulos — voz BENDITA */
 h1,
 h2,
 h3,
-h4 {
-  font-family: var(--font-display);
+h4,
+h5,
+h6,
+.bc-display {
+  font-family: var(--bc-font-display);
+  font-weight: 600;
+  line-height: var(--bc-leading-tight);
+  color: var(--bc-text);
+  letter-spacing: var(--bc-tracking-display);
+}
+
+h1,
+.bc-h1 {
+  font-size: var(--bc-text-hero);
+  text-transform: uppercase;
+}
+
+h2,
+.bc-h2 {
+  font-size: clamp(1.5rem, 3vw, var(--bc-text-2xl));
+  text-transform: uppercase;
+}
+
+h3,
+.bc-h3 {
+  font-size: var(--bc-text-xl);
+  letter-spacing: var(--bc-tracking-ui);
+  text-transform: none;
+}
+
+h4,
+.bc-h4 {
+  font-size: var(--bc-text-lg);
+  letter-spacing: var(--bc-tracking-ui);
+  text-transform: none;
+}
+
+/* Cuerpo — voz COMIDA */
+p,
+.bc-body {
+  font-family: var(--bc-font-body);
+  color: var(--bc-text-muted);
+}
+
+.bc-eyebrow {
+  font-family: var(--bc-font-display);
+  font-size: var(--bc-text-xs);
   font-weight: 500;
-  line-height: 1.15;
-  color: var(--color-text);
+  letter-spacing: var(--bc-tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--bc-text-subtle);
 }
 
-h1 {
-  font-size: clamp(2.5rem, 6vw, 4.25rem);
+.bc-lead {
+  font-size: var(--bc-text-md);
+  line-height: var(--bc-leading-body);
+  color: var(--bc-text-muted);
 }
 
-h2 {
-  font-size: clamp(2rem, 4vw, 3rem);
+.bc-caption {
+  font-size: var(--bc-text-sm);
+  color: var(--bc-text-subtle);
 }
 
-h3 {
-  font-size: clamp(1.25rem, 2.5vw, 1.5rem);
-}
-
-p {
-  color: var(--color-text-muted);
+.bc-price {
+  font-family: var(--bc-font-display);
+  font-size: var(--bc-text-lg);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--bc-text);
+  letter-spacing: 0;
 }
 
 em {
-  font-style: italic;
-  color: var(--color-primary-light);
+  font-style: normal;
+  font-weight: 600;
+  color: var(--bc-text);
+}
+
+strong {
+  font-weight: 600;
+  color: var(--bc-text);
 }

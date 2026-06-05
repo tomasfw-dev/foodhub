@@ -1,45 +1,124 @@
+/**
+ * Bendita-Comida — Design tokens
+ * Sistema visual monocromático basado en el logo.
+ */
 :root {
-  /* Paleta oscura premium + acentos cálidos */
-  --color-bg: #0d0b0a;
-  --color-bg-elevated: #161311;
-  --color-bg-card: #1c1815;
-  --color-surface: #242019;
+  /* ── Marca: negro y blanco ── */
+  --bc-ink: #000000;
+  --bc-ink-soft: #1a1a1a;
+  --bc-paper: #ffffff;
 
-  --color-primary: #d4a574;
-  --color-primary-light: #e8c9a0;
-  --color-primary-dark: #a67c52;
-  --color-accent: #c45c3e;
-  --color-accent-glow: rgba(212, 165, 116, 0.25);
+  /* ── Escala de grises ── */
+  --bc-gray-900: #111111;
+  --bc-gray-700: #3d3d3d;
+  --bc-gray-500: #6b6b6b;
+  --bc-gray-300: #d4d4d4;
+  --bc-gray-100: #f5f5f5;
 
-  --color-text: #f5f0eb;
-  --color-text-muted: #a89f94;
-  --color-text-subtle: #6b635c;
+  /* ── Semánticos ── */
+  --bc-bg: var(--bc-paper);
+  --bc-bg-alt: var(--bc-gray-100);
+  --bc-bg-inverse: var(--bc-ink);
+  --bc-text: var(--bc-ink);
+  --bc-text-muted: var(--bc-gray-700);
+  --bc-text-subtle: var(--bc-gray-500);
+  --bc-text-inverse: var(--bc-paper);
+  --bc-border: var(--bc-gray-300);
+  --bc-border-strong: var(--bc-ink);
 
-  --color-whatsapp: #25d366;
-  --color-border: rgba(255, 255, 255, 0.08);
-  --color-overlay: rgba(8, 6, 5, 0.72);
+  /* ── Funcional (único color fuera de B/N en UI) ── */
+  --bc-whatsapp: #25d366;
 
-  /* Tipografía */
-  --font-display: 'Cormorant Garamond', Georgia, serif;
-  --font-sans: 'Outfit', system-ui, sans-serif;
+  /* ── Tipografía ── */
+  --bc-font-display: 'DM Sans', system-ui, sans-serif;
+  --bc-font-body: 'Nunito Sans', system-ui, sans-serif;
 
-  /* Espaciado y layout */
-  --container-width: 1180px;
-  --navbar-height: 72px;
-  --radius-sm: 8px;
-  --radius-md: 14px;
-  --radius-lg: 22px;
-  --radius-full: 999px;
+  --bc-tracking-display: 0.08em;
+  --bc-tracking-eyebrow: 0.2em;
+  --bc-tracking-ui: 0.03em;
 
-  /* Sombras */
-  --shadow-sm: 0 4px 20px rgba(0, 0, 0, 0.25);
-  --shadow-md: 0 12px 40px rgba(0, 0, 0, 0.35);
-  --shadow-lg: 0 24px 60px rgba(0, 0, 0, 0.45);
-  --shadow-glow: 0 0 40px var(--color-accent-glow);
+  --bc-text-xs: 0.75rem;
+  --bc-text-sm: 0.875rem;
+  --bc-text-base: 1rem;
+  --bc-text-md: 1.0625rem;
+  --bc-text-lg: 1.125rem;
+  --bc-text-xl: 1.5rem;
+  --bc-text-2xl: 2.25rem;
+  --bc-text-hero: clamp(2rem, 5vw, 3.5rem);
 
-  /* Transiciones */
-  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
-  --duration-fast: 0.2s;
-  --duration-normal: 0.35s;
-  --duration-slow: 0.6s;
+  --bc-leading-tight: 1.15;
+  --bc-leading-body: 1.65;
+
+  /* ── Espaciado (base 8px) ── */
+  --bc-space-1: 0.25rem;  /* 4px */
+  --bc-space-2: 0.5rem;   /* 8px */
+  --bc-space-3: 1rem;     /* 16px */
+  --bc-space-4: 1.5rem;   /* 24px */
+  --bc-space-5: 2rem;     /* 32px */
+  --bc-space-6: 3rem;     /* 48px */
+  --bc-space-7: 4rem;     /* 64px */
+  --bc-space-8: 6rem;     /* 96px */
+
+  /* ── Layout ── */
+  --bc-container: 1120px;
+  --bc-gutter: 1.25rem;
+  --bc-gutter-lg: 2rem;
+  --bc-navbar-height: 72px;
+
+  /* ── Radios (eco del óvalo del logo) ── */
+  --bc-radius-sm: 8px;
+  --bc-radius-md: 14px;
+  --bc-radius-lg: 20px;
+  --bc-radius-pill: 999px;
+
+  /* ── Sombras monocromas ── */
+  --bc-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+  --bc-shadow-md: 0 4px 16px rgba(0, 0, 0, 0.1);
+  --bc-shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.12);
+
+  /* ── Transiciones ── */
+  --bc-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --bc-duration-fast: 0.2s;
+  --bc-duration: 0.35s;
+  --bc-duration-slow: 0.6s;
+
+  /* ── Aliases legacy (componentes existentes hasta rediseño) ── */
+  --color-bg: var(--bc-bg);
+  --color-bg-elevated: var(--bc-paper);
+  --color-bg-card: var(--bc-paper);
+  --color-surface: var(--bc-gray-100);
+
+  --color-primary: var(--bc-ink);
+  --color-primary-light: var(--bc-gray-700);
+  --color-primary-dark: var(--bc-ink-soft);
+  --color-accent: var(--bc-ink);
+  --color-accent-glow: transparent;
+
+  --color-text: var(--bc-text);
+  --color-text-muted: var(--bc-text-muted);
+  --color-text-subtle: var(--bc-text-subtle);
+
+  --color-whatsapp: var(--bc-whatsapp);
+  --color-border: var(--bc-border);
+  --color-overlay: rgba(0, 0, 0, 0.6);
+
+  --font-display: var(--bc-font-display);
+  --font-sans: var(--bc-font-body);
+
+  --container-width: var(--bc-container);
+  --navbar-height: var(--bc-navbar-height);
+  --radius-sm: var(--bc-radius-sm);
+  --radius-md: var(--bc-radius-md);
+  --radius-lg: var(--bc-radius-lg);
+  --radius-full: var(--bc-radius-pill);
+
+  --shadow-sm: var(--bc-shadow-sm);
+  --shadow-md: var(--bc-shadow-md);
+  --shadow-lg: var(--bc-shadow-lg);
+  --shadow-glow: none;
+
+  --ease-out: var(--bc-ease);
+  --duration-fast: var(--bc-duration-fast);
+  --duration-normal: var(--bc-duration);
+  --duration-slow: var(--bc-duration-slow);
 }

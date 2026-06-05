@@ -1,0 +1,71 @@
+/**
+ * Espaciado global — utilidades Bendita-Comida
+ * Escala base 8px
+ */
+
+/* Contenedor */
+.bc-container {
+  width: min(100% - (var(--bc-gutter) * 2), var(--bc-container));
+  margin-inline: auto;
+}
+
+@media (min-width: 992px) {
+  .bc-container {
+    width: min(100% - (var(--bc-gutter-lg) * 2), var(--bc-container));
+  }
+}
+
+/* Secciones */
+.bc-section {
+  padding-block: var(--bc-space-7);
+}
+
+@media (min-width: 992px) {
+  .bc-section {
+    padding-block: var(--bc-space-8);
+  }
+}
+
+.bc-section--alt {
+  background-color: var(--bc-bg-alt);
+}
+
+/* Stack / gap */
+.bc-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--bc-space-3);
+}
+
+.bc-stack--lg {
+  gap: var(--bc-space-5);
+}
+
+/* Margin utilities */
+.bc-mt-0 { margin-top: 0; }
+.bc-mt-2 { margin-top: var(--bc-space-2); }
+.bc-mt-3 { margin-top: var(--bc-space-3); }
+.bc-mt-4 { margin-top: var(--bc-space-4); }
+.bc-mt-5 { margin-top: var(--bc-space-5); }
+.bc-mt-6 { margin-top: var(--bc-space-6); }
+
+.bc-mb-0 { margin-bottom: 0; }
+.bc-mb-2 { margin-bottom: var(--bc-space-2); }
+.bc-mb-3 { margin-bottom: var(--bc-space-3); }
+.bc-mb-4 { margin-bottom: var(--bc-space-4); }
+.bc-mb-5 { margin-bottom: var(--bc-space-5); }
+.bc-mb-6 { margin-bottom: var(--bc-space-6); }
+
+/* Padding utilities */
+.bc-p-3 { padding: var(--bc-space-3); }
+.bc-p-4 { padding: var(--bc-space-4); }
+.bc-p-5 { padding: var(--bc-space-5); }
+
+.bc-py-3 { padding-block: var(--bc-space-3); }
+.bc-py-4 { padding-block: var(--bc-space-4); }
+.bc-py-5 { padding-block: var(--bc-space-5); }
+.bc-py-6 { padding-block: var(--bc-space-6); }
+
+.bc-px-3 { padding-inline: var(--bc-space-3); }
+.bc-px-4 { padding-inline: var(--bc-space-4); }
+.bc-px-5 { padding-inline: var(--bc-space-5); }

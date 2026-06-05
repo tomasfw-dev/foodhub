@@ -1,0 +1,37 @@
+/**
+ * Compatibilidad con Bootstrap 5
+ * Variables alineadas al sistema Bendita-Comida cuando BS está presente.
+ */
+:root {
+  --bs-body-font-family: var(--bc-font-body);
+  --bs-body-font-size: var(--bc-text-base);
+  --bs-body-font-weight: 400;
+  --bs-body-line-height: var(--bc-leading-body);
+  --bs-body-color: var(--bc-text);
+  --bs-body-bg: var(--bc-bg);
+
+  --bs-emphasis-color: var(--bc-ink);
+  --bs-secondary-color: var(--bc-text-muted);
+  --bs-secondary-bg: var(--bc-bg-alt);
+  --bs-tertiary-color: var(--bc-text-subtle);
+  --bs-tertiary-bg: var(--bc-gray-100);
+
+  --bs-border-color: var(--bc-border);
+  --bs-border-radius: var(--bc-radius-sm);
+  --bs-border-radius-sm: var(--bc-radius-sm);
+  --bs-border-radius-lg: var(--bc-radius-md);
+  --bs-border-radius-pill: var(--bc-radius-pill);
+
+  --bs-primary: var(--bc-ink);
+  --bs-primary-rgb: 0, 0, 0;
+  --bs-secondary: var(--bc-gray-700);
+  --bs-secondary-rgb: 61, 61, 61;
+  --bs-success: var(--bc-whatsapp);
+  --bs-success-rgb: 37, 211, 102;
+
+  --bs-link-color: var(--bc-ink);
+  --bs-link-hover-color: var(--bc-gray-700);
+
+  --bs-font-sans-serif: var(--bc-font-body);
+  --bs-heading-color: var(--bc-ink);
+}
