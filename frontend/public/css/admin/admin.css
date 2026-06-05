@@ -101,3 +101,9 @@
 .admin-main {
   max-width: 1400px;
 }
+
+.admin-product-thumb {
+  object-fit: cover;
+  border: 1px solid #dee2e6;
+  background: #f8f9fa;
+}

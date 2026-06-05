@@ -5,8 +5,7 @@ const db = require('../database/connection');
 const queries = require('../database/queries/menu.queries');
 const logger = require('../utils/logger');
 const config = require('../config');
-
-const PLACEHOLDER_IMAGE = '/images/placeholder-food.svg';
+const { resolveProductImageUrl } = require('../utils/image.helpers');
 
 /**
  * Mapea fila de Productos al formato de las vistas (food-card).
@@ -18,7 +17,7 @@ function mapProductoParaVista(row) {
     name: row.nombre,
     description: row.descripcion || '',
     price: row.precio != null ? Number(row.precio) : null,
-    image: row.imagen || PLACEHOLDER_IMAGE,
+    image: resolveProductImageUrl(row.imagen),
     badge: null,
   };
 }

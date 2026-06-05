@@ -13,6 +13,7 @@
       loading="lazy"
       width="400"
       height="300"
+      onerror="this.onerror=null;this.src='<%= defaultProductImage %>';"
     >
     <% if (item.badge) { %>
     <span class="food-card__badge"><%= item.badge %></span>

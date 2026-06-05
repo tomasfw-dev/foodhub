@@ -4,6 +4,7 @@
 const db = require('../../database/connection');
 const queries = require('../../database/queries/productos.queries');
 const logger = require('../../utils/logger');
+const { resolveProductImageUrl } = require('../../utils/image.helpers');
 
 function createError(status, message) {
   const err = new Error(message);
@@ -12,13 +13,15 @@ function createError(status, message) {
 }
 
 function mapRow(row) {
+  const imagen = row.imagen || null;
   return {
     id: row.id,
     categoriaId: row.categoria_id,
     nombre: row.nombre,
     descripcion: row.descripcion || '',
     precio: row.precio != null ? Number(row.precio) : 0,
-    imagen: row.imagen || null,
+    imagen,
+    imagenUrl: resolveProductImageUrl(imagen),
     badge: null,
     activo: Boolean(row.activo),
   };

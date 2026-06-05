@@ -81,10 +81,11 @@
     <input type="hidden" name="imagenActual" value="<%= producto.imagen %>">
     <div class="mb-3">
       <img
-        src="<%= producto.imagen %>"
+        src="<%= producto.imagenUrl %>"
         alt="Imagen actual del producto"
         class="img-thumbnail"
         style="max-height: 180px; object-fit: cover;"
+        onerror="this.onerror=null;this.src='<%= defaultProductImage %>';"
       >
       <p class="small text-muted mt-1 mb-0">Imagen actual. Subí un archivo para reemplazarla.</p>
     </div>
