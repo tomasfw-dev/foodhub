@@ -8,4 +8,5 @@ module.exports = {
   frontendDir,
   viewsDir: path.join(frontendDir, 'views'),
   publicDir: path.join(frontendDir, 'public'),
+  uploadsProductosDir: path.join(frontendDir, 'public', 'uploads', 'productos'),
 };

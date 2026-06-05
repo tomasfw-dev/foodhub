@@ -1,14 +1,16 @@
 const { Router } = require('express');
 const productosController = require('../../controllers/admin/productos.controller');
+const { uploadProductoImagen } = require('../../middlewares/uploadProducto.middleware');
+const { handleUploadError } = require('../../middlewares/uploadError.middleware');
 
 const router = Router();
 
 /* Vistas HTML */
 router.get('/', productosController.indexPage);
 router.get('/create', productosController.createPage);
-router.post('/', productosController.store);
+router.post('/', uploadProductoImagen, handleUploadError, productosController.store);
 router.get('/:id/edit', productosController.editPage);
-router.post('/:id/edit', productosController.update);
+router.post('/:id/edit', uploadProductoImagen, handleUploadError, productosController.update);
 router.post('/:id/delete', productosController.destroy);
 router.post('/:id/:accion', productosController.toggleActivo);
 

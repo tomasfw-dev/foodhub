@@ -18,9 +18,10 @@ Thumbs.db
 .vscode/
 .idea/
 
-# Uploads de usuarios
-public/uploads/
-uploads/
+# Uploads de usuarios (mantener estructura con .gitkeep)
+frontend/public/uploads/**/*
+!frontend/public/uploads/
+!frontend/public/uploads/**/.gitkeep
 
 # Cobertura de tests
 coverage/

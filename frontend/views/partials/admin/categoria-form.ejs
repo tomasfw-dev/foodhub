@@ -1,5 +1,5 @@
 <div class="row g-3">
-  <div class="col-md-8">
+  <div class="col-12">
     <label for="nombre" class="form-label">Nombre <span class="text-danger">*</span></label>
     <input
       type="text"
@@ -9,17 +9,6 @@
       value="<%= categoria ? categoria.nombre : '' %>"
       required
       maxlength="120"
-    >
-  </div>
-  <div class="col-md-4">
-    <label for="orden" class="form-label">Orden</label>
-    <input
-      type="number"
-      class="form-control"
-      id="orden"
-      name="orden"
-      value="<%= categoria ? categoria.orden : '' %>"
-      min="1"
     >
   </div>
   <div class="col-12">
@@ -32,18 +21,7 @@
       maxlength="500"
     ><%= categoria ? categoria.descripcion : '' %></textarea>
   </div>
-  <div class="col-md-6">
-    <label for="slug" class="form-label">Slug (opcional)</label>
-    <input
-      type="text"
-      class="form-control"
-      id="slug"
-      name="slug"
-      value="<%= categoria ? categoria.slug : '' %>"
-      placeholder="se-genera-automaticamente"
-    >
-  </div>
-  <div class="col-md-6 d-flex align-items-end">
+  <div class="col-12">
     <div class="form-check form-switch">
       <input
         class="form-check-input"

@@ -2,6 +2,7 @@
  * Controlador admin — categorías (vistas HTML + API JSON).
  */
 const categoriasService = require('../../services/admin/categorias.service');
+const logger = require('../../utils/logger');
 
 const ADMIN = '/admin/categorias';
 
@@ -18,25 +19,25 @@ function parseFormBody(body) {
   return {
     nombre: body.nombre,
     descripcion: body.descripcion,
-    slug: body.slug,
-    orden: body.orden,
     activo: body.activo === 'on' || body.activo === 'true' || body.activo === true,
   };
 }
 
 /* --- Vistas HTML --- */
 
-exports.indexPage = (req, res) => {
+exports.indexPage = async (req, res, next) => {
   try {
+    const categorias = await categoriasService.listar();
     res.render('layouts/admin', {
       title: 'Categorías',
       activeMenu: 'categorias',
       contentPartial: '../admin/categorias/index',
-      categorias: categoriasService.listar(),
+      categorias,
       flash: res.locals.flash,
     });
   } catch (err) {
-    redirectWithError(res, ADMIN, err.message);
+    logger.error('Error al listar categorías', err);
+    next(err);
   }
 };
 
@@ -50,9 +51,9 @@ exports.createPage = (req, res) => {
   });
 };
 
-exports.editPage = (req, res) => {
+exports.editPage = async (req, res) => {
   try {
-    const categoria = categoriasService.obtenerPorId(req.params.id);
+    const categoria = await categoriasService.obtenerPorId(req.params.id);
     res.render('layouts/admin', {
       title: 'Editar categoría',
       activeMenu: 'categorias',
@@ -65,27 +66,27 @@ exports.editPage = (req, res) => {
   }
 };
 
-exports.store = (req, res) => {
+exports.store = async (req, res) => {
   try {
-    categoriasService.crear(parseFormBody(req.body));
+    await categoriasService.crear(parseFormBody(req.body));
     res.redirect(`${ADMIN}?success=${encodeURIComponent('Categoría creada')}`);
   } catch (err) {
     redirectWithError(res, `${ADMIN}/create`, err.message);
   }
 };
 
-exports.update = (req, res) => {
+exports.update = async (req, res) => {
   try {
-    categoriasService.editar(req.params.id, parseFormBody(req.body));
+    await categoriasService.editar(req.params.id, parseFormBody(req.body));
     res.redirect(`${ADMIN}?success=${encodeURIComponent('Categoría actualizada')}`);
   } catch (err) {
     redirectWithError(res, `${ADMIN}/${req.params.id}/edit`, err.message);
   }
 };
 
-exports.destroy = (req, res) => {
+exports.destroy = async (req, res) => {
   try {
-    categoriasService.eliminar(req.params.id);
+    await categoriasService.eliminar(req.params.id);
     res.redirect(`${ADMIN}?success=${encodeURIComponent('Categoría eliminada')}`);
   } catch (err) {
     redirectWithError(res, ADMIN, err.message);
@@ -94,35 +95,36 @@ exports.destroy = (req, res) => {
 
 /* --- API JSON --- */
 
-exports.listar = (req, res) => {
+exports.listar = async (req, res) => {
   try {
-    res.json({ data: categoriasService.listar() });
+    const data = await categoriasService.listar();
+    res.json({ data });
   } catch (err) {
     handleError(res, err);
   }
 };
 
-exports.crear = (req, res) => {
+exports.crear = async (req, res) => {
   try {
-    const categoria = categoriasService.crear(req.body);
+    const categoria = await categoriasService.crear(req.body);
     res.status(201).json({ data: categoria });
   } catch (err) {
     handleError(res, err);
   }
 };
 
-exports.editar = (req, res) => {
+exports.editar = async (req, res) => {
   try {
-    const categoria = categoriasService.editar(req.params.id, req.body);
+    const categoria = await categoriasService.editar(req.params.id, req.body);
     res.json({ data: categoria });
   } catch (err) {
     handleError(res, err);
   }
 };
 
-exports.eliminar = (req, res) => {
+exports.eliminar = async (req, res) => {
   try {
-    const categoria = categoriasService.eliminar(req.params.id);
+    const categoria = await categoriasService.eliminar(req.params.id);
     res.json({ data: categoria, message: 'Categoría eliminada' });
   } catch (err) {
     handleError(res, err);

@@ -10,7 +10,7 @@
 
 <div class="card admin-form-card">
   <div class="card-body p-4">
-    <form action="<%= adminRoutes.PRODUCTOS %>" method="post">
+    <form action="<%= adminRoutes.PRODUCTOS %>" method="post" enctype="multipart/form-data">
       <%- include('../../partials/admin/producto-form', { producto: producto, categorias: categorias }) %>
       <div class="d-flex gap-2 mt-4">
         <button type="submit" class="btn btn-primary">Guardar</button>

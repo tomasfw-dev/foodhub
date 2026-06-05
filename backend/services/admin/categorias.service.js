@@ -1,28 +1,9 @@
 /**
- * Lógica de negocio para categorías del menú.
- * Persistencia en memoria (reemplazar por base de datos).
+ * Lógica de negocio para categorías — SQL Server.
  */
-
-let categorias = [
-  {
-    id: 1,
-    nombre: 'Platos principales',
-    descripcion: 'Platos caseros del día',
-    activo: true,
-    slug: 'platos-principales',
-    orden: 1,
-  },
-  {
-    id: 2,
-    nombre: 'Tartas y horno',
-    descripcion: 'Tartas y preparaciones al horno',
-    activo: true,
-    slug: 'tartas-y-horno',
-    orden: 2,
-  },
-];
-
-let nextId = 3;
+const db = require('../../database/connection');
+const queries = require('../../database/queries/categorias.queries');
+const logger = require('../../utils/logger');
 
 function createError(status, message) {
   const err = new Error(message);
@@ -30,75 +11,67 @@ function createError(status, message) {
   return err;
 }
 
-function slugify(text) {
-  return String(text)
-    .toLowerCase()
-    .trim()
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-|-$/g, '');
+function mapRow(row) {
+  return {
+    id: row.id,
+    nombre: row.nombre,
+    descripcion: row.descripcion || '',
+    activo: Boolean(row.activo),
+  };
 }
 
-exports.listar = () => {
-  return [...categorias].sort((a, b) => a.orden - b.orden);
+exports.listar = async () => {
+  logger.info('Listando categorías desde BD');
+  const rows = await db.query(queries.LISTAR);
+  return rows.map(mapRow);
 };
 
-exports.obtenerPorId = (id) => {
-  const categoria = categorias.find((c) => c.id === Number(id));
-  if (!categoria) throw createError(404, 'Categoría no encontrada');
-  return categoria;
+exports.obtenerPorId = async (id) => {
+  const rows = await db.query(queries.OBTENER_POR_ID, { id: Number(id) });
+  if (!rows.length) throw createError(404, 'Categoría no encontrada');
+  return mapRow(rows[0]);
 };
 
-exports.crear = (datos) => {
+exports.crear = async (datos) => {
   const nombre = datos.nombre?.trim();
   if (!nombre) throw createError(400, 'El nombre es obligatorio');
 
-  const categoria = {
-    id: nextId++,
+  const rows = await db.query(queries.CREAR, {
     nombre,
     descripcion: datos.descripcion?.trim() || '',
     activo: datos.activo !== false && datos.activo !== 'false',
-    slug: datos.slug?.trim() || slugify(nombre),
-    orden: Number(datos.orden) || categorias.length + 1,
-  };
+  });
 
-  categorias.push(categoria);
+  const categoria = mapRow(rows[0]);
+  logger.info('Categoría creada en BD', { id: categoria.id });
   return categoria;
 };
 
-exports.editar = (id, datos) => {
-  const index = categorias.findIndex((c) => c.id === Number(id));
-  if (index === -1) throw createError(404, 'Categoría no encontrada');
-
-  const actual = categorias[index];
+exports.editar = async (id, datos) => {
+  const actual = await exports.obtenerPorId(id);
   const nombre = datos.nombre !== undefined ? datos.nombre.trim() : actual.nombre;
-
   if (!nombre) throw createError(400, 'El nombre es obligatorio');
 
-  categorias[index] = {
-    ...actual,
-    nombre,
+  const rows = await db.query(queries.EDITAR, {
+    id: Number(id),
+    nombre: nombre ?? actual.nombre,
     descripcion:
       datos.descripcion !== undefined ? datos.descripcion.trim() : actual.descripcion,
     activo:
       datos.activo !== undefined
         ? datos.activo !== false && datos.activo !== 'false'
         : actual.activo,
-    slug:
-      datos.slug !== undefined
-        ? datos.slug.trim() || slugify(nombre)
-        : actual.slug,
-    orden: datos.orden !== undefined ? Number(datos.orden) : actual.orden,
-  };
+  });
 
-  return categorias[index];
+  if (!rows.length) throw createError(404, 'Categoría no encontrada');
+
+  return mapRow(rows[0]);
 };
 
-exports.eliminar = (id) => {
-  const index = categorias.findIndex((c) => c.id === Number(id));
-  if (index === -1) throw createError(404, 'Categoría no encontrada');
+exports.eliminar = async (id) => {
+  const rows = await db.query(queries.ELIMINAR, { id: Number(id) });
+  if (!rows.length) throw createError(404, 'Categoría no encontrada');
 
-  const [eliminada] = categorias.splice(index, 1);
-  return eliminada;
+  logger.info('Categoría dada de baja en BD', { id });
+  return { id: rows[0].id };
 };

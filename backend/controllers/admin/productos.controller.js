@@ -3,6 +3,8 @@
  */
 const productosService = require('../../services/admin/productos.service');
 const categoriasService = require('../../services/admin/categorias.service');
+const uploadService = require('../../services/admin/upload.service');
+const logger = require('../../utils/logger');
 
 const ADMIN = '/admin/productos';
 
@@ -15,28 +17,43 @@ function redirectWithError(res, url, message) {
   return res.redirect(`${url}?error=${encodeURIComponent(message)}`);
 }
 
-function parseFormBody(body) {
+function resolveImagen(req) {
+  if (req.file) {
+    return uploadService.toPublicUrl(req.file.filename);
+  }
+  if (req.body.imagenActual) {
+    return req.body.imagenActual.trim();
+  }
+  return null;
+}
+
+function parseFormBody(req) {
   return {
-    categoriaId: body.categoriaId,
-    nombre: body.nombre,
-    descripcion: body.descripcion,
-    precio: body.precio,
-    imagen: body.imagen,
-    badge: body.badge,
-    activo: body.activo === 'on' || body.activo === 'true' || body.activo === true,
+    categoriaId: req.body.categoriaId,
+    nombre: req.body.nombre,
+    descripcion: req.body.descripcion,
+    precio: req.body.precio,
+    imagen: resolveImagen(req),
+    imagenAnterior: req.body.imagenActual || null,
+    badge: req.body.badge,
+    activo: req.body.activo === 'on' || req.body.activo === 'true' || req.body.activo === true,
   };
 }
 
-function getCategoriasParaSelect() {
-  return categoriasService.listar();
+function cleanupUploadedFile(req) {
+  if (req.file) {
+    uploadService.deleteProductoImage(uploadService.toPublicUrl(req.file.filename));
+  }
 }
 
 /* --- Vistas HTML --- */
 
-exports.indexPage = (req, res) => {
+exports.indexPage = async (req, res, next) => {
   try {
-    const productos = productosService.listar();
-    const categorias = getCategoriasParaSelect();
+    const [productos, categorias] = await Promise.all([
+      productosService.listar(),
+      categoriasService.listar(),
+    ]);
     const categoriasMap = Object.fromEntries(categorias.map((c) => [c.id, c.nombre]));
 
     res.render('layouts/admin', {
@@ -48,30 +65,39 @@ exports.indexPage = (req, res) => {
       flash: res.locals.flash,
     });
   } catch (err) {
-    redirectWithError(res, ADMIN, err.message);
+    logger.error('Error al listar productos', err);
+    next(err);
   }
 };
 
-exports.createPage = (req, res) => {
-  res.render('layouts/admin', {
-    title: 'Nuevo producto',
-    activeMenu: 'productos',
-    contentPartial: '../admin/productos/create',
-    producto: null,
-    categorias: getCategoriasParaSelect(),
-    flash: res.locals.flash,
-  });
+exports.createPage = async (req, res, next) => {
+  try {
+    const categorias = await categoriasService.listar();
+    res.render('layouts/admin', {
+      title: 'Nuevo producto',
+      activeMenu: 'productos',
+      contentPartial: '../admin/productos/create',
+      producto: null,
+      categorias,
+      flash: res.locals.flash,
+    });
+  } catch (err) {
+    next(err);
+  }
 };
 
-exports.editPage = (req, res) => {
+exports.editPage = async (req, res, next) => {
   try {
-    const producto = productosService.obtenerPorId(req.params.id);
+    const [producto, categorias] = await Promise.all([
+      productosService.obtenerPorId(req.params.id),
+      categoriasService.listar(),
+    ]);
     res.render('layouts/admin', {
       title: 'Editar producto',
       activeMenu: 'productos',
       contentPartial: '../admin/productos/edit',
       producto,
-      categorias: getCategoriasParaSelect(),
+      categorias,
       flash: res.locals.flash,
     });
   } catch (err) {
@@ -79,34 +105,50 @@ exports.editPage = (req, res) => {
   }
 };
 
-exports.store = (req, res) => {
+exports.store = async (req, res) => {
   try {
-    productosService.crear(parseFormBody(req.body));
+    const datos = parseFormBody(req);
+    await productosService.crear(datos);
+    logger.info('Producto creado', { imagen: datos.imagen });
     res.redirect(`${ADMIN}?success=${encodeURIComponent('Producto creado')}`);
   } catch (err) {
+    cleanupUploadedFile(req);
+    logger.error('Error al crear producto', err);
     redirectWithError(res, `${ADMIN}/create`, err.message);
   }
 };
 
-exports.update = (req, res) => {
+exports.update = async (req, res) => {
   try {
-    productosService.editar(req.params.id, parseFormBody(req.body));
+    const datos = parseFormBody(req);
+    await productosService.editar(req.params.id, datos);
+
+    if (req.file && datos.imagenAnterior && datos.imagenAnterior !== datos.imagen) {
+      uploadService.deleteProductoImage(datos.imagenAnterior);
+    }
+
+    logger.info('Producto actualizado', { id: req.params.id, imagen: datos.imagen });
     res.redirect(`${ADMIN}?success=${encodeURIComponent('Producto actualizado')}`);
   } catch (err) {
+    cleanupUploadedFile(req);
+    logger.error('Error al actualizar producto', err);
     redirectWithError(res, `${ADMIN}/${req.params.id}/edit`, err.message);
   }
 };
 
-exports.destroy = (req, res) => {
+exports.destroy = async (req, res) => {
   try {
-    productosService.eliminar(req.params.id);
+    const producto = await productosService.eliminar(req.params.id);
+    uploadService.deleteProductoImage(producto.imagen);
+    logger.info('Producto eliminado', { id: req.params.id });
     res.redirect(`${ADMIN}?success=${encodeURIComponent('Producto eliminado')}`);
   } catch (err) {
+    logger.error('Error al eliminar producto', err);
     redirectWithError(res, ADMIN, err.message);
   }
 };
 
-exports.toggleActivo = (req, res) => {
+exports.toggleActivo = async (req, res) => {
   try {
     const { accion } = req.params;
     if (accion !== 'activar' && accion !== 'desactivar') {
@@ -114,9 +156,9 @@ exports.toggleActivo = (req, res) => {
     }
     const activar = accion === 'activar';
     if (activar) {
-      productosService.activar(req.params.id);
+      await productosService.activar(req.params.id);
     } else {
-      productosService.desactivar(req.params.id);
+      await productosService.desactivar(req.params.id);
     }
     res.redirect(`${ADMIN}?success=${encodeURIComponent(activar ? 'Producto activado' : 'Producto desactivado')}`);
   } catch (err) {
@@ -126,57 +168,58 @@ exports.toggleActivo = (req, res) => {
 
 /* --- API JSON --- */
 
-exports.listar = (req, res) => {
+exports.listar = async (req, res) => {
   try {
     const filtros = {
       categoriaId: req.query.categoriaId,
       soloActivos: req.query.soloActivos === 'true',
     };
-    res.json({ data: productosService.listar(filtros) });
+    const data = await productosService.listar(filtros);
+    res.json({ data });
   } catch (err) {
     handleError(res, err);
   }
 };
 
-exports.crear = (req, res) => {
+exports.crear = async (req, res) => {
   try {
-    const producto = productosService.crear(req.body);
+    const producto = await productosService.crear(req.body);
     res.status(201).json({ data: producto });
   } catch (err) {
     handleError(res, err);
   }
 };
 
-exports.editar = (req, res) => {
+exports.editar = async (req, res) => {
   try {
-    const producto = productosService.editar(req.params.id, req.body);
+    const producto = await productosService.editar(req.params.id, req.body);
     res.json({ data: producto });
   } catch (err) {
     handleError(res, err);
   }
 };
 
-exports.eliminar = (req, res) => {
+exports.eliminar = async (req, res) => {
   try {
-    const producto = productosService.eliminar(req.params.id);
+    const producto = await productosService.eliminar(req.params.id);
     res.json({ data: producto, message: 'Producto eliminado' });
   } catch (err) {
     handleError(res, err);
   }
 };
 
-exports.activar = (req, res) => {
+exports.activar = async (req, res) => {
   try {
-    const producto = productosService.activar(req.params.id);
+    const producto = await productosService.activar(req.params.id);
     res.json({ data: producto, message: 'Producto activado' });
   } catch (err) {
     handleError(res, err);
   }
 };
 
-exports.desactivar = (req, res) => {
+exports.desactivar = async (req, res) => {
   try {
-    const producto = productosService.desactivar(req.params.id);
+    const producto = await productosService.desactivar(req.params.id);
     res.json({ data: producto, message: 'Producto desactivado' });
   } catch (err) {
     handleError(res, err);

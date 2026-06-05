@@ -1,23 +1,9 @@
 /**
- * Lógica de negocio para productos del menú.
- * Persistencia en memoria (reemplazar por base de datos).
+ * Lógica de negocio para productos — SQL Server.
  */
-const categoriasService = require('./categorias.service');
-
-let productos = [
-  {
-    id: 1,
-    categoriaId: 1,
-    nombre: 'Milanesas caseras',
-    descripcion: 'Crocantes por fuera, jugosas por dentro.',
-    precio: 4500,
-    imagen: null,
-    badge: 'Popular',
-    activo: true,
-  },
-];
-
-let nextId = 2;
+const db = require('../../database/connection');
+const queries = require('../../database/queries/productos.queries');
+const logger = require('../../utils/logger');
 
 function createError(status, message) {
   const err = new Error(message);
@@ -25,8 +11,29 @@ function createError(status, message) {
   return err;
 }
 
-exports.listar = (filtros = {}) => {
-  let resultado = [...productos];
+function mapRow(row) {
+  return {
+    id: row.id,
+    categoriaId: row.categoria_id,
+    nombre: row.nombre,
+    descripcion: row.descripcion || '',
+    precio: row.precio != null ? Number(row.precio) : 0,
+    imagen: row.imagen || null,
+    badge: null,
+    activo: Boolean(row.activo),
+  };
+}
+
+async function verificarCategoria(categoriaId) {
+  const rows = await db.query(queries.VERIFICAR_CATEGORIA, {
+    categoriaId: Number(categoriaId),
+  });
+  if (!rows.length) throw createError(404, 'Categoría no encontrada');
+}
+
+exports.listar = async (filtros = {}) => {
+  logger.info('Listando productos desde BD');
+  let resultado = (await db.query(queries.LISTAR)).map(mapRow);
 
   if (filtros.categoriaId) {
     resultado = resultado.filter(
@@ -38,78 +45,73 @@ exports.listar = (filtros = {}) => {
     resultado = resultado.filter((p) => p.activo);
   }
 
-  return resultado.sort((a, b) => a.nombre.localeCompare(b.nombre));
+  return resultado;
 };
 
-exports.obtenerPorId = (id) => {
-  const producto = productos.find((p) => p.id === Number(id));
-  if (!producto) throw createError(404, 'Producto no encontrado');
-  return producto;
+exports.obtenerPorId = async (id) => {
+  const rows = await db.query(queries.OBTENER_POR_ID, { id: Number(id) });
+  if (!rows.length) throw createError(404, 'Producto no encontrado');
+  return mapRow(rows[0]);
 };
 
-exports.crear = (datos) => {
+exports.crear = async (datos) => {
   const nombre = datos.nombre?.trim();
   if (!nombre) throw createError(400, 'El nombre es obligatorio');
   if (datos.categoriaId == null) throw createError(400, 'La categoría es obligatoria');
 
-  categoriasService.obtenerPorId(datos.categoriaId);
+  await verificarCategoria(datos.categoriaId);
 
-  const producto = {
-    id: nextId++,
+  const rows = await db.query(queries.CREAR, {
     categoriaId: Number(datos.categoriaId),
     nombre,
     descripcion: datos.descripcion?.trim() || '',
-    precio: datos.precio != null ? Number(datos.precio) : null,
+    precio: datos.precio != null ? Number(datos.precio) : 0,
     imagen: datos.imagen?.trim() || null,
-    badge: datos.badge?.trim() || null,
     activo: datos.activo !== false,
-  };
+  });
 
-  productos.push(producto);
+  const producto = mapRow(rows[0]);
+  logger.info('Producto creado en BD', { id: producto.id, imagen: producto.imagen });
   return producto;
 };
 
-exports.editar = (id, datos) => {
-  const index = productos.findIndex((p) => p.id === Number(id));
-  if (index === -1) throw createError(404, 'Producto no encontrado');
-
-  const actual = productos[index];
+exports.editar = async (id, datos) => {
+  const actual = await exports.obtenerPorId(id);
 
   if (datos.categoriaId != null) {
-    categoriasService.obtenerPorId(datos.categoriaId);
+    await verificarCategoria(datos.categoriaId);
   }
 
   const nombre = datos.nombre !== undefined ? datos.nombre.trim() : actual.nombre;
   if (!nombre) throw createError(400, 'El nombre es obligatorio');
 
-  productos[index] = {
-    ...actual,
-    nombre,
+  const rows = await db.query(queries.EDITAR, {
+    id: Number(id),
     categoriaId:
       datos.categoriaId != null ? Number(datos.categoriaId) : actual.categoriaId,
+    nombre,
     descripcion:
       datos.descripcion !== undefined ? datos.descripcion.trim() : actual.descripcion,
     precio: datos.precio !== undefined ? Number(datos.precio) : actual.precio,
     imagen: datos.imagen !== undefined ? datos.imagen?.trim() || null : actual.imagen,
-    badge: datos.badge !== undefined ? datos.badge?.trim() || null : actual.badge,
     activo: datos.activo !== undefined ? Boolean(datos.activo) : actual.activo,
-  };
+  });
 
-  return productos[index];
+  if (!rows.length) throw createError(404, 'Producto no encontrado');
+
+  const producto = mapRow(rows[0]);
+  logger.info('Producto actualizado en BD', { id: producto.id, imagen: producto.imagen });
+  return producto;
 };
 
-exports.eliminar = (id) => {
-  const index = productos.findIndex((p) => p.id === Number(id));
-  if (index === -1) throw createError(404, 'Producto no encontrado');
+exports.eliminar = async (id) => {
+  const rows = await db.query(queries.ELIMINAR, { id: Number(id) });
+  if (!rows.length) throw createError(404, 'Producto no encontrado');
 
-  const [eliminado] = productos.splice(index, 1);
-  return eliminado;
+  logger.info('Producto dado de baja en BD', { id });
+  return { id: rows[0].id, imagen: rows[0].imagen };
 };
 
-exports.activar = (id) => {
-  return exports.editar(id, { activo: true });
-};
+exports.activar = async (id) => exports.editar(id, { activo: true });
 
-exports.desactivar = (id) => {
-  return exports.editar(id, { activo: false });
-};
+exports.desactivar = async (id) => exports.editar(id, { activo: false });
