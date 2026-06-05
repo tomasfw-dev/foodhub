@@ -1,0 +1,57 @@
+<div class="auth-card">
+  <div class="auth-card__brand text-center mb-4">
+    <img
+      src="<%= site.logoUrl %>"
+      alt="<%= appName %>"
+      class="auth-card__logo"
+      width="180"
+      height="150"
+      decoding="async"
+    >
+    <h1 class="auth-card__title">Panel administrativo</h1>
+    <p class="auth-card__subtitle">Ingresá con tu cuenta de administradora</p>
+  </div>
+
+  <% if (typeof success !== 'undefined' && success) { %>
+  <div class="alert alert-success" role="alert"><%= success %></div>
+  <% } %>
+
+  <% if (typeof error !== 'undefined' && error) { %>
+  <div class="alert alert-danger" role="alert"><%= error %></div>
+  <% } %>
+
+  <form class="auth-form" method="POST" action="<%= routes.AUTH_LOGIN %>" novalidate>
+    <div class="mb-3">
+      <label for="email" class="form-label">Email</label>
+      <input
+        type="email"
+        class="form-control"
+        id="email"
+        name="email"
+        value="<%= typeof email !== 'undefined' ? email : '' %>"
+        autocomplete="username"
+        required
+        autofocus
+      >
+    </div>
+
+    <div class="mb-4">
+      <label for="password" class="form-label">Contraseña</label>
+      <input
+        type="password"
+        class="form-control"
+        id="password"
+        name="password"
+        autocomplete="current-password"
+        required
+        minlength="6"
+      >
+    </div>
+
+    <button type="submit" class="btn btn-dark w-100 auth-form__submit">Iniciar sesión</button>
+  </form>
+
+  <p class="auth-card__footer text-center mt-4 mb-0">
+    <a href="<%= routes.HOME %>" class="text-muted small">← Volver al sitio</a>
+  </p>
+</div>

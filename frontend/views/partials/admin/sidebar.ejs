@@ -13,6 +13,9 @@
     <div class="admin-sidebar__brand px-4 py-4 d-none d-lg-block">
       <span class="admin-sidebar__logo"><%= appName %></span>
       <small class="d-block text-muted">Panel administrativo</small>
+      <% if (typeof adminUser !== 'undefined' && adminUser) { %>
+      <small class="d-block text-muted mt-1"><%= adminUser.nombre %></small>
+      <% } %>
     </div>
 
     <nav class="admin-sidebar__nav nav flex-column px-3 flex-grow-1">

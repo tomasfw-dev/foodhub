@@ -1,0 +1,78 @@
+/**
+ * Login administrativo — Bendita-Comida
+ */
+.auth-body {
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bc-paper);
+  padding: var(--bc-space-4);
+}
+
+.auth-main {
+  width: 100%;
+  max-width: 420px;
+}
+
+.auth-card {
+  background: var(--bc-paper);
+  border: 1px solid var(--bc-border);
+  border-radius: var(--bc-radius-lg);
+  padding: var(--bc-space-5);
+  box-shadow: var(--bc-shadow-md);
+}
+
+.auth-card__logo {
+  width: auto;
+  height: 120px;
+  max-width: 200px;
+  margin: 0 auto var(--bc-space-3);
+  object-fit: contain;
+  filter: brightness(0) contrast(1.25);
+}
+
+.auth-card__title {
+  font-family: var(--bc-font-display);
+  font-size: var(--bc-text-xl);
+  font-weight: 700;
+  letter-spacing: var(--bc-tracking-display);
+  text-transform: uppercase;
+  color: var(--bc-ink);
+  margin-bottom: var(--bc-space-2);
+}
+
+.auth-card__subtitle {
+  font-family: var(--bc-font-body);
+  font-size: var(--bc-text-sm);
+  color: var(--bc-text-muted);
+  margin: 0;
+}
+
+.auth-form__submit {
+  font-family: var(--bc-font-display);
+  font-weight: 600;
+  letter-spacing: var(--bc-tracking-ui);
+  text-transform: uppercase;
+  padding-block: 0.85rem;
+}
+
+.auth-card .form-label {
+  font-family: var(--bc-font-display);
+  font-size: var(--bc-text-xs);
+  font-weight: 600;
+  letter-spacing: var(--bc-tracking-ui);
+  text-transform: uppercase;
+  color: var(--bc-ink);
+}
+
+.auth-card .form-control {
+  border-color: var(--bc-border);
+  border-radius: var(--bc-radius-sm);
+}
+
+.auth-card .form-control:focus {
+  border-color: var(--bc-ink);
+  box-shadow: 0 0 0 0.15rem rgba(0, 0, 0, 0.1);
+}

@@ -1,13 +1,12 @@
 const { Router } = require('express');
-const constants = require('../../config/constants');
+const authController = require('../../controllers/auth.controller');
+const { redirectIfAuthenticated } = require('../../middlewares/auth.middleware');
 
 const router = Router();
 
-/**
- * Cerrar sesión (placeholder hasta implementar auth).
- */
-router.get('/logout', (req, res) => {
-  res.redirect(constants.ROUTES.AUTH_LOGIN + '?message=' + encodeURIComponent('Sesión cerrada'));
-});
+router.get('/login', redirectIfAuthenticated, authController.showLogin);
+router.post('/login', redirectIfAuthenticated, authController.login);
+router.get('/logout', authController.logout);
+router.post('/logout', authController.logout);
 
 module.exports = router;

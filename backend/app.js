@@ -7,6 +7,7 @@ const routes = require('./routes');
 const { notFoundHandler } = require('./middlewares/notFound.middleware');
 const { errorHandler } = require('./middlewares/error.middleware');
 const { flashMiddleware } = require('./middlewares/flash.middleware');
+const createSessionMiddleware = require('./config/session.config');
 const imageHelper = require('./utils/image.helpers');
 
 const app = express();
@@ -27,6 +28,7 @@ app.locals.defaultProductImage = imageHelper.DEFAULT_PRODUCT_IMAGE;
 // Middlewares base
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(createSessionMiddleware());
 app.use(flashMiddleware);
 
 // Assets públicos
