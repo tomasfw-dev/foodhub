@@ -2,9 +2,10 @@
   Bendita-Comida — Administradora inicial (única)
   Ejecutar después de 001_schema_bendita_comida.sql
 
-  Credenciales iniciales:
-    Email:    admin@bendita-comida.com
-    Password: Bendita2026!
+  Administrador inicial para desarrollo.
+
+  IMPORTANTE:
+  Configurar credenciales propias antes de utilizar el sistema.
 
   IMPORTANTE: Cambiar la contraseña después del primer acceso.
   Para generar un nuevo hash: node backend/scripts/hash-password.js "tu_password"
