@@ -25,6 +25,7 @@ app.locals.routes = constants.ROUTES;
 app.locals.adminRoutes = constants.ADMIN_ROUTES;
 app.locals.resolveProductImageUrl = imageHelper.resolveProductImageUrl;
 app.locals.defaultProductImage = imageHelper.DEFAULT_PRODUCT_IMAGE;
+app.locals.defaultPromocionImage = imageHelper.DEFAULT_PROMOCION_IMAGE;
 
 // Middlewares base
 app.use(express.json());

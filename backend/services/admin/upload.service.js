@@ -18,6 +18,13 @@ exports.ensureLogosUploadDir = () => {
   }
 };
 
+exports.ensurePromocionesUploadDir = () => {
+  if (!fs.existsSync(uploadConfig.PROMOCIONES_DIR)) {
+    fs.mkdirSync(uploadConfig.PROMOCIONES_DIR, { recursive: true });
+    logger.info('Directorio de promociones creado', { dir: uploadConfig.PROMOCIONES_DIR });
+  }
+};
+
 exports.generateUniqueFilename = (originalname) => {
   const ext = path.extname(originalname).toLowerCase();
   const uniqueId = `${Date.now()}-${crypto.randomBytes(8).toString('hex')}`;
@@ -32,6 +39,11 @@ exports.toPublicUrl = (filename) => {
 exports.toLogoPublicUrl = (filename) => {
   if (!filename) return null;
   return `${uploadConfig.LOGO_PUBLIC_PREFIX}/${filename}`;
+};
+
+exports.toPromocionPublicUrl = (filename) => {
+  if (!filename) return null;
+  return `${uploadConfig.PROMOCIONES_PUBLIC_PREFIX}/${filename}`;
 };
 
 exports.isAllowedExtension = (filename) => {
@@ -71,4 +83,21 @@ exports.deleteLogoImage = (publicUrl) => {
 
   fs.unlinkSync(filePath);
   logger.info('Logo eliminado', { filename });
+};
+
+exports.deletePromocionImage = (publicUrl) => {
+  if (!publicUrl || !publicUrl.startsWith(`${uploadConfig.PROMOCIONES_PUBLIC_PREFIX}/`)) {
+    return;
+  }
+
+  const filename = path.basename(publicUrl);
+  const filePath = path.join(uploadConfig.PROMOCIONES_DIR, filename);
+
+  if (!fs.existsSync(filePath)) {
+    logger.warn('Imagen de promoción a eliminar no encontrada', { filePath });
+    return;
+  }
+
+  fs.unlinkSync(filePath);
+  logger.info('Imagen de promoción eliminada', { filename });
 };

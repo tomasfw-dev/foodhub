@@ -3,6 +3,7 @@ const logger = require('../utils/logger');
 
 const ADMIN_PRODUCTOS = '/admin/productos';
 const ADMIN_CONFIGURACION = '/admin/configuracion';
+const ADMIN_PROMOCIONES = '/admin/promociones';
 
 exports.handleUploadError = (err, req, res, next) => {
   if (!err) return next();
@@ -34,6 +35,11 @@ exports.handleUploadError = (err, req, res, next) => {
 
   if (req.originalUrl.startsWith(ADMIN_CONFIGURACION)) {
     redirectUrl = ADMIN_CONFIGURACION;
+  } else if (req.originalUrl.startsWith(ADMIN_PROMOCIONES)) {
+    const isEdit = req.originalUrl.includes('/edit');
+    redirectUrl = isEdit
+      ? `${ADMIN_PROMOCIONES}/${req.params.id}/edit`
+      : `${ADMIN_PROMOCIONES}/create`;
   } else {
     const isEdit = req.originalUrl.includes('/edit');
     redirectUrl = isEdit

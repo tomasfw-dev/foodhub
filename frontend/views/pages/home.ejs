@@ -81,8 +81,8 @@
     </header>
 
     <div class="promo-grid">
-      <% promotions.forEach(function(promo, index) { %>
-      <article class="promo-card reveal<%= index === 0 ? ' promo-card--featured' : '' %>">
+      <% promotions.forEach(function(promo) { %>
+      <article class="promo-card reveal<%= promo.destacado ? ' promo-card--featured' : '' %>">
         <div class="promo-card__media">
           <img src="<%= promo.image %>" alt="<%= promo.title %>" loading="lazy" class="promo-card__image">
           <div class="promo-card__overlay"></div>
@@ -90,6 +90,9 @@
         </div>
         <div class="promo-card__body">
           <h3 class="promo-card__title"><%= promo.title %></h3>
+          <% if (promo.price != null) { %>
+          <p class="promo-card__price">$<%= Number(promo.price).toLocaleString('es-AR') %></p>
+          <% } %>
           <p class="promo-card__text"><%= promo.description %></p>
           <% if (whatsapp && whatsapp.phone) { %>
           <a
@@ -107,4 +110,6 @@
     </div>
   </div>
 </section>
+<% } else { %>
+<section class="section section--promos section--promos-empty" id="promociones" aria-hidden="true"></section>
 <% } %>

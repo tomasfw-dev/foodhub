@@ -1,0 +1,117 @@
+<div class="row g-3">
+  <div class="col-md-8">
+    <label for="nombre" class="form-label">Nombre <span class="text-danger">*</span></label>
+    <input
+      type="text"
+      class="form-control"
+      id="nombre"
+      name="nombre"
+      value="<%= promocion ? promocion.nombre : '' %>"
+      required
+      maxlength="160"
+    >
+  </div>
+  <div class="col-md-4">
+    <label for="precio_promocional" class="form-label">Precio promocional</label>
+    <div class="input-group">
+      <span class="input-group-text">$</span>
+      <input
+        type="number"
+        class="form-control"
+        id="precio_promocional"
+        name="precio_promocional"
+        value="<%= promocion && promocion.precio_promocional != null ? promocion.precio_promocional : '' %>"
+        min="0"
+        step="0.01"
+      >
+    </div>
+  </div>
+
+  <div class="col-12">
+    <label for="descripcion" class="form-label">Descripción</label>
+    <textarea
+      class="form-control"
+      id="descripcion"
+      name="descripcion"
+      rows="3"
+      maxlength="1000"
+    ><%= promocion ? promocion.descripcion : '' %></textarea>
+  </div>
+
+  <div class="col-md-6">
+    <label for="fecha_inicio" class="form-label">Fecha de inicio</label>
+    <input
+      type="date"
+      class="form-control"
+      id="fecha_inicio"
+      name="fecha_inicio"
+      value="<%= promocion ? promocion.fecha_inicio_input : '' %>"
+    >
+    <div class="form-text">Opcional. Si no se indica, la promo es válida desde ya.</div>
+  </div>
+  <div class="col-md-6">
+    <label for="fecha_fin" class="form-label">Fecha de fin</label>
+    <input
+      type="date"
+      class="form-control"
+      id="fecha_fin"
+      name="fecha_fin"
+      value="<%= promocion ? promocion.fecha_fin_input : '' %>"
+    >
+    <div class="form-text">Opcional. Si no se indica, no expira automáticamente.</div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="form-check form-switch">
+      <input
+        class="form-check-input"
+        type="checkbox"
+        id="activo"
+        name="activo"
+        <%= !promocion || promocion.activo ? 'checked' : '' %>
+      >
+      <label class="form-check-label" for="activo">Promoción activa</label>
+    </div>
+    <div class="form-text">Solo las promos activas y vigentes se muestran en la home.</div>
+  </div>
+  <div class="col-md-6">
+    <div class="form-check form-switch">
+      <input
+        class="form-check-input"
+        type="checkbox"
+        id="destacado"
+        name="destacado"
+        <%= promocion && promocion.destacado ? 'checked' : '' %>
+      >
+      <label class="form-check-label" for="destacado">Destacada en la home</label>
+    </div>
+    <div class="form-text">Las promos destacadas ocupan el formato grande en la landing.</div>
+  </div>
+
+  <div class="col-12">
+    <label for="imagen" class="form-label">Imagen<%= promocion ? '' : ' (recomendada)' %></label>
+    <% if (promocion && promocion.imagen) { %>
+    <input type="hidden" name="imagenActual" value="<%= promocion.imagen %>">
+    <div class="mb-3">
+      <img
+        src="<%= promocion.imagenUrl %>"
+        alt="Imagen actual de la promoción"
+        class="img-thumbnail"
+        style="max-height: 180px; object-fit: cover;"
+        onerror="this.onerror=null;this.src='<%= defaultPromocionImage %>';"
+      >
+      <p class="small text-muted mt-1 mb-0">Imagen actual. Subí un archivo para reemplazarla.</p>
+    </div>
+    <% } %>
+    <input
+      type="file"
+      class="form-control"
+      id="imagen"
+      name="imagen"
+      accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
+    >
+    <div class="form-text">
+      JPG, JPEG, PNG o WEBP. Máximo 5 MB.
+    </div>
+  </div>
+</div>

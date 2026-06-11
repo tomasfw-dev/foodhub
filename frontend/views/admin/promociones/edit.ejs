@@ -1,0 +1,34 @@
+<div class="mb-4">
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="<%= adminRoutes.PROMOCIONES %>">Promociones</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Editar</li>
+    </ol>
+  </nav>
+  <h1 class="h3 mb-1">Editar promoción</h1>
+</div>
+
+<% if (promocion && !promocion.vigencia.visibleEnHome) { %>
+<div class="alert alert-warning" role="alert">
+  <strong>No visible en la home.</strong>
+  <% if (promocion.vigencia.estado === 'expirada') { %>
+  La fecha de fin (<%= promocion.fecha_fin_display || '—' %>) ya pasó. Extendé la vigencia o dejá la fecha de fin vacía para que no expire.
+  <% } else if (promocion.vigencia.estado === 'programada') { %>
+  La promoción comienza el <%= promocion.fecha_inicio_display %>.
+  <% } else if (promocion.vigencia.estado === 'inactiva') { %>
+  La promoción está inactiva. Activá el switch «Promoción activa» para publicarla.
+  <% } %>
+</div>
+<% } %>
+
+<div class="card admin-form-card">
+  <div class="card-body p-4">
+    <form action="/admin/promociones/<%= promocion.id %>/edit" method="post" enctype="multipart/form-data">
+      <%- include('../../partials/admin/promocion-form', { promocion: promocion }) %>
+      <div class="d-flex gap-2 mt-4">
+        <button type="submit" class="btn btn-primary">Actualizar</button>
+        <a href="<%= adminRoutes.PROMOCIONES %>" class="btn btn-outline-secondary">Cancelar</a>
+      </div>
+    </form>
+  </div>
+</div>

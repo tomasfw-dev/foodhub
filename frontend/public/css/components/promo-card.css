@@ -4,13 +4,6 @@
   grid-template-columns: 1fr;
 }
 
-@media (min-width: 768px) {
-  .promo-grid {
-    grid-template-columns: 1.2fr 1fr;
-    gap: 1.75rem;
-  }
-}
-
 .promo-card {
   display: flex;
   flex-direction: column;
@@ -28,23 +21,35 @@
   box-shadow: var(--shadow-md);
 }
 
-.promo-card--featured .promo-card__media {
-  min-height: 280px;
+/* ── Destacada: un poco más grande, no gigante ── */
+.promo-card--featured {
+  border-color: var(--bc-border-strong);
+  box-shadow: var(--bc-shadow-md, var(--shadow-md));
 }
 
-@media (min-width: 768px) {
-  .promo-card--featured {
-    grid-row: span 1;
-  }
+.promo-card--featured .promo-card__media {
+  min-height: 200px;
+  max-height: 220px;
+}
 
-  .promo-card--featured .promo-card__media {
-    min-height: 320px;
-  }
+.promo-card--featured .promo-card__tag {
+  color: var(--bc-paper);
+  background: var(--bc-ink);
+  border-color: var(--bc-ink);
+}
+
+.promo-card--featured .promo-card__title {
+  font-size: 1.375rem;
+}
+
+.promo-card--featured .promo-card__price {
+  font-size: 1.3125rem;
 }
 
 .promo-card__media {
   position: relative;
-  min-height: 200px;
+  min-height: 180px;
+  max-height: 200px;
   overflow: hidden;
 }
 
@@ -63,51 +68,136 @@
 .promo-card__overlay {
   position: absolute;
   inset: 0;
+  z-index: 0;
   background: linear-gradient(
-    135deg,
-    rgba(13, 11, 10, 0.75) 0%,
-    rgba(196, 92, 62, 0.15) 100%
+    180deg,
+    rgba(0, 0, 0, 0.12) 0%,
+    rgba(0, 0, 0, 0.4) 100%
   );
 }
 
 .promo-card__tag {
   position: absolute;
-  top: 1.25rem;
-  right: 1.25rem;
-  padding: 0.5rem 1rem;
-  font-size: 0.8rem;
+  top: 1rem;
+  right: 1rem;
+  z-index: 1;
+  padding: 0.4rem 0.85rem;
+  font-size: 0.7rem;
   font-weight: 600;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--color-text);
-  background: var(--color-accent);
+  color: var(--bc-ink);
+  background: var(--bc-paper);
+  border: 2px solid var(--bc-ink);
   border-radius: var(--radius-full);
   box-shadow: var(--shadow-sm);
 }
 
 .promo-card__body {
-  padding: 1.5rem;
+  padding: 1.25rem 1.5rem;
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 0.625rem;
   flex: 1;
 }
 
 .promo-card__title {
   font-family: var(--font-display);
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   font-weight: 600;
   color: var(--color-text);
+  line-height: 1.25;
+}
+
+.promo-card__price {
+  font-family: var(--font-display);
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--color-text);
+  margin: 0;
 }
 
 .promo-card__text {
-  font-size: 0.9rem;
-  line-height: 1.6;
+  font-size: 0.875rem;
+  line-height: 1.55;
   color: var(--color-text-muted);
   flex: 1;
 }
 
 .promo-card__body .btn {
   align-self: flex-start;
-  margin-top: 0.5rem;
+  margin-top: 0.25rem;
+}
+
+@media (min-width: 768px) {
+  .promo-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.5rem;
+    align-items: start;
+  }
+
+  /* Grilla centrada y contenida */
+  .promo-grid:has(.promo-card--featured) {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+  }
+
+  /* Destacada: banner horizontal compacto, ancho máximo controlado */
+  .promo-card--featured {
+    width: 100%;
+    max-width: 640px;
+    flex-direction: row;
+    align-items: stretch;
+  }
+
+  .promo-card--featured .promo-card__media {
+    flex: 0 0 44%;
+    min-height: unset;
+    max-height: none;
+    height: auto;
+    min-height: 200px;
+  }
+
+  .promo-card--featured .promo-card__body {
+    flex: 1;
+    justify-content: center;
+    padding: 1.25rem 1.5rem;
+  }
+
+  /* Promo normal: tarjeta chica */
+  .promo-card:not(.promo-card--featured) {
+    max-width: 320px;
+    width: 100%;
+  }
+
+  .promo-card:not(.promo-card--featured) .promo-card__media {
+    min-height: 150px;
+    max-height: 170px;
+  }
+
+  /* Solo promos normales (sin destacada) */
+  .promo-grid:not(:has(.promo-card--featured)) {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 320px));
+    justify-content: center;
+  }
+
+  /* Destacada + otras: las normales en fila debajo */
+  .promo-grid:has(.promo-card--featured):has(.promo-card:not(.promo-card--featured)) {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .promo-grid:has(.promo-card--featured) .promo-card:not(.promo-card--featured) {
+    max-width: 320px;
+  }
+}
+
+@media (min-width: 992px) {
+  .promo-card--featured {
+    max-width: 720px;
+  }
 }

@@ -52,3 +52,13 @@
   );
   pointer-events: none;
 }
+
+.section--promos-empty {
+  padding: 0;
+  min-height: 1px;
+  background: transparent;
+}
+
+.section--promos-empty::before {
+  display: none;
+}

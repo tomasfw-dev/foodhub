@@ -3,9 +3,10 @@
  */
 const db = require('../database/connection');
 const queries = require('../database/queries/menu.queries');
+const promocionesQueries = require('../database/queries/promociones.queries');
 const logger = require('../utils/logger');
 const config = require('../config');
-const { resolveProductImageUrl } = require('../utils/image.helpers');
+const { resolveProductImageUrl, resolvePromocionImageUrl } = require('../utils/image.helpers');
 
 /**
  * Mapea fila de Productos al formato de las vistas (food-card).
@@ -78,9 +79,24 @@ exports.getFeaturedItems = async (limite = config.menuFeaturedLimit) => {
 };
 
 /**
- * Promociones (sin tabla en BD por ahora).
+ * Promociones activas y vigentes para la landing.
  */
 exports.getPromotions = async () => {
-  logger.warn('Promociones no configuradas en base de datos');
-  return [];
+  logger.info('Consultando promociones vigentes');
+
+  const rows = await db.query(promocionesQueries.ACTIVAS_VIGENTES);
+
+  return rows.map((row) => {
+    const precio = row.precio_promocional != null ? Number(row.precio_promocional) : null;
+
+    return {
+      id: row.id,
+      title: row.nombre,
+      description: row.descripcion || '',
+      image: resolvePromocionImageUrl(row.imagen),
+      price: precio,
+      tag: row.destacado ? 'Destacada' : 'Promo',
+      destacado: Boolean(row.destacado),
+    };
+  });
 };

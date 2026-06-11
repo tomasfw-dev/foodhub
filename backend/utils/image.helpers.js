@@ -67,3 +67,48 @@ exports.fileExists = (absolutePath) => {
 };
 
 exports.DEFAULT_PRODUCT_IMAGE = DEFAULT_PRODUCT_IMAGE;
+
+/**
+ * Resuelve la URL pública de imagen de una promoción.
+ * @param {string|null|undefined} storedUrl
+ * @returns {string}
+ */
+exports.resolvePromocionImageUrl = (storedUrl) => {
+  if (!storedUrl || typeof storedUrl !== 'string' || !storedUrl.trim()) {
+    return DEFAULT_PRODUCT_IMAGE;
+  }
+
+  const url = storedUrl.trim();
+
+  if (/^https?:\/\//i.test(url)) {
+    return url;
+  }
+
+  if (url.startsWith(`${uploadConfig.PROMOCIONES_PUBLIC_PREFIX}/`)) {
+    const filename = path.basename(url);
+    const filePath = path.join(uploadConfig.PROMOCIONES_DIR, filename);
+
+    if (exports.fileExists(filePath)) {
+      return url;
+    }
+
+    logger.warn('Imagen de promoción no encontrada en disco', { url, filePath });
+    return DEFAULT_PRODUCT_IMAGE;
+  }
+
+  if (url.startsWith('/')) {
+    const filePath = path.join(paths.publicDir, url.replace(/^\//, ''));
+
+    if (exports.fileExists(filePath)) {
+      return url;
+    }
+
+    logger.warn('Archivo de promoción no encontrado', { url, filePath });
+    return DEFAULT_PRODUCT_IMAGE;
+  }
+
+  logger.warn('URL de promoción con formato no reconocido', { url });
+  return DEFAULT_PRODUCT_IMAGE;
+};
+
+exports.DEFAULT_PROMOCION_IMAGE = DEFAULT_PRODUCT_IMAGE;

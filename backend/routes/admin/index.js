@@ -5,6 +5,7 @@ const categoriasRoutes = require('./categorias.routes');
 const productosRoutes = require('./productos.routes');
 const configuracionRoutes = require('./configuracion.routes');
 const perfilRoutes = require('./perfil.routes');
+const promocionesRoutes = require('./promociones.routes');
 
 const router = Router();
 
@@ -13,6 +14,7 @@ router.use(requireAuth);
 router.use('/', dashboardRoutes);
 router.use('/categorias', categoriasRoutes);
 router.use('/productos', productosRoutes);
+router.use('/promociones', promocionesRoutes);
 router.use('/configuracion', configuracionRoutes);
 router.use('/perfil', perfilRoutes);
 
