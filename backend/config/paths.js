@@ -10,5 +10,6 @@ module.exports = {
   publicDir: path.join(frontendDir, 'public'),
   uploadsProductosDir: path.join(frontendDir, 'public', 'uploads', 'productos'),
   uploadsLogosDir: path.join(frontendDir, 'public', 'uploads', 'logos'),
+  uploadsOgDir: path.join(frontendDir, 'public', 'uploads', 'og'),
   uploadsPromocionesDir: path.join(frontendDir, 'public', 'uploads', 'promociones'),
 };

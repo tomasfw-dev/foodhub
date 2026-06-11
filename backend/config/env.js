@@ -18,6 +18,8 @@ module.exports = {
       (process.env.NODE_ENV || 'development') === 'development'),
   MENU_FEATURED_LIMIT: parseInt(process.env.MENU_FEATURED_LIMIT, 10) || 6,
 
+  SITE_URL: process.env.SITE_URL || 'http://localhost:3000',
+
   SESSION_SECRET: process.env.SESSION_SECRET || '',
   SESSION_MAX_AGE_MS: parseInt(process.env.SESSION_MAX_AGE_MS, 10) || 24 * 60 * 60 * 1000,
 };

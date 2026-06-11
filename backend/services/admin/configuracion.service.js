@@ -4,6 +4,7 @@
 const db = require('../../database/connection');
 const queries = require('../../database/queries/configuracion.queries');
 const siteHelpers = require('../../utils/site.helpers');
+const seoHelpers = require('../../utils/seo.helpers');
 const uploadConfig = require('../../config/upload.config');
 const uploadService = require('./upload.service');
 const logger = require('../../utils/logger');
@@ -36,6 +37,11 @@ function mapRow(row) {
     logo: row.logo || '',
     logoUrl: siteHelpers.resolveLogoUrl(row.logo),
     mensaje_whatsapp: row.mensaje_whatsapp || '',
+    seo_title: row.seo_title || '',
+    seo_description: row.seo_description || '',
+    seo_keywords: row.seo_keywords || '',
+    og_image: row.og_image || '',
+    ogImageUrl: seoHelpers.resolveOgImageUrl(row.og_image) || siteHelpers.resolveLogoUrl(row.logo),
     fecha_modificacion: row.fecha_modificacion,
   };
 }
@@ -73,6 +79,9 @@ exports.validar = (datos) => {
 
   const nombre = datos.nombre_negocio?.trim();
   const slogan = datos.slogan?.trim();
+  const seoTitle = datos.seo_title?.trim() || null;
+  const seoDescription = datos.seo_description?.trim() || null;
+  const seoKeywords = datos.seo_keywords?.trim() || null;
 
   if (!nombre || nombre.length < 2) {
     errors.push('El nombre del negocio es obligatorio (mínimo 2 caracteres).');
@@ -99,6 +108,18 @@ exports.validar = (datos) => {
     errors.push('El mensaje de WhatsApp no puede superar 500 caracteres.');
   }
 
+  if (seoTitle && seoTitle.length > 120) {
+    errors.push('El título SEO no puede superar 120 caracteres.');
+  }
+
+  if (seoDescription && seoDescription.length > 320) {
+    errors.push('La descripción SEO no puede superar 320 caracteres.');
+  }
+
+  if (seoKeywords && seoKeywords.length > 500) {
+    errors.push('Las palabras clave SEO no pueden superar 500 caracteres.');
+  }
+
   return {
     valid: errors.length === 0,
     errors,
@@ -113,11 +134,15 @@ exports.validar = (datos) => {
       horarios: datos.horarios?.trim() || null,
       email: datos.email?.trim().toLowerCase() || null,
       mensaje_whatsapp: mensaje || null,
+      seo_title: seoTitle,
+      seo_description: seoDescription,
+      seo_keywords: seoKeywords,
     },
   };
 };
 
-exports.actualizar = async (datos, logoFile) => {
+exports.actualizar = async (datos, files = {}) => {
+  const { logoFile = null, ogImageFile = null } = files;
   const actual = await exports.obtener({ useCache: false });
   const validation = exports.validar(datos);
 
@@ -126,6 +151,7 @@ exports.actualizar = async (datos, logoFile) => {
   }
 
   let logo = actual.logo;
+  let og_image = actual.og_image;
 
   if (logoFile) {
     if (actual.logo?.startsWith(`${uploadConfig.LOGO_PUBLIC_PREFIX}/`)) {
@@ -135,9 +161,18 @@ exports.actualizar = async (datos, logoFile) => {
     logger.info('Logo del negocio actualizado', { logo });
   }
 
+  if (ogImageFile) {
+    if (actual.og_image?.startsWith(`${uploadConfig.OG_PUBLIC_PREFIX}/`)) {
+      uploadService.deleteOgImage(actual.og_image);
+    }
+    og_image = uploadService.toOgPublicUrl(ogImageFile.filename);
+    logger.info('Imagen Open Graph actualizada', { og_image });
+  }
+
   const rows = await db.query(queries.ACTUALIZAR, {
     ...validation.sanitized,
     logo,
+    og_image,
   });
 
   if (!rows.length) {

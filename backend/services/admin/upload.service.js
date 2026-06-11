@@ -25,6 +25,13 @@ exports.ensurePromocionesUploadDir = () => {
   }
 };
 
+exports.ensureOgUploadDir = () => {
+  if (!fs.existsSync(uploadConfig.OG_DIR)) {
+    fs.mkdirSync(uploadConfig.OG_DIR, { recursive: true });
+    logger.info('Directorio de OG creado', { dir: uploadConfig.OG_DIR });
+  }
+};
+
 exports.generateUniqueFilename = (originalname) => {
   const ext = path.extname(originalname).toLowerCase();
   const uniqueId = `${Date.now()}-${crypto.randomBytes(8).toString('hex')}`;
@@ -39,6 +46,11 @@ exports.toPublicUrl = (filename) => {
 exports.toLogoPublicUrl = (filename) => {
   if (!filename) return null;
   return `${uploadConfig.LOGO_PUBLIC_PREFIX}/${filename}`;
+};
+
+exports.toOgPublicUrl = (filename) => {
+  if (!filename) return null;
+  return `${uploadConfig.OG_PUBLIC_PREFIX}/${filename}`;
 };
 
 exports.toPromocionPublicUrl = (filename) => {
@@ -83,6 +95,23 @@ exports.deleteLogoImage = (publicUrl) => {
 
   fs.unlinkSync(filePath);
   logger.info('Logo eliminado', { filename });
+};
+
+exports.deleteOgImage = (publicUrl) => {
+  if (!publicUrl || !publicUrl.startsWith(`${uploadConfig.OG_PUBLIC_PREFIX}/`)) {
+    return;
+  }
+
+  const filename = path.basename(publicUrl);
+  const filePath = path.join(uploadConfig.OG_DIR, filename);
+
+  if (!fs.existsSync(filePath)) {
+    logger.warn('Imagen OG a eliminar no encontrada', { filePath });
+    return;
+  }
+
+  fs.unlinkSync(filePath);
+  logger.info('Imagen OG eliminada', { filename });
 };
 
 exports.deletePromocionImage = (publicUrl) => {

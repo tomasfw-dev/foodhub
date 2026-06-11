@@ -16,6 +16,10 @@ module.exports = {
       email,
       logo,
       mensaje_whatsapp,
+      seo_title,
+      seo_description,
+      seo_keywords,
+      og_image,
       fecha_modificacion
     FROM dbo.ConfiguracionNegocio
     WHERE id = 1
@@ -35,6 +39,10 @@ module.exports = {
       email NVARCHAR(255),
       logo NVARCHAR(500),
       mensaje_whatsapp NVARCHAR(500),
+      seo_title NVARCHAR(120),
+      seo_description NVARCHAR(320),
+      seo_keywords NVARCHAR(500),
+      og_image NVARCHAR(500),
       fecha_modificacion DATETIME2(0)
     );
 
@@ -51,6 +59,10 @@ module.exports = {
       email = @email,
       logo = @logo,
       mensaje_whatsapp = @mensaje_whatsapp,
+      seo_title = @seo_title,
+      seo_description = @seo_description,
+      seo_keywords = @seo_keywords,
+      og_image = @og_image,
       fecha_modificacion = SYSUTCDATETIME()
     OUTPUT
       INSERTED.id,
@@ -65,6 +77,10 @@ module.exports = {
       INSERTED.email,
       INSERTED.logo,
       INSERTED.mensaje_whatsapp,
+      INSERTED.seo_title,
+      INSERTED.seo_description,
+      INSERTED.seo_keywords,
+      INSERTED.og_image,
       INSERTED.fecha_modificacion
     INTO @updated
     WHERE id = 1;

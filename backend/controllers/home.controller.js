@@ -1,4 +1,5 @@
 const menuService = require('../services/menu.service');
+const seoHelpers = require('../utils/seo.helpers');
 const logger = require('../utils/logger');
 
 exports.getHome = async (req, res, next) => {
@@ -8,6 +9,14 @@ exports.getHome = async (req, res, next) => {
       menuService.getPromotions(),
     ]);
 
+    const seo = seoHelpers.buildPageSeo(res.locals.seoBase, {
+      useDefaultTitle: true,
+      path: '/',
+      description: promotions.length
+        ? `${res.locals.seoBase.defaultDescription} Promociones y recomendaciones disponibles.`
+        : undefined,
+    });
+
     res.render('layouts/main', {
       title: 'Inicio',
       page: 'home',
@@ -15,6 +24,7 @@ exports.getHome = async (req, res, next) => {
       contentPartial: '../pages/home',
       featuredItems,
       promotions,
+      seo,
     });
   } catch (err) {
     logger.error('Error al renderizar landing', err);

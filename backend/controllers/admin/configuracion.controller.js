@@ -29,7 +29,10 @@ exports.editPage = async (req, res, next) => {
 
 exports.update = async (req, res) => {
   try {
-    await configuracionService.actualizar(req.body, req.file);
+    const logoFile = req.files?.logo?.[0] || null;
+    const ogImageFile = req.files?.og_image?.[0] || null;
+
+    await configuracionService.actualizar(req.body, { logoFile, ogImageFile });
     res.redirect(`${ADMIN_CONFIG}?success=${encodeURIComponent('Configuración actualizada correctamente')}`);
   } catch (err) {
     logger.error('Error al actualizar configuración', err);

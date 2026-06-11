@@ -10,6 +10,8 @@ const { flashMiddleware } = require('./middlewares/flash.middleware');
 const { loadSiteConfig } = require('./middlewares/siteConfig.middleware');
 const createSessionMiddleware = require('./config/session.config');
 const imageHelper = require('./utils/image.helpers');
+const seoHelpers = require('./utils/seo.helpers');
+const seoRoutes = require('./routes/seo.routes');
 
 const app = express();
 
@@ -26,6 +28,7 @@ app.locals.adminRoutes = constants.ADMIN_ROUTES;
 app.locals.resolveProductImageUrl = imageHelper.resolveProductImageUrl;
 app.locals.defaultProductImage = imageHelper.DEFAULT_PRODUCT_IMAGE;
 app.locals.defaultPromocionImage = imageHelper.DEFAULT_PROMOCION_IMAGE;
+app.locals.buildPageSeo = seoHelpers.buildPageSeo;
 
 // Middlewares base
 app.use(express.json());
@@ -33,6 +36,9 @@ app.use(express.urlencoded({ extended: true }));
 app.use(createSessionMiddleware());
 app.use(flashMiddleware);
 app.use(loadSiteConfig);
+
+// SEO (antes de static para robots.txt y sitemap.xml dinámicos)
+app.use(seoRoutes);
 
 // Assets públicos
 app.use(express.static(paths.publicDir));

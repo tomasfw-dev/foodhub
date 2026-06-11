@@ -1,0 +1,8 @@
+# Servido dinámicamente por Express (backend/routes/seo.routes.js).
+# Este archivo documenta la política por defecto del sitio.
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /auth/
+
+Sitemap: /sitemap.xml

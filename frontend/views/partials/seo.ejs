@@ -1,0 +1,50 @@
+<%#
+  Metadatos SEO / Open Graph / Twitter Card.
+  Objeto `seo` desde el controlador; fallback con seoBase + buildPageSeo.
+%>
+<%
+  let meta = (typeof seo !== 'undefined' && seo) ? seo : null;
+
+  if (!meta && typeof seoBase !== 'undefined' && typeof buildPageSeo === 'function') {
+    meta = buildPageSeo(seoBase, {
+      useDefaultTitle: true,
+      path: typeof currentPath !== 'undefined' ? currentPath : '/',
+    });
+  }
+
+  if (!meta) {
+    meta = {
+      title: typeof appName !== 'undefined' ? appName : 'Bendita-Comida',
+      description: typeof site !== 'undefined' ? `${site.tagline} — Comidas caseras premium` : '',
+      keywords: typeof appName !== 'undefined' ? appName : '',
+      canonical: '',
+      ogTitle: typeof appName !== 'undefined' ? appName : 'Bendita-Comida',
+      ogDescription: typeof site !== 'undefined' ? site.tagline : '',
+      ogImage: typeof site !== 'undefined' ? site.logoUrl : '',
+      ogUrl: '',
+      twitterTitle: typeof appName !== 'undefined' ? appName : 'Bendita-Comida',
+      twitterDescription: typeof site !== 'undefined' ? site.tagline : '',
+      twitterImage: typeof site !== 'undefined' ? site.logoUrl : '',
+      siteName: typeof appName !== 'undefined' ? appName : 'Bendita-Comida',
+    };
+  }
+%>
+<title><%= meta.title %></title>
+<meta name="description" content="<%= meta.description %>">
+<meta name="keywords" content="<%= meta.keywords %>">
+<% if (meta.canonical) { %>
+<link rel="canonical" href="<%= meta.canonical %>">
+<% } %>
+
+<meta property="og:type" content="website">
+<meta property="og:locale" content="es_AR">
+<meta property="og:site_name" content="<%= meta.siteName %>">
+<meta property="og:title" content="<%= meta.ogTitle %>">
+<meta property="og:description" content="<%= meta.ogDescription %>">
+<meta property="og:image" content="<%= meta.ogImage %>">
+<meta property="og:url" content="<%= meta.ogUrl %>">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="<%= meta.twitterTitle %>">
+<meta name="twitter:description" content="<%= meta.twitterDescription %>">
+<meta name="twitter:image" content="<%= meta.twitterImage %>">

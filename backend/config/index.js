@@ -27,4 +27,5 @@ module.exports = {
     },
   },
   menuFeaturedLimit: env.MENU_FEATURED_LIMIT,
+  siteUrl: env.SITE_URL.replace(/\/+$/, ''),
 };
