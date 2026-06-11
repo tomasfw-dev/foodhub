@@ -7,11 +7,15 @@
 SELECT
     id,
     nombre,
-    descripcion
+    descripcion,
+    orden
 FROM dbo.Categorias
 WHERE activo = 1
   AND fecha_baja IS NULL
-ORDER BY nombre ASC;
+ORDER BY
+    CASE WHEN orden IS NULL THEN 1 ELSE 0 END,
+    orden ASC,
+    fecha_creacion DESC;
 
 -- 2) Productos activos (sin baja lógica)
 SELECT
@@ -20,11 +24,15 @@ SELECT
     nombre,
     descripcion,
     precio,
-    imagen
+    imagen,
+    orden
 FROM dbo.Productos
 WHERE activo = 1
   AND fecha_baja IS NULL
-ORDER BY nombre ASC;
+ORDER BY
+    CASE WHEN orden IS NULL THEN 1 ELSE 0 END,
+    orden ASC,
+    fecha_creacion DESC;
 
 -- 3) Menú agrupado (una sola consulta — alternativa optimizada)
 SELECT
@@ -43,7 +51,13 @@ LEFT JOIN dbo.Productos AS p
    AND p.fecha_baja IS NULL
 WHERE c.activo = 1
   AND c.fecha_baja IS NULL
-ORDER BY c.nombre ASC, p.nombre ASC;
+ORDER BY
+    CASE WHEN c.orden IS NULL THEN 1 ELSE 0 END,
+    c.orden ASC,
+    c.fecha_creacion DESC,
+    CASE WHEN p.orden IS NULL THEN 1 ELSE 0 END,
+    p.orden ASC,
+    p.fecha_creacion DESC;
 
 -- 4) Productos destacados activos para landing (máx. 6, requiere columna destacado)
 SELECT TOP (6)

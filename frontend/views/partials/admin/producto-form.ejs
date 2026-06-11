@@ -51,6 +51,20 @@
     </div>
   </div>
   <div class="col-md-4">
+    <label for="orden" class="form-label">Orden en la categoría</label>
+    <input
+      type="number"
+      class="form-control"
+      id="orden"
+      name="orden"
+      value="<%= producto && producto.orden != null ? producto.orden : '' %>"
+      min="0"
+      step="1"
+      placeholder="Automático"
+    >
+    <div class="form-text">Orden dentro de su categoría en el menú público.</div>
+  </div>
+  <div class="col-md-4">
     <label for="badge" class="form-label">Etiqueta (badge)</label>
     <input
       type="text"

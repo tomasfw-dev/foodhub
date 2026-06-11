@@ -4,6 +4,7 @@
 const db = require('../../database/connection');
 const queries = require('../../database/queries/categorias.queries');
 const logger = require('../../utils/logger');
+const { parseOrden, mapOrden } = require('../../utils/orden.helpers');
 
 function createError(status, message) {
   const err = new Error(message);
@@ -17,6 +18,7 @@ function mapRow(row) {
     nombre: row.nombre,
     descripcion: row.descripcion || '',
     activo: Boolean(row.activo),
+    orden: mapOrden(row.orden),
   };
 }
 
@@ -36,14 +38,22 @@ exports.crear = async (datos) => {
   const nombre = datos.nombre?.trim();
   if (!nombre) throw createError(400, 'El nombre es obligatorio');
 
+  let orden = null;
+  try {
+    orden = parseOrden(datos.orden);
+  } catch (err) {
+    throw createError(err.status || 400, err.message);
+  }
+
   const rows = await db.query(queries.CREAR, {
     nombre,
     descripcion: datos.descripcion?.trim() || '',
     activo: datos.activo !== false && datos.activo !== 'false',
+    orden,
   });
 
   const categoria = mapRow(rows[0]);
-  logger.info('Categoría creada en BD', { id: categoria.id });
+  logger.info('Categoría creada en BD', { id: categoria.id, orden: categoria.orden });
   return categoria;
 };
 
@@ -51,6 +61,15 @@ exports.editar = async (id, datos) => {
   const actual = await exports.obtenerPorId(id);
   const nombre = datos.nombre !== undefined ? datos.nombre.trim() : actual.nombre;
   if (!nombre) throw createError(400, 'El nombre es obligatorio');
+
+  let orden = actual.orden;
+  if (datos.orden !== undefined) {
+    try {
+      orden = parseOrden(datos.orden);
+    } catch (err) {
+      throw createError(err.status || 400, err.message);
+    }
+  }
 
   const rows = await db.query(queries.EDITAR, {
     id: Number(id),
@@ -61,11 +80,14 @@ exports.editar = async (id, datos) => {
       datos.activo !== undefined
         ? datos.activo !== false && datos.activo !== 'false'
         : actual.activo,
+    orden,
   });
 
   if (!rows.length) throw createError(404, 'Categoría no encontrada');
 
-  return mapRow(rows[0]);
+  const categoria = mapRow(rows[0]);
+  logger.info('Categoría actualizada en BD', { id: categoria.id, orden: categoria.orden });
+  return categoria;
 };
 
 exports.eliminar = async (id) => {

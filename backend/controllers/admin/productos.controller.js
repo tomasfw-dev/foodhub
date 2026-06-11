@@ -38,6 +38,7 @@ function parseFormBody(req) {
     badge: req.body.badge,
     activo: req.body.activo === 'on' || req.body.activo === 'true' || req.body.activo === true,
     destacado: req.body.destacado === 'on' || req.body.destacado === 'true' || req.body.destacado === true,
+    orden: req.body.orden,
   };
 }
 

@@ -8,6 +8,8 @@ const logger = require('../utils/logger');
 const config = require('../config');
 const { resolveProductImageUrl, resolvePromocionImageUrl } = require('../utils/image.helpers');
 
+const { parseOrden, mapOrden } = require('../utils/orden.helpers');
+
 /**
  * Mapea fila de Productos al formato de las vistas (food-card).
  */
@@ -20,7 +22,18 @@ function mapProductoParaVista(row) {
     price: row.precio != null ? Number(row.precio) : null,
     image: resolveProductImageUrl(row.imagen),
     badge: null,
+    orden: mapOrden(row.orden),
   };
+}
+
+function compareOrdenMenu(a, b) {
+  const aSinOrden = a.orden == null ? 1 : 0;
+  const bSinOrden = b.orden == null ? 1 : 0;
+  if (aSinOrden !== bSinOrden) return aSinOrden - bSinOrden;
+  if (a.orden != null && b.orden != null && a.orden !== b.orden) {
+    return a.orden - b.orden;
+  }
+  return 0;
 }
 
 /**
@@ -54,7 +67,9 @@ exports.getMenuAgrupado = async () => {
     id: categoria.id,
     nombre: categoria.nombre,
     descripcion: categoria.descripcion,
-    productos: productos.filter((p) => p.categoriaId === categoria.id),
+    productos: productos
+      .filter((p) => p.categoriaId === categoria.id)
+      .sort(compareOrdenMenu),
   }));
 
   logger.info('Menú agrupado generado', {

@@ -8,10 +8,15 @@ module.exports = {
       precio,
       imagen,
       activo,
-      destacado
+      destacado,
+      orden
     FROM dbo.Productos
     WHERE fecha_baja IS NULL
-    ORDER BY destacado DESC, nombre ASC
+    ORDER BY
+      categoria_id ASC,
+      CASE WHEN orden IS NULL THEN 1 ELSE 0 END,
+      orden ASC,
+      nombre ASC
   `,
 
   OBTENER_POR_ID: `
@@ -23,7 +28,8 @@ module.exports = {
       precio,
       imagen,
       activo,
-      destacado
+      destacado,
+      orden
     FROM dbo.Productos
     WHERE id = @id
       AND fecha_baja IS NULL
@@ -45,10 +51,11 @@ module.exports = {
       precio DECIMAL(10, 2),
       imagen NVARCHAR(500),
       activo BIT,
-      destacado BIT
+      destacado BIT,
+      orden INT
     );
 
-    INSERT INTO dbo.Productos (categoria_id, nombre, descripcion, precio, imagen, activo, destacado)
+    INSERT INTO dbo.Productos (categoria_id, nombre, descripcion, precio, imagen, activo, destacado, orden)
     OUTPUT
       INSERTED.id,
       INSERTED.categoria_id,
@@ -57,11 +64,12 @@ module.exports = {
       INSERTED.precio,
       INSERTED.imagen,
       INSERTED.activo,
-      INSERTED.destacado
+      INSERTED.destacado,
+      INSERTED.orden
     INTO @inserted
-    VALUES (@categoriaId, @nombre, @descripcion, @precio, @imagen, @activo, @destacado);
+    VALUES (@categoriaId, @nombre, @descripcion, @precio, @imagen, @activo, @destacado, @orden);
 
-    SELECT id, categoria_id, nombre, descripcion, precio, imagen, activo, destacado
+    SELECT id, categoria_id, nombre, descripcion, precio, imagen, activo, destacado, orden
     FROM @inserted;
   `,
 
@@ -74,7 +82,8 @@ module.exports = {
       precio DECIMAL(10, 2),
       imagen NVARCHAR(500),
       activo BIT,
-      destacado BIT
+      destacado BIT,
+      orden INT
     );
 
     UPDATE dbo.Productos
@@ -85,7 +94,8 @@ module.exports = {
       precio = @precio,
       imagen = @imagen,
       activo = @activo,
-      destacado = @destacado
+      destacado = @destacado,
+      orden = @orden
     OUTPUT
       INSERTED.id,
       INSERTED.categoria_id,
@@ -94,12 +104,13 @@ module.exports = {
       INSERTED.precio,
       INSERTED.imagen,
       INSERTED.activo,
-      INSERTED.destacado
+      INSERTED.destacado,
+      INSERTED.orden
     INTO @updated
     WHERE id = @id
       AND fecha_baja IS NULL;
 
-    SELECT id, categoria_id, nombre, descripcion, precio, imagen, activo, destacado
+    SELECT id, categoria_id, nombre, descripcion, precio, imagen, activo, destacado, orden
     FROM @updated;
   `,
 
@@ -112,7 +123,8 @@ module.exports = {
       precio DECIMAL(10, 2),
       imagen NVARCHAR(500),
       activo BIT,
-      destacado BIT
+      destacado BIT,
+      orden INT
     );
 
     UPDATE dbo.Productos
@@ -125,12 +137,13 @@ module.exports = {
       INSERTED.precio,
       INSERTED.imagen,
       INSERTED.activo,
-      INSERTED.destacado
+      INSERTED.destacado,
+      INSERTED.orden
     INTO @updated
     WHERE id = @id
       AND fecha_baja IS NULL;
 
-    SELECT id, categoria_id, nombre, descripcion, precio, imagen, activo, destacado
+    SELECT id, categoria_id, nombre, descripcion, precio, imagen, activo, destacado, orden
     FROM @updated;
   `,
 
@@ -143,7 +156,8 @@ module.exports = {
       precio DECIMAL(10, 2),
       imagen NVARCHAR(500),
       activo BIT,
-      destacado BIT
+      destacado BIT,
+      orden INT
     );
 
     UPDATE dbo.Productos
@@ -156,12 +170,13 @@ module.exports = {
       INSERTED.precio,
       INSERTED.imagen,
       INSERTED.activo,
-      INSERTED.destacado
+      INSERTED.destacado,
+      INSERTED.orden
     INTO @updated
     WHERE id = @id
       AND fecha_baja IS NULL;
 
-    SELECT id, categoria_id, nombre, descripcion, precio, imagen, activo, destacado
+    SELECT id, categoria_id, nombre, descripcion, precio, imagen, activo, destacado, orden
     FROM @updated;
   `,
 

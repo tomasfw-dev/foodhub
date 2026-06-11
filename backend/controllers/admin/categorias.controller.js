@@ -20,6 +20,7 @@ function parseFormBody(body) {
     nombre: body.nombre,
     descripcion: body.descripcion,
     activo: body.activo === 'on' || body.activo === 'true' || body.activo === true,
+    orden: body.orden,
   };
 }
 

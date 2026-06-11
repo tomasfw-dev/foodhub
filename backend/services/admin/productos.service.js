@@ -6,6 +6,7 @@ const queries = require('../../database/queries/productos.queries');
 const logger = require('../../utils/logger');
 const config = require('../../config');
 const { resolveProductImageUrl } = require('../../utils/image.helpers');
+const { parseOrden, mapOrden } = require('../../utils/orden.helpers');
 
 const MAX_DESTACADOS = config.menuFeaturedLimit;
 
@@ -28,6 +29,7 @@ function mapRow(row) {
     badge: null,
     activo: Boolean(row.activo),
     destacado: Boolean(row.destacado),
+    orden: mapOrden(row.orden),
   };
 }
 
@@ -98,6 +100,13 @@ exports.crear = async (datos) => {
   await validarLimiteDestacados(destacado);
   await verificarCategoria(datos.categoriaId);
 
+  let orden = null;
+  try {
+    orden = parseOrden(datos.orden);
+  } catch (err) {
+    throw createError(err.status || 400, err.message);
+  }
+
   const rows = await db.query(queries.CREAR, {
     categoriaId: Number(datos.categoriaId),
     nombre,
@@ -106,6 +115,7 @@ exports.crear = async (datos) => {
     imagen: datos.imagen?.trim() || null,
     activo: datos.activo !== false && datos.activo !== 'false',
     destacado,
+    orden,
   });
 
   const producto = mapRow(rows[0]);
@@ -113,6 +123,7 @@ exports.crear = async (datos) => {
     id: producto.id,
     imagen: producto.imagen,
     destacado: producto.destacado,
+    orden: producto.orden,
   });
   return producto;
 };
@@ -137,6 +148,15 @@ exports.editar = async (id, datos) => {
 
   await validarLimiteDestacados(destacado, id);
 
+  let orden = actual.orden;
+  if (datos.orden !== undefined) {
+    try {
+      orden = parseOrden(datos.orden);
+    } catch (err) {
+      throw createError(err.status || 400, err.message);
+    }
+  }
+
   const rows = await db.query(queries.EDITAR, {
     id: Number(id),
     categoriaId:
@@ -148,6 +168,7 @@ exports.editar = async (id, datos) => {
     imagen: datos.imagen !== undefined ? datos.imagen?.trim() || null : actual.imagen,
     activo: datos.activo !== undefined ? Boolean(datos.activo) : actual.activo,
     destacado,
+    orden,
   });
 
   if (!rows.length) throw createError(404, 'Producto no encontrado');
@@ -157,6 +178,7 @@ exports.editar = async (id, datos) => {
     id: producto.id,
     imagen: producto.imagen,
     destacado: producto.destacado,
+    orden: producto.orden,
   });
   return producto;
 };

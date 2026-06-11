@@ -7,11 +7,15 @@ module.exports = {
     SELECT
       id,
       nombre,
-      descripcion
+      descripcion,
+      orden
     FROM dbo.Categorias
     WHERE activo = 1
       AND fecha_baja IS NULL
-    ORDER BY nombre ASC
+    ORDER BY
+      CASE WHEN orden IS NULL THEN 1 ELSE 0 END,
+      orden ASC,
+      fecha_creacion DESC
   `,
 
   PRODUCTOS_ACTIVOS: `
@@ -21,11 +25,15 @@ module.exports = {
       nombre,
       descripcion,
       precio,
-      imagen
+      imagen,
+      orden
     FROM dbo.Productos
     WHERE activo = 1
       AND fecha_baja IS NULL
-    ORDER BY nombre ASC
+    ORDER BY
+      CASE WHEN orden IS NULL THEN 1 ELSE 0 END,
+      orden ASC,
+      fecha_creacion DESC
   `,
 
   PRODUCTOS_DESTACADOS: `

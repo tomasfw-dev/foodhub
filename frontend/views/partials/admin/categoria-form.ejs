@@ -21,7 +21,21 @@
       maxlength="500"
     ><%= categoria ? categoria.descripcion : '' %></textarea>
   </div>
-  <div class="col-12">
+  <div class="col-md-4">
+    <label for="orden" class="form-label">Orden en el menú</label>
+    <input
+      type="number"
+      class="form-control"
+      id="orden"
+      name="orden"
+      value="<%= categoria && categoria.orden != null ? categoria.orden : '' %>"
+      min="0"
+      step="1"
+      placeholder="Automático"
+    >
+    <div class="form-text">Menor número = primero. Vacío = al final.</div>
+  </div>
+  <div class="col-md-8 d-flex align-items-end">
     <div class="form-check form-switch">
       <input
         class="form-check-input"
