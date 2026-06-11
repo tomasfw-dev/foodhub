@@ -74,6 +74,19 @@
       <label class="form-check-label" for="activo">Producto activo</label>
     </div>
   </div>
+  <div class="col-md-4">
+    <div class="form-check form-switch">
+      <input
+        class="form-check-input"
+        type="checkbox"
+        id="destacado"
+        name="destacado"
+        <%= producto && producto.destacado ? 'checked' : '' %>
+      >
+      <label class="form-check-label" for="destacado">Destacado en home</label>
+    </div>
+    <div class="form-text">Máx. 6 en «Nuestras Recomendaciones». Debe estar activo.</div>
+  </div>
 
   <div class="col-12">
     <label for="imagen" class="form-label">Imagen principal</label>

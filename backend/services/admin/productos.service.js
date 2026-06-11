@@ -4,7 +4,10 @@
 const db = require('../../database/connection');
 const queries = require('../../database/queries/productos.queries');
 const logger = require('../../utils/logger');
+const config = require('../../config');
 const { resolveProductImageUrl } = require('../../utils/image.helpers');
+
+const MAX_DESTACADOS = config.menuFeaturedLimit;
 
 function createError(status, message) {
   const err = new Error(message);
@@ -24,6 +27,7 @@ function mapRow(row) {
     imagenUrl: resolveProductImageUrl(imagen),
     badge: null,
     activo: Boolean(row.activo),
+    destacado: Boolean(row.destacado),
   };
 }
 
@@ -33,6 +37,30 @@ async function verificarCategoria(categoriaId) {
   });
   if (!rows.length) throw createError(404, 'Categoría no encontrada');
 }
+
+async function contarDestacados() {
+  const rows = await db.query(queries.CONTAR_DESTACADOS);
+  return Number(rows[0]?.total || 0);
+}
+
+async function validarLimiteDestacados(destacado, productoId = null) {
+  if (!destacado) return;
+
+  const total = await contarDestacados();
+  const actual = productoId ? await exports.obtenerPorId(productoId) : null;
+  const yaDestacado = actual?.destacado;
+
+  if (!yaDestacado && total >= MAX_DESTACADOS) {
+    throw createError(
+      400,
+      `Solo podés tener hasta ${MAX_DESTACADOS} productos destacados en la home.`
+    );
+  }
+}
+
+exports.getMaxDestacados = () => MAX_DESTACADOS;
+
+exports.contarDestacados = contarDestacados;
 
 exports.listar = async (filtros = {}) => {
   logger.info('Listando productos desde BD');
@@ -46,6 +74,10 @@ exports.listar = async (filtros = {}) => {
 
   if (filtros.soloActivos) {
     resultado = resultado.filter((p) => p.activo);
+  }
+
+  if (filtros.soloDestacados) {
+    resultado = resultado.filter((p) => p.destacado);
   }
 
   return resultado;
@@ -62,6 +94,8 @@ exports.crear = async (datos) => {
   if (!nombre) throw createError(400, 'El nombre es obligatorio');
   if (datos.categoriaId == null) throw createError(400, 'La categoría es obligatoria');
 
+  const destacado = datos.destacado === true || datos.destacado === 'true' || datos.destacado === 'on';
+  await validarLimiteDestacados(destacado);
   await verificarCategoria(datos.categoriaId);
 
   const rows = await db.query(queries.CREAR, {
@@ -70,11 +104,16 @@ exports.crear = async (datos) => {
     descripcion: datos.descripcion?.trim() || '',
     precio: datos.precio != null ? Number(datos.precio) : 0,
     imagen: datos.imagen?.trim() || null,
-    activo: datos.activo !== false,
+    activo: datos.activo !== false && datos.activo !== 'false',
+    destacado,
   });
 
   const producto = mapRow(rows[0]);
-  logger.info('Producto creado en BD', { id: producto.id, imagen: producto.imagen });
+  logger.info('Producto creado en BD', {
+    id: producto.id,
+    imagen: producto.imagen,
+    destacado: producto.destacado,
+  });
   return producto;
 };
 
@@ -88,6 +127,16 @@ exports.editar = async (id, datos) => {
   const nombre = datos.nombre !== undefined ? datos.nombre.trim() : actual.nombre;
   if (!nombre) throw createError(400, 'El nombre es obligatorio');
 
+  let destacado = actual.destacado;
+  if (datos.destacado !== undefined) {
+    destacado =
+      datos.destacado === true ||
+      datos.destacado === 'true' ||
+      datos.destacado === 'on';
+  }
+
+  await validarLimiteDestacados(destacado, id);
+
   const rows = await db.query(queries.EDITAR, {
     id: Number(id),
     categoriaId:
@@ -98,12 +147,58 @@ exports.editar = async (id, datos) => {
     precio: datos.precio !== undefined ? Number(datos.precio) : actual.precio,
     imagen: datos.imagen !== undefined ? datos.imagen?.trim() || null : actual.imagen,
     activo: datos.activo !== undefined ? Boolean(datos.activo) : actual.activo,
+    destacado,
   });
 
   if (!rows.length) throw createError(404, 'Producto no encontrado');
 
   const producto = mapRow(rows[0]);
-  logger.info('Producto actualizado en BD', { id: producto.id, imagen: producto.imagen });
+  logger.info('Producto actualizado en BD', {
+    id: producto.id,
+    imagen: producto.imagen,
+    destacado: producto.destacado,
+  });
+  return producto;
+};
+
+exports.actualizarDestacado = async (id, destacado) => {
+  await validarLimiteDestacados(destacado, id);
+
+  const rows = await db.query(queries.ACTUALIZAR_DESTACADO, {
+    id: Number(id),
+    destacado: Boolean(destacado),
+  });
+
+  if (!rows.length) throw createError(404, 'Producto no encontrado');
+
+  const producto = mapRow(rows[0]);
+  logger.info('Destacado de producto actualizado', {
+    id: producto.id,
+    destacado: producto.destacado,
+  });
+
+  return producto;
+};
+
+exports.toggleDestacado = async (id) => {
+  const actual = await exports.obtenerPorId(id);
+  return exports.actualizarDestacado(id, !actual.destacado);
+};
+
+exports.actualizarActivo = async (id, activo) => {
+  const rows = await db.query(queries.ACTUALIZAR_ACTIVO, {
+    id: Number(id),
+    activo: Boolean(activo),
+  });
+
+  if (!rows.length) throw createError(404, 'Producto no encontrado');
+
+  const producto = mapRow(rows[0]);
+  logger.info('Estado activo de producto actualizado', {
+    id: producto.id,
+    activo: producto.activo,
+  });
+
   return producto;
 };
 
@@ -115,6 +210,6 @@ exports.eliminar = async (id) => {
   return { id: rows[0].id, imagen: rows[0].imagen };
 };
 
-exports.activar = async (id) => exports.editar(id, { activo: true });
+exports.activar = async (id) => exports.actualizarActivo(id, true);
 
-exports.desactivar = async (id) => exports.editar(id, { activo: false });
+exports.desactivar = async (id) => exports.actualizarActivo(id, false);

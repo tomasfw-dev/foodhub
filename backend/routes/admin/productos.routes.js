@@ -12,6 +12,7 @@ router.post('/', uploadProductoImagen, handleUploadError, productosController.st
 router.get('/:id/edit', productosController.editPage);
 router.post('/:id/edit', uploadProductoImagen, handleUploadError, productosController.update);
 router.post('/:id/delete', productosController.destroy);
+router.post('/:id/toggle-destacado', productosController.toggleDestacado);
 router.post('/:id/:accion', productosController.toggleActivo);
 
 /* API JSON */

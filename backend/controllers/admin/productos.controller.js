@@ -37,6 +37,7 @@ function parseFormBody(req) {
     imagenAnterior: req.body.imagenActual || null,
     badge: req.body.badge,
     activo: req.body.activo === 'on' || req.body.activo === 'true' || req.body.activo === true,
+    destacado: req.body.destacado === 'on' || req.body.destacado === 'true' || req.body.destacado === true,
   };
 }
 
@@ -50,9 +51,10 @@ function cleanupUploadedFile(req) {
 
 exports.indexPage = async (req, res, next) => {
   try {
-    const [productos, categorias] = await Promise.all([
+    const [productos, categorias, totalDestacados] = await Promise.all([
       productosService.listar(),
       categoriasService.listar(),
+      productosService.contarDestacados(),
     ]);
     const categoriasMap = Object.fromEntries(categorias.map((c) => [c.id, c.nombre]));
 
@@ -62,6 +64,8 @@ exports.indexPage = async (req, res, next) => {
       contentPartial: '../admin/productos/index',
       productos,
       categoriasMap,
+      totalDestacados,
+      maxDestacados: productosService.getMaxDestacados(),
       flash: res.locals.flash,
     });
   } catch (err) {
@@ -162,6 +166,20 @@ exports.toggleActivo = async (req, res) => {
     }
     res.redirect(`${ADMIN}?success=${encodeURIComponent(activar ? 'Producto activado' : 'Producto desactivado')}`);
   } catch (err) {
+    redirectWithError(res, ADMIN, err.message);
+  }
+};
+
+exports.toggleDestacado = async (req, res) => {
+  try {
+    const producto = await productosService.toggleDestacado(req.params.id);
+    const mensaje = producto.destacado
+      ? 'Producto marcado como destacado'
+      : 'Producto quitado de destacados';
+
+    res.redirect(`${ADMIN}?success=${encodeURIComponent(mensaje)}`);
+  } catch (err) {
+    logger.error('Error al cambiar destacado de producto', err);
     redirectWithError(res, ADMIN, err.message);
   }
 };

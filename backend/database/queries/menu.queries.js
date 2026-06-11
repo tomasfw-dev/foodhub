@@ -38,6 +38,7 @@ module.exports = {
       imagen
     FROM dbo.Productos
     WHERE activo = 1
+      AND destacado = 1
       AND fecha_baja IS NULL
     ORDER BY fecha_creacion DESC
   `,

@@ -16,7 +16,7 @@ module.exports = {
     process.env.DB_TRUST_SERVER_CERTIFICATE === 'true' ||
     (process.env.DB_TRUST_SERVER_CERTIFICATE !== 'false' &&
       (process.env.NODE_ENV || 'development') === 'development'),
-  MENU_FEATURED_LIMIT: parseInt(process.env.MENU_FEATURED_LIMIT, 10) || 4,
+  MENU_FEATURED_LIMIT: parseInt(process.env.MENU_FEATURED_LIMIT, 10) || 6,
 
   SESSION_SECRET: process.env.SESSION_SECRET || '',
   SESSION_MAX_AGE_MS: parseInt(process.env.SESSION_MAX_AGE_MS, 10) || 24 * 60 * 60 * 1000,

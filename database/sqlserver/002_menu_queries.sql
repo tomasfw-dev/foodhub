@@ -45,8 +45,8 @@ WHERE c.activo = 1
   AND c.fecha_baja IS NULL
 ORDER BY c.nombre ASC, p.nombre ASC;
 
--- 4) Productos destacados para landing (ej. primeros 4 activos)
-SELECT TOP (4)
+-- 4) Productos destacados activos para landing (máx. 6, requiere columna destacado)
+SELECT TOP (6)
     id,
     categoria_id,
     nombre,
@@ -55,5 +55,6 @@ SELECT TOP (4)
     imagen
 FROM dbo.Productos
 WHERE activo = 1
+  AND destacado = 1
   AND fecha_baja IS NULL
 ORDER BY fecha_creacion DESC;

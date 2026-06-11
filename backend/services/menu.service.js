@@ -66,16 +66,19 @@ exports.getMenuAgrupado = async () => {
 };
 
 /**
- * Productos destacados para la landing.
+ * Productos destacados para la landing (marcados + activos, máx. 6).
  */
 exports.getFeaturedItems = async (limite = config.menuFeaturedLimit) => {
-  logger.info('Consultando productos destacados', { limite });
+  logger.info('Consultando productos destacados activos', { limite });
 
   const rows = await db.query(queries.PRODUCTOS_DESTACADOS, {
     limite,
   });
 
-  return rows.map(mapProductoParaVista);
+  return rows.map((row) => ({
+    ...mapProductoParaVista(row),
+    badge: 'Recomendado',
+  }));
 };
 
 /**

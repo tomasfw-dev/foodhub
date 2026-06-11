@@ -48,15 +48,15 @@
 <section class="section section--menu" id="menu-destacado">
   <div class="container">
     <header class="section__header reveal">
-      <span class="section__eyebrow">Nuestra carta</span>
-      <h2 class="section__title">Platos destacados</h2>
+      <span class="section__eyebrow">Selección de la casa</span>
+      <h2 class="section__title">Nuestras Recomendaciones</h2>
       <p class="section__subtitle">
-        Los favoritos de la casa, preparados al momento con recetas de autor.
+        Los platos que más eligen nuestros clientes, preparados al momento.
       </p>
     </header>
 
     <% if (featuredItems.length === 0) { %>
-    <p class="text-center text-muted">Próximamente nuevos platos en carta.</p>
+    <p class="text-center text-muted">Próximamente nuevas recomendaciones en carta.</p>
     <% } else { %>
     <div class="food-grid">
       <% featuredItems.forEach(function(item) { %>
