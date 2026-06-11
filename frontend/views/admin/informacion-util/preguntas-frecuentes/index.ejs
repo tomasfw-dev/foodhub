@@ -1,0 +1,73 @@
+<div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-2">
+  <div>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb mb-2">
+        <li class="breadcrumb-item"><a href="<%= adminRoutes.INFORMACION_UTIL %>">Información útil</a></li>
+        <li class="breadcrumb-item active">Preguntas frecuentes</li>
+      </ol>
+    </nav>
+    <h1 class="h3 mb-1">Preguntas frecuentes</h1>
+    <p class="text-muted mb-0">Dudas comunes de los clientes</p>
+  </div>
+  <a href="<%= adminRoutes.PREGUNTAS_FRECUENTES_CREATE %>" class="btn btn-primary">
+    <i class="bi bi-plus-lg me-1"></i>Nueva pregunta
+  </a>
+</div>
+
+<div class="card admin-table-card">
+  <div class="table-responsive">
+    <table class="table table-hover align-middle mb-0">
+      <thead class="table-light">
+        <tr>
+          <th scope="col">Orden</th>
+          <th scope="col">#</th>
+          <th scope="col">Pregunta</th>
+          <th scope="col">Respuesta</th>
+          <th scope="col">Estado</th>
+          <th scope="col" class="text-end">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if (preguntas.length === 0) { %>
+        <tr>
+          <td colspan="6" class="text-center text-muted py-5">No hay preguntas registradas</td>
+        </tr>
+        <% } %>
+        <% preguntas.forEach(function(pregunta) { %>
+        <tr>
+          <td class="text-muted"><%= pregunta.orden != null ? pregunta.orden : '—' %></td>
+          <td><%= pregunta.id %></td>
+          <td class="fw-semibold" style="max-width: 220px;"><%= pregunta.pregunta %></td>
+          <td class="small text-muted" style="max-width: 280px;">
+            <%= pregunta.respuesta.length > 90 ? pregunta.respuesta.slice(0, 90) + '…' : pregunta.respuesta %>
+          </td>
+          <td>
+            <% if (pregunta.activo) { %>
+            <span class="badge text-bg-success">Activa</span>
+            <% } else { %>
+            <span class="badge text-bg-secondary">Inactiva</span>
+            <% } %>
+          </td>
+          <td class="text-end">
+            <div class="d-inline-flex flex-wrap gap-1 justify-content-end">
+              <% if (pregunta.activo) { %>
+              <form action="<%= adminRoutes.PREGUNTAS_FRECUENTES %>/<%= pregunta.id %>/desactivar" method="post" class="d-inline">
+                <button type="submit" class="btn btn-sm btn-outline-secondary" title="Desactivar"><i class="bi bi-eye-slash"></i></button>
+              </form>
+              <% } else { %>
+              <form action="<%= adminRoutes.PREGUNTAS_FRECUENTES %>/<%= pregunta.id %>/activar" method="post" class="d-inline">
+                <button type="submit" class="btn btn-sm btn-outline-success" title="Activar"><i class="bi bi-eye"></i></button>
+              </form>
+              <% } %>
+              <a href="<%= adminRoutes.PREGUNTAS_FRECUENTES %>/<%= pregunta.id %>/edit" class="btn btn-sm btn-outline-secondary" title="Editar"><i class="bi bi-pencil"></i></a>
+              <form action="<%= adminRoutes.PREGUNTAS_FRECUENTES %>/<%= pregunta.id %>/delete" method="post" class="d-inline" onsubmit="return confirm('¿Eliminar esta pregunta?');">
+                <button type="submit" class="btn btn-sm btn-outline-danger" title="Eliminar"><i class="bi bi-trash"></i></button>
+              </form>
+            </div>
+          </td>
+        </tr>
+        <% }); %>
+      </tbody>
+    </table>
+  </div>
+</div>

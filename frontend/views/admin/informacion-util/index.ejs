@@ -1,0 +1,58 @@
+<div class="mb-4">
+  <h1 class="h3 mb-1">Información útil</h1>
+  <p class="text-muted mb-0">Gestioná la información clave que ven los clientes en la web</p>
+</div>
+
+<div class="row g-4">
+  <div class="col-md-4">
+    <div class="card h-100 admin-form-card">
+      <div class="card-body p-4 d-flex flex-column">
+        <div class="mb-3">
+          <span class="badge text-bg-light border mb-2"><i class="bi bi-geo-alt me-1"></i>Zonas</span>
+          <h2 class="h5 mb-2">Zonas de entrega</h2>
+          <p class="text-muted small mb-0">Barrios, costos de envío y cobertura de delivery.</p>
+        </div>
+        <a href="<%= adminRoutes.ZONAS_ENTREGA %>" class="btn btn-outline-primary mt-auto align-self-start">
+          Gestionar zonas
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-4">
+    <div class="card h-100 admin-form-card">
+      <div class="card-body p-4 d-flex flex-column">
+        <div class="mb-3">
+          <span class="badge text-bg-light border mb-2"><i class="bi bi-credit-card me-1"></i>Pagos</span>
+          <h2 class="h5 mb-2">Formas de pago</h2>
+          <p class="text-muted small mb-0">Efectivo, transferencia, Mercado Pago y otras opciones.</p>
+        </div>
+        <a href="<%= adminRoutes.FORMAS_PAGO %>" class="btn btn-outline-primary mt-auto align-self-start">
+          Gestionar pagos
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-4">
+    <div class="card h-100 admin-form-card">
+      <div class="card-body p-4 d-flex flex-column">
+        <div class="mb-3">
+          <span class="badge text-bg-light border mb-2"><i class="bi bi-question-circle me-1"></i>FAQ</span>
+          <h2 class="h5 mb-2">Preguntas frecuentes</h2>
+          <p class="text-muted small mb-0">Respuestas a las dudas más comunes de tus clientes.</p>
+        </div>
+        <a href="<%= adminRoutes.PREGUNTAS_FRECUENTES %>" class="btn btn-outline-primary mt-auto align-self-start">
+          Gestionar FAQ
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<p class="small text-muted mt-4 mb-0">
+  <i class="bi bi-info-circle me-1"></i>
+  El contenido activo se publica en
+  <a href="<%= routes.INFORMACION_UTIL %>" target="_blank" rel="noopener">Información útil</a>.
+  Las secciones sin ítems activos no se muestran.
+</p>

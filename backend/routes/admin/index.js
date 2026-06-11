@@ -8,6 +8,7 @@ const perfilRoutes = require('./perfil.routes');
 const promocionesRoutes = require('./promociones.routes');
 const heroRoutes = require('./hero.routes');
 const testimoniosRoutes = require('./testimonios.routes');
+const informacionUtilRoutes = require('./informacion-util');
 
 const router = Router();
 
@@ -19,6 +20,7 @@ router.use('/productos', productosRoutes);
 router.use('/promociones', promocionesRoutes);
 router.use('/hero', heroRoutes);
 router.use('/testimonios', testimoniosRoutes);
+router.use('/informacion-util', informacionUtilRoutes);
 router.use('/configuracion', configuracionRoutes);
 router.use('/perfil', perfilRoutes);
 

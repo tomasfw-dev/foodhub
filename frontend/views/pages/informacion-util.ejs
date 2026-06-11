@@ -1,0 +1,86 @@
+<section class="info-util-section">
+  <div class="container">
+    <header class="section__header">
+      <span class="section__eyebrow">Ayuda</span>
+      <h1 class="section__title">Información útil</h1>
+      <p class="section__subtitle">
+        Todo lo que necesitás saber sobre envíos, pagos y pedidos antes de ordenar.
+      </p>
+    </header>
+
+    <% if (!tieneContenido) { %>
+    <div class="info-util-empty" role="status">
+      <p>Estamos actualizando esta sección. Mientras tanto, consultanos por WhatsApp.</p>
+      <% if (whatsapp && whatsapp.phone) { %>
+      <a
+        href="<%= typeof whatsappUrl !== 'undefined' ? whatsappUrl : 'https://wa.me/' + whatsapp.phone %>"
+        class="btn btn--primary"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Escribinos por WhatsApp
+      </a>
+      <% } %>
+    </div>
+    <% } else { %>
+
+    <% if (zonasEntrega.length > 0) { %>
+    <section class="info-util-block" id="zonas-entrega">
+      <h2 class="info-util-block__title">Zonas de entrega</h2>
+      <div class="info-util-grid">
+        <% zonasEntrega.forEach(function(zona) { %>
+        <article class="info-util-card">
+          <div class="info-util-card__head">
+            <h3 class="info-util-card__name"><%= zona.nombreZona %></h3>
+            <p class="info-util-card__price">
+              <% if (zona.costoEnvio > 0) { %>
+              Envío $<%= Number(zona.costoEnvio).toLocaleString('es-AR') %>
+              <% } else { %>
+              Envío sin cargo
+              <% } %>
+            </p>
+          </div>
+          <% if (zona.descripcion) { %>
+          <p class="info-util-card__text"><%= zona.descripcion %></p>
+          <% } %>
+        </article>
+        <% }); %>
+      </div>
+    </section>
+    <% } %>
+
+    <% if (formasPago.length > 0) { %>
+    <section class="info-util-block" id="formas-pago">
+      <h2 class="info-util-block__title">Formas de pago</h2>
+      <div class="info-util-grid">
+        <% formasPago.forEach(function(forma) { %>
+        <article class="info-util-card">
+          <h3 class="info-util-card__name"><%= forma.nombre %></h3>
+          <% if (forma.descripcion) { %>
+          <p class="info-util-card__text"><%= forma.descripcion %></p>
+          <% } %>
+        </article>
+        <% }); %>
+      </div>
+    </section>
+    <% } %>
+
+    <% if (preguntasFrecuentes.length > 0) { %>
+    <section class="info-util-block" id="preguntas-frecuentes">
+      <h2 class="info-util-block__title">Preguntas frecuentes</h2>
+      <div class="info-util-faq">
+        <% preguntasFrecuentes.forEach(function(item, index) { %>
+        <details class="info-util-faq__item" <%= index === 0 ? 'open' : '' %>>
+          <summary class="info-util-faq__question"><%= item.pregunta %></summary>
+          <div class="info-util-faq__answer">
+            <p><%= item.respuesta %></p>
+          </div>
+        </details>
+        <% }); %>
+      </div>
+    </section>
+    <% } %>
+
+    <% } %>
+  </div>
+</section>

@@ -1,0 +1,22 @@
+<div class="mb-4">
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="<%= adminRoutes.INFORMACION_UTIL %>">Información útil</a></li>
+      <li class="breadcrumb-item"><a href="<%= adminRoutes.PREGUNTAS_FRECUENTES %>">Preguntas frecuentes</a></li>
+      <li class="breadcrumb-item active">Editar</li>
+    </ol>
+  </nav>
+  <h1 class="h3 mb-1">Editar pregunta frecuente</h1>
+</div>
+
+<div class="card admin-form-card">
+  <div class="card-body p-4">
+    <form action="<%= adminRoutes.PREGUNTAS_FRECUENTES %>/<%= pregunta.id %>/edit" method="post">
+      <%- include('../../../partials/admin/pregunta-frecuente-form', { pregunta: pregunta }) %>
+      <div class="d-flex gap-2 mt-4">
+        <button type="submit" class="btn btn-primary">Guardar cambios</button>
+        <a href="<%= adminRoutes.PREGUNTAS_FRECUENTES %>" class="btn btn-outline-secondary">Cancelar</a>
+      </div>
+    </form>
+  </div>
+</div>

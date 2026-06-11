@@ -8,6 +8,7 @@ module.exports = {
     AUTH_LOGIN: '/auth/login',
     AUTH_LOGOUT: '/auth/logout',
     TESTIMONIOS: '/testimonios',
+    INFORMACION_UTIL: '/informacion-util',
   },
 
   ADMIN_ROUTES: {
@@ -23,6 +24,13 @@ module.exports = {
     TESTIMONIOS: '/admin/testimonios',
     TESTIMONIOS_CREATE: '/admin/testimonios/create',
     TESTIMONIOS_PENDIENTES: '/admin/testimonios/pendientes',
+    INFORMACION_UTIL: '/admin/informacion-util',
+    ZONAS_ENTREGA: '/admin/informacion-util/zonas-entrega',
+    ZONAS_ENTREGA_CREATE: '/admin/informacion-util/zonas-entrega/create',
+    FORMAS_PAGO: '/admin/informacion-util/formas-pago',
+    FORMAS_PAGO_CREATE: '/admin/informacion-util/formas-pago/create',
+    PREGUNTAS_FRECUENTES: '/admin/informacion-util/preguntas-frecuentes',
+    PREGUNTAS_FRECUENTES_CREATE: '/admin/informacion-util/preguntas-frecuentes/create',
     PERFIL: '/admin/perfil',
   },
 

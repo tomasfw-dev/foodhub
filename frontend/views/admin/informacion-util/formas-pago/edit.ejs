@@ -1,0 +1,22 @@
+<div class="mb-4">
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="<%= adminRoutes.INFORMACION_UTIL %>">Información útil</a></li>
+      <li class="breadcrumb-item"><a href="<%= adminRoutes.FORMAS_PAGO %>">Formas de pago</a></li>
+      <li class="breadcrumb-item active">Editar</li>
+    </ol>
+  </nav>
+  <h1 class="h3 mb-1">Editar forma de pago</h1>
+</div>
+
+<div class="card admin-form-card">
+  <div class="card-body p-4">
+    <form action="<%= adminRoutes.FORMAS_PAGO %>/<%= formaPago.id %>/edit" method="post">
+      <%- include('../../../partials/admin/forma-pago-form', { formaPago: formaPago }) %>
+      <div class="d-flex gap-2 mt-4">
+        <button type="submit" class="btn btn-primary">Guardar cambios</button>
+        <a href="<%= adminRoutes.FORMAS_PAGO %>" class="btn btn-outline-secondary">Cancelar</a>
+      </div>
+    </form>
+  </div>
+</div>

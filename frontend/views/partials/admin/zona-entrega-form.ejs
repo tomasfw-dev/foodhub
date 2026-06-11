@@ -1,0 +1,69 @@
+<div class="row g-3">
+  <div class="col-md-6">
+    <label for="nombre_zona" class="form-label">Nombre de la zona <span class="text-danger">*</span></label>
+    <input
+      type="text"
+      class="form-control"
+      id="nombre_zona"
+      name="nombre_zona"
+      value="<%= zona ? zona.nombre_zona : '' %>"
+      required
+      maxlength="120"
+    >
+  </div>
+
+  <div class="col-md-3">
+    <label for="costo_envio" class="form-label">Costo de envío <span class="text-danger">*</span></label>
+    <div class="input-group">
+      <span class="input-group-text">$</span>
+      <input
+        type="number"
+        class="form-control"
+        id="costo_envio"
+        name="costo_envio"
+        value="<%= zona ? zona.costo_envio : '0' %>"
+        min="0"
+        step="0.01"
+        required
+      >
+    </div>
+  </div>
+
+  <div class="col-md-3">
+    <label for="orden" class="form-label">Orden</label>
+    <input
+      type="number"
+      class="form-control"
+      id="orden"
+      name="orden"
+      value="<%= zona && zona.orden != null ? zona.orden : '' %>"
+      min="0"
+      step="1"
+      placeholder="Automático"
+    >
+  </div>
+
+  <div class="col-12">
+    <label for="descripcion" class="form-label">Descripción</label>
+    <textarea
+      class="form-control"
+      id="descripcion"
+      name="descripcion"
+      rows="3"
+      maxlength="500"
+    ><%= zona ? zona.descripcion : '' %></textarea>
+  </div>
+
+  <div class="col-12">
+    <div class="form-check form-switch">
+      <input
+        class="form-check-input"
+        type="checkbox"
+        id="activo"
+        name="activo"
+        <%= !zona || zona.activo ? 'checked' : '' %>
+      >
+      <label class="form-check-label" for="activo">Visible en la web</label>
+    </div>
+  </div>
+</div>

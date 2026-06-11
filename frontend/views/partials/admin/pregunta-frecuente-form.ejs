@@ -1,0 +1,53 @@
+<div class="row g-3">
+  <div class="col-md-8">
+    <label for="pregunta" class="form-label">Pregunta <span class="text-danger">*</span></label>
+    <input
+      type="text"
+      class="form-control"
+      id="pregunta"
+      name="pregunta"
+      value="<%= pregunta ? pregunta.pregunta : '' %>"
+      required
+      maxlength="300"
+    >
+  </div>
+
+  <div class="col-md-4">
+    <label for="orden" class="form-label">Orden</label>
+    <input
+      type="number"
+      class="form-control"
+      id="orden"
+      name="orden"
+      value="<%= pregunta && pregunta.orden != null ? pregunta.orden : '' %>"
+      min="0"
+      step="1"
+      placeholder="Automático"
+    >
+  </div>
+
+  <div class="col-12">
+    <label for="respuesta" class="form-label">Respuesta <span class="text-danger">*</span></label>
+    <textarea
+      class="form-control"
+      id="respuesta"
+      name="respuesta"
+      rows="5"
+      required
+      maxlength="2000"
+    ><%= pregunta ? pregunta.respuesta : '' %></textarea>
+  </div>
+
+  <div class="col-12">
+    <div class="form-check form-switch">
+      <input
+        class="form-check-input"
+        type="checkbox"
+        id="activo"
+        name="activo"
+        <%= !pregunta || pregunta.activo ? 'checked' : '' %>
+      >
+      <label class="form-check-label" for="activo">Visible en la web</label>
+    </div>
+  </div>
+</div>

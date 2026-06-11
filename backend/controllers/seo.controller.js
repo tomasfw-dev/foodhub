@@ -3,7 +3,7 @@ const seoHelpers = require('../utils/seo.helpers');
 const logger = require('../utils/logger');
 
 /** Rutas públicas indexables (sin /promociones: no existe página dedicada). */
-const SITEMAP_PATHS = ['/', '/menu'];
+const SITEMAP_PATHS = ['/', '/menu', '/informacion-util'];
 
 exports.getRobots = (_req, res) => {
   const siteUrl = config.siteUrl.replace(/\/+$/, '');
