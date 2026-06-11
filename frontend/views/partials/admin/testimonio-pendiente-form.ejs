@@ -1,0 +1,38 @@
+<div class="row g-3">
+  <div class="col-md-6">
+    <label for="nombre_cliente" class="form-label">Nombre del cliente <span class="text-danger">*</span></label>
+    <input
+      type="text"
+      class="form-control"
+      id="nombre_cliente"
+      name="nombre_cliente"
+      value="<%= testimonio.nombre_cliente %>"
+      required
+      maxlength="100"
+    >
+  </div>
+
+  <div class="col-md-6">
+    <label for="puntuacion" class="form-label">Puntuación <span class="text-danger">*</span></label>
+    <select class="form-select" id="puntuacion" name="puntuacion" required>
+      <% for (let i = 5; i >= 1; i -= 1) { %>
+      <option value="<%= i %>" <%= testimonio.puntuacion === i ? 'selected' : '' %>>
+        <%= i %> estrella<%= i === 1 ? '' : 's' %>
+      </option>
+      <% } %>
+    </select>
+  </div>
+
+  <div class="col-12">
+    <label for="comentario" class="form-label">Comentario <span class="text-danger">*</span></label>
+    <textarea
+      class="form-control"
+      id="comentario"
+      name="comentario"
+      rows="5"
+      required
+      maxlength="500"
+    ><%= testimonio.comentario %></textarea>
+    <div class="form-text">Mínimo 5 caracteres. Máximo 500.</div>
+  </div>
+</div>

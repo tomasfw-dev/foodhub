@@ -1,0 +1,62 @@
+<div class="mb-4">
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="<%= adminRoutes.TESTIMONIOS %>">Testimonios</a></li>
+      <li class="breadcrumb-item"><a href="<%= adminRoutes.TESTIMONIOS_PENDIENTES %>">Pendientes</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Moderar #<%= testimonio.id %></li>
+    </ol>
+  </nav>
+  <h1 class="h3 mb-1">Moderar testimonio</h1>
+  <p class="text-muted mb-0">
+    Revisá el contenido antes de aprobarlo para la página principal.
+    <% if (testimonio.fecha_creacion) { %>
+    Recibido el
+    <%= new Date(testimonio.fecha_creacion).toLocaleString('es-AR', { dateStyle: 'long', timeStyle: 'short' }) %>.
+    <% } %>
+  </p>
+</div>
+
+<div class="card admin-form-card mb-4">
+  <div class="card-body p-4">
+    <form action="<%= adminRoutes.TESTIMONIOS_PENDIENTES %>/<%= testimonio.id %>/edit" method="post">
+      <%- include('../../partials/admin/testimonio-pendiente-form', { testimonio: testimonio }) %>
+      <div class="d-flex flex-wrap gap-2 mt-4">
+        <button type="submit" class="btn btn-primary">Guardar cambios</button>
+        <a href="<%= adminRoutes.TESTIMONIOS_PENDIENTES %>" class="btn btn-outline-secondary">Cancelar</a>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="card border-0 bg-light">
+  <div class="card-body p-4">
+    <h2 class="h6 mb-3">Acciones de moderación</h2>
+    <div class="d-flex flex-wrap gap-2">
+      <form action="<%= adminRoutes.TESTIMONIOS_PENDIENTES %>/<%= testimonio.id %>/aprobar" method="post" class="d-inline">
+        <button type="submit" class="btn btn-success">
+          <i class="bi bi-check-lg me-1"></i>Aprobar y publicar
+        </button>
+      </form>
+      <form
+        action="<%= adminRoutes.TESTIMONIOS_PENDIENTES %>/<%= testimonio.id %>/rechazar"
+        method="post"
+        class="d-inline"
+        onsubmit="return confirm('¿Rechazar este testimonio?');"
+      >
+        <button type="submit" class="btn btn-outline-warning">
+          <i class="bi bi-x-lg me-1"></i>Rechazar
+        </button>
+      </form>
+      <form
+        action="<%= adminRoutes.TESTIMONIOS_PENDIENTES %>/<%= testimonio.id %>/delete"
+        method="post"
+        class="d-inline ms-auto"
+        onsubmit="return confirm('¿Eliminar este testimonio permanentemente?');"
+      >
+        <button type="submit" class="btn btn-outline-danger">
+          <i class="bi bi-trash me-1"></i>Eliminar
+        </button>
+      </form>
+    </div>
+  </div>
+</div>

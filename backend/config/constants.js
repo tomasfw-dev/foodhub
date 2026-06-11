@@ -7,6 +7,7 @@ module.exports = {
     ADMIN: '/admin',
     AUTH_LOGIN: '/auth/login',
     AUTH_LOGOUT: '/auth/logout',
+    TESTIMONIOS: '/testimonios',
   },
 
   ADMIN_ROUTES: {
@@ -21,6 +22,7 @@ module.exports = {
     HERO: '/admin/hero',
     TESTIMONIOS: '/admin/testimonios',
     TESTIMONIOS_CREATE: '/admin/testimonios/create',
+    TESTIMONIOS_PENDIENTES: '/admin/testimonios/pendientes',
     PERFIL: '/admin/perfil',
   },
 

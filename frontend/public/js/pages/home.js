@@ -123,5 +123,55 @@
     $(document).on('keydown', function (e) {
       if (e.key === 'Escape') closeMobileMenu();
     });
+
+    var $testimonialSection = $('#dejar-testimonio');
+    var $testimonialTextarea = $('#testimonial-comentario');
+    var $testimonialCounter = $('[data-testimonial-counter]');
+
+    if ($testimonialTextarea.length && $testimonialCounter.length) {
+      function updateTestimonialCounter() {
+        var len = $testimonialTextarea.val().length;
+        $testimonialCounter.text(len + ' / 500');
+      }
+
+      $testimonialTextarea.on('input', updateTestimonialCounter);
+      updateTestimonialCounter();
+    }
+
+    $('.testimonial-form__stars').each(function () {
+      var $group = $(this);
+
+      function paintStars(hoverValue) {
+        var checked = Number($group.find('.testimonial-form__star-input:checked').val()) || 0;
+        var activeValue = hoverValue || checked;
+
+        $group.find('.testimonial-form__star-label').each(function () {
+          var starValue = Number($(this).find('.testimonial-form__star-input').val());
+          $(this)
+            .find('.testimonial-form__star')
+            .toggleClass('is-filled', starValue <= activeValue);
+        });
+      }
+
+      $group.on('change click', '.testimonial-form__star-input', function () {
+        paintStars();
+      });
+
+      $group.on('mouseenter', '.testimonial-form__star-label', function () {
+        paintStars(Number($(this).find('.testimonial-form__star-input').val()));
+      });
+
+      $group.on('mouseleave', function () {
+        paintStars();
+      });
+
+      paintStars();
+    });
+
+    if ($testimonialSection.length && (window.location.hash === '#dejar-testimonio' || $('.testimonial-form__alert').length)) {
+      setTimeout(function () {
+        smoothScrollTo('#dejar-testimonio');
+      }, 150);
+    }
   });
 })(jQuery);

@@ -1,0 +1,85 @@
+<div class="testimonial-form">
+  <% if (flash) { %>
+  <div
+    class="testimonial-form__alert testimonial-form__alert--<%= flash.type === 'danger' ? 'error' : 'success' %>"
+    role="alert"
+  >
+    <%= flash.message %>
+  </div>
+  <% } %>
+
+  <form
+    class="testimonial-form__body"
+    action="<%= routes.TESTIMONIOS %>"
+    method="post"
+    novalidate
+  >
+    <div class="testimonial-form__honeypot" aria-hidden="true">
+      <label for="website">Sitio web</label>
+      <input type="text" id="website" name="website" tabindex="-1" autocomplete="off">
+    </div>
+
+    <div class="testimonial-form__field">
+      <label for="testimonial-nombre" class="testimonial-form__label">
+        Tu nombre <span class="testimonial-form__required" aria-hidden="true">*</span>
+      </label>
+      <input
+        type="text"
+        id="testimonial-nombre"
+        name="nombre_cliente"
+        class="testimonial-form__input"
+        required
+        minlength="2"
+        maxlength="100"
+        autocomplete="name"
+        placeholder="Ej.: María G."
+      >
+    </div>
+
+    <div class="testimonial-form__field">
+      <label class="testimonial-form__label">
+        Puntuación <span class="testimonial-form__required" aria-hidden="true">*</span>
+      </label>
+      <div class="testimonial-form__stars" role="radiogroup" aria-label="Puntuación de 1 a 5 estrellas">
+        <% for (let i = 5; i >= 1; i -= 1) { %>
+        <label class="testimonial-form__star-label">
+          <input
+            type="radio"
+            name="puntuacion"
+            value="<%= i %>"
+            class="testimonial-form__star-input"
+            <%= i === 5 ? 'checked' : '' %>
+            required
+          >
+          <span class="testimonial-form__star" aria-hidden="true">★</span>
+          <span class="testimonial-form__sr-only"><%= i %> estrella<%= i === 1 ? '' : 's' %></span>
+        </label>
+        <% } %>
+      </div>
+    </div>
+
+    <div class="testimonial-form__field">
+      <label for="testimonial-comentario" class="testimonial-form__label">
+        Tu experiencia <span class="testimonial-form__required" aria-hidden="true">*</span>
+      </label>
+      <textarea
+        id="testimonial-comentario"
+        name="comentario"
+        class="testimonial-form__textarea"
+        rows="4"
+        required
+        minlength="5"
+        maxlength="500"
+        placeholder="Contanos qué te pareció la comida, el servicio o la experiencia..."
+      ></textarea>
+      <p class="testimonial-form__hint">
+        Mínimo 5 caracteres. Máximo 500.
+        <span class="testimonial-form__counter" data-testimonial-counter>0 / 500</span>
+      </p>
+    </div>
+
+    <button type="submit" class="btn btn--primary testimonial-form__submit">
+      Enviar testimonio
+    </button>
+  </form>
+</div>

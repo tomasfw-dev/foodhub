@@ -6,6 +6,7 @@ const logger = require('../../utils/logger');
 const constants = require('../../config/constants');
 
 const ADMIN = constants.ADMIN_ROUTES.TESTIMONIOS;
+const ADMIN_PENDIENTES = constants.ADMIN_ROUTES.TESTIMONIOS_PENDIENTES;
 
 function redirectWithError(res, url, message) {
   return res.redirect(`${url}?error=${encodeURIComponent(message)}`);
@@ -21,19 +22,48 @@ function parseFormBody(body) {
   };
 }
 
+function parsePendienteBody(body) {
+  return {
+    nombre_cliente: body.nombre_cliente,
+    comentario: body.comentario,
+    puntuacion: body.puntuacion,
+  };
+}
+
 exports.indexPage = async (req, res, next) => {
   try {
-    const testimonios = await testimoniosService.listar();
+    const [testimonios, pendientesCount] = await Promise.all([
+      testimoniosService.listar(),
+      testimoniosService.contarPendientes(),
+    ]);
 
     res.render('layouts/admin', {
       title: 'Testimonios',
       activeMenu: 'testimonios',
       contentPartial: '../admin/testimonios/index',
       testimonios,
+      pendientesCount,
       flash: res.locals.flash,
     });
   } catch (err) {
     logger.error('Error al listar testimonios', err);
+    next(err);
+  }
+};
+
+exports.pendientesPage = async (req, res, next) => {
+  try {
+    const testimonios = await testimoniosService.listarPendientes();
+
+    res.render('layouts/admin', {
+      title: 'Testimonios pendientes',
+      activeMenu: 'testimonios',
+      contentPartial: '../admin/testimonios/pendientes',
+      testimonios,
+      flash: res.locals.flash,
+    });
+  } catch (err) {
+    logger.error('Error al listar testimonios pendientes', err);
     next(err);
   }
 };
@@ -64,6 +94,22 @@ exports.editPage = async (req, res) => {
   }
 };
 
+exports.editPendientePage = async (req, res) => {
+  try {
+    const testimonio = await testimoniosService.obtenerPendientePorId(req.params.id);
+
+    res.render('layouts/admin', {
+      title: 'Moderar testimonio',
+      activeMenu: 'testimonios',
+      contentPartial: '../admin/testimonios/edit-pendiente',
+      testimonio,
+      flash: res.locals.flash,
+    });
+  } catch (err) {
+    redirectWithError(res, ADMIN_PENDIENTES, err.message);
+  }
+};
+
 exports.store = async (req, res) => {
   try {
     await testimoniosService.crear(parseFormBody(req.body));
@@ -84,6 +130,16 @@ exports.update = async (req, res) => {
   }
 };
 
+exports.updatePendiente = async (req, res) => {
+  try {
+    await testimoniosService.editarPendiente(req.params.id, parsePendienteBody(req.body));
+    res.redirect(`${ADMIN_PENDIENTES}?success=${encodeURIComponent('Testimonio pendiente actualizado')}`);
+  } catch (err) {
+    logger.error('Error al editar testimonio pendiente', err);
+    redirectWithError(res, `${ADMIN_PENDIENTES}/${req.params.id}/edit`, err.message);
+  }
+};
+
 exports.destroy = async (req, res) => {
   try {
     await testimoniosService.eliminar(req.params.id);
@@ -91,6 +147,36 @@ exports.destroy = async (req, res) => {
   } catch (err) {
     logger.error('Error al eliminar testimonio', err);
     redirectWithError(res, ADMIN, err.message);
+  }
+};
+
+exports.destroyPendiente = async (req, res) => {
+  try {
+    await testimoniosService.eliminar(req.params.id);
+    res.redirect(`${ADMIN_PENDIENTES}?success=${encodeURIComponent('Testimonio eliminado')}`);
+  } catch (err) {
+    logger.error('Error al eliminar testimonio pendiente', err);
+    redirectWithError(res, ADMIN_PENDIENTES, err.message);
+  }
+};
+
+exports.aprobar = async (req, res) => {
+  try {
+    await testimoniosService.aprobar(req.params.id);
+    res.redirect(`${ADMIN_PENDIENTES}?success=${encodeURIComponent('Testimonio aprobado y publicado')}`);
+  } catch (err) {
+    logger.error('Error al aprobar testimonio', err);
+    redirectWithError(res, ADMIN_PENDIENTES, err.message);
+  }
+};
+
+exports.rechazar = async (req, res) => {
+  try {
+    await testimoniosService.rechazar(req.params.id);
+    res.redirect(`${ADMIN_PENDIENTES}?success=${encodeURIComponent('Testimonio rechazado')}`);
+  } catch (err) {
+    logger.error('Error al rechazar testimonio', err);
+    redirectWithError(res, ADMIN_PENDIENTES, err.message);
   }
 };
 

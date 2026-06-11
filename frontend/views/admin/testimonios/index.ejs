@@ -3,9 +3,19 @@
     <h1 class="h3 mb-1">Testimonios</h1>
     <p class="text-muted mb-0">Opiniones de clientes visibles en la página principal</p>
   </div>
-  <a href="<%= adminRoutes.TESTIMONIOS_CREATE %>" class="btn btn-primary">
-    <i class="bi bi-plus-lg me-1"></i>Nuevo testimonio
-  </a>
+  <div class="d-flex flex-wrap gap-2">
+    <a href="<%= adminRoutes.TESTIMONIOS_PENDIENTES %>" class="btn btn-outline-primary position-relative">
+      <i class="bi bi-hourglass-split me-1"></i>Testimonios pendientes
+      <% if (typeof pendientesCount !== 'undefined' && pendientesCount > 0) { %>
+      <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill text-bg-danger">
+        <%= pendientesCount %>
+      </span>
+      <% } %>
+    </a>
+    <a href="<%= adminRoutes.TESTIMONIOS_CREATE %>" class="btn btn-primary">
+      <i class="bi bi-plus-lg me-1"></i>Nuevo testimonio
+    </a>
+  </div>
 </div>
 
 <div class="card admin-table-card">
@@ -44,7 +54,9 @@
             </span>
           </td>
           <td>
-            <% if (testimonio.activo) { %>
+            <% if (testimonio.estado === 'rechazado') { %>
+            <span class="badge text-bg-danger">Rechazado</span>
+            <% } else if (testimonio.activo) { %>
             <span class="badge text-bg-success">Activo</span>
             <% } else { %>
             <span class="badge text-bg-secondary">Inactivo</span>
@@ -84,5 +96,6 @@
 
 <p class="small text-muted mt-3 mb-0">
   <i class="bi bi-info-circle me-1"></i>
-  Solo los testimonios <strong>activos</strong> se muestran en la home, ordenados por <strong>orden</strong> y fecha de creación.
+  Solo los testimonios <strong>aprobados y activos</strong> se muestran en la home. Los envíos desde la web quedan en
+  <a href="<%= adminRoutes.TESTIMONIOS_PENDIENTES %>">Testimonios pendientes</a> hasta ser moderados.
 </p>

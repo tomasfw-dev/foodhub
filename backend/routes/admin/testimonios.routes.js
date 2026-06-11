@@ -3,6 +3,13 @@ const testimoniosController = require('../../controllers/admin/testimonios.contr
 
 const router = Router();
 
+router.get('/pendientes', testimoniosController.pendientesPage);
+router.get('/pendientes/:id/edit', testimoniosController.editPendientePage);
+router.post('/pendientes/:id/edit', testimoniosController.updatePendiente);
+router.post('/pendientes/:id/aprobar', testimoniosController.aprobar);
+router.post('/pendientes/:id/rechazar', testimoniosController.rechazar);
+router.post('/pendientes/:id/delete', testimoniosController.destroyPendiente);
+
 router.get('/', testimoniosController.indexPage);
 router.get('/create', testimoniosController.createPage);
 router.post('/', testimoniosController.store);
