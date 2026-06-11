@@ -1,0 +1,255 @@
+/**
+ * Carrito flotante de pedido — Bendita-Comida
+ */
+
+.order-cart {
+  position: fixed;
+  bottom: var(--bc-space-4);
+  left: var(--bc-space-4);
+  z-index: 920;
+  max-width: min(100vw - (var(--bc-space-4) * 2), 22rem);
+  font-family: var(--bc-font-body);
+}
+
+body.has-order-cart .whatsapp-float {
+  bottom: calc(var(--bc-space-4) + 3.25rem);
+}
+
+.order-cart__toast {
+  position: absolute;
+  bottom: calc(100% + var(--bc-space-2));
+  left: 0;
+  right: 0;
+  padding: var(--bc-space-2) var(--bc-space-3);
+  background: var(--bc-ink);
+  color: #fff;
+  font-size: var(--bc-text-sm);
+  border-radius: var(--bc-radius-md);
+  box-shadow: var(--bc-shadow-md);
+  text-align: center;
+}
+
+.order-cart__toggle {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.15rem;
+  width: 100%;
+  padding: var(--bc-space-3) var(--bc-space-4);
+  border: 1px solid var(--bc-border);
+  border-radius: var(--bc-radius-lg);
+  background: var(--bc-bg);
+  box-shadow: var(--bc-shadow-md);
+  cursor: pointer;
+  text-align: left;
+  transition: border-color var(--bc-duration-fast), box-shadow var(--bc-duration-fast);
+}
+
+.order-cart__toggle:hover,
+.order-cart--open .order-cart__toggle {
+  border-color: var(--bc-ink);
+  box-shadow: var(--bc-shadow-lg);
+}
+
+.order-cart__toggle-label {
+  font-family: var(--bc-font-display);
+  font-size: var(--bc-text-xs);
+  font-weight: 600;
+  letter-spacing: var(--bc-tracking-ui);
+  text-transform: uppercase;
+  color: var(--bc-text-muted);
+}
+
+.order-cart__toggle-meta {
+  font-size: var(--bc-text-sm);
+  font-weight: 600;
+  color: var(--bc-ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.order-cart__panel {
+  margin-top: var(--bc-space-2);
+  padding: var(--bc-space-4);
+  border: 1px solid var(--bc-border);
+  border-radius: var(--bc-radius-lg);
+  background: var(--bc-bg);
+  box-shadow: var(--bc-shadow-lg);
+  max-height: min(60vh, 28rem);
+  overflow: auto;
+}
+
+.order-cart__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--bc-space-2);
+  margin-bottom: var(--bc-space-3);
+}
+
+.order-cart__title {
+  margin: 0;
+  font-family: var(--bc-font-display);
+  font-size: var(--bc-text-base);
+  font-weight: 700;
+  color: var(--bc-ink);
+}
+
+.order-cart__close {
+  border: none;
+  background: transparent;
+  font-size: 1.5rem;
+  line-height: 1;
+  color: var(--bc-text-muted);
+  cursor: pointer;
+  padding: 0.15rem 0.35rem;
+}
+
+.order-cart__close:hover {
+  color: var(--bc-ink);
+}
+
+.order-cart__list {
+  list-style: none;
+  margin: 0 0 var(--bc-space-3);
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--bc-space-2);
+}
+
+.order-cart__item {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--bc-space-2);
+  padding-bottom: var(--bc-space-2);
+  border-bottom: 1px solid var(--bc-border);
+}
+
+.order-cart__item-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 0;
+}
+
+.order-cart__item-name {
+  font-size: var(--bc-text-sm);
+  font-weight: 600;
+  color: var(--bc-text);
+  line-height: 1.3;
+}
+
+.order-cart__item-qty {
+  font-weight: 500;
+  color: var(--bc-text-muted);
+}
+
+.order-cart__item-price {
+  font-size: var(--bc-text-xs);
+  color: var(--bc-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.order-cart__item-remove {
+  flex-shrink: 0;
+  border: none;
+  background: transparent;
+  color: var(--bc-text-muted);
+  font-size: 1.25rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0.1rem 0.35rem;
+}
+
+.order-cart__item-remove:hover {
+  color: var(--bc-ink);
+}
+
+.order-cart__empty {
+  margin: 0 0 var(--bc-space-3);
+  font-size: var(--bc-text-sm);
+  color: var(--bc-text-muted);
+}
+
+.order-cart__summary {
+  margin-bottom: var(--bc-space-3);
+  padding-top: var(--bc-space-2);
+  border-top: 1px solid var(--bc-border);
+}
+
+.order-cart__summary-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0 0 var(--bc-space-1);
+  font-size: var(--bc-text-sm);
+  color: var(--bc-text-muted);
+}
+
+.order-cart__summary-row strong {
+  color: var(--bc-ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.order-cart__summary-row--total {
+  margin-top: var(--bc-space-2);
+  font-size: var(--bc-text-base);
+  color: var(--bc-text);
+}
+
+.order-cart__error {
+  margin: 0 0 var(--bc-space-2);
+  font-size: var(--bc-text-xs);
+  color: #b42318;
+}
+
+.order-cart__actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--bc-space-2);
+}
+
+.order-cart__send.is-disabled {
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+.order-cart__send .btn__icon--whatsapp {
+  color: var(--bc-whatsapp);
+}
+
+.js-add-to-order.is-added {
+  border-color: var(--bc-ink);
+  background: var(--bc-surface-muted, #f5f5f5);
+}
+
+.food-card__actions {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--bc-space-2);
+  flex-shrink: 0;
+}
+
+@media (min-width: 480px) {
+  .food-card__footer {
+    align-items: center;
+  }
+
+  .food-card__actions {
+    align-items: flex-end;
+  }
+}
+
+@media (max-width: 479px) {
+  .order-cart {
+    left: var(--bc-space-3);
+    right: var(--bc-space-3);
+    max-width: none;
+  }
+
+  body.has-order-cart .whatsapp-float {
+    bottom: calc(var(--bc-space-4) + 4.5rem);
+  }
+}

@@ -94,16 +94,13 @@
           <p class="promo-card__price">$<%= Number(promo.price).toLocaleString('es-AR') %></p>
           <% } %>
           <p class="promo-card__text"><%= promo.description %></p>
-          <% if (whatsapp && whatsapp.phone) { %>
-          <a
-            href="https://wa.me/<%= whatsapp.phone %>?text=<%= encodeURIComponent('Hola! Quiero consultar por: ' + promo.title) %>"
-            class="btn btn--primary btn--sm"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Consultar promo
-          </a>
-          <% } %>
+          <%- include('../partials/add-to-order-btn', {
+            orderKey: 'promo-' + promo.id,
+            orderType: 'promo',
+            orderName: promo.title,
+            orderPrice: promo.price,
+            btnClass: 'btn btn--primary btn--sm js-add-to-order'
+          }) %>
         </div>
       </article>
       <% }); %>

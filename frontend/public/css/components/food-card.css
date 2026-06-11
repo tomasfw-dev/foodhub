@@ -134,7 +134,7 @@
 
 .food-card__footer {
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: space-between;
   gap: var(--bc-space-3);
   margin-top: var(--bc-space-2);
@@ -150,21 +150,9 @@
   line-height: 1;
 }
 
-.food-card__cta.btn--primary {
+
+.food-card__actions .js-add-to-order {
   flex-shrink: 0;
-  background-color: var(--bc-ink);
-  color: #ffffff;
-  border-color: var(--bc-ink);
-}
-
-.food-card__cta.btn--primary:hover {
-  background-color: var(--bc-ink-soft);
-  border-color: var(--bc-ink-soft);
-  color: #ffffff;
-}
-
-.food-card__cta .btn__icon--whatsapp {
-  color: var(--bc-whatsapp);
 }
 
 @media (max-width: 479px) {
@@ -172,7 +160,11 @@
     flex-wrap: wrap;
   }
 
-  .food-card__cta {
+  .food-card__actions {
+    width: 100%;
+  }
+
+  .food-card__actions .js-add-to-order {
     width: 100%;
     justify-content: center;
   }

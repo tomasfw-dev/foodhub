@@ -1,0 +1,22 @@
+<%
+  const cartKey = typeof orderKey !== 'undefined' ? orderKey : '';
+  const cartType = typeof orderType !== 'undefined' ? orderType : 'producto';
+  const cartName = typeof orderName !== 'undefined' ? orderName : '';
+  const cartPrice = typeof orderPrice !== 'undefined' ? orderPrice : null;
+  const cartBtnClass = typeof btnClass !== 'undefined'
+    ? btnClass
+    : 'btn btn--outline btn--sm js-add-to-order';
+%>
+<button
+  type="button"
+  class="<%= cartBtnClass %>"
+  data-order-key="<%= cartKey %>"
+  data-order-type="<%= cartType %>"
+  data-order-name="<%= cartName %>"
+  <% if (cartPrice != null && cartPrice !== '') { %>
+  data-order-price="<%= cartPrice %>"
+  <% } %>
+  aria-label="Agregar <%= cartName %> al pedido"
+>
+  Agregar al pedido
+</button>

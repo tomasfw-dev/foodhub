@@ -24,9 +24,11 @@
   <% } %>
 
   <%- include('../partials/whatsapp-button') %>
+  <%- include('../partials/order-cart') %>
 
   <script src="/js/vendor/jquery.min.js"></script>
   <script src="/js/core/app.js"></script>
+  <script src="/js/core/order-cart.js"></script>
   <% if (typeof page !== 'undefined' && page) { %>
   <script src="/js/pages/<%= page %>.js"></script>
   <% } %>
