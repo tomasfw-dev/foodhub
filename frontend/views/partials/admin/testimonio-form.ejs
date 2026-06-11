@@ -1,0 +1,71 @@
+<div class="row g-3">
+  <div class="col-md-6">
+    <label for="nombre_cliente" class="form-label">Nombre del cliente <span class="text-danger">*</span></label>
+    <input
+      type="text"
+      class="form-control"
+      id="nombre_cliente"
+      name="nombre_cliente"
+      value="<%= testimonio ? testimonio.nombre_cliente : '' %>"
+      required
+      maxlength="120"
+      placeholder="María G."
+    >
+  </div>
+
+  <div class="col-md-3">
+    <label for="puntuacion" class="form-label">Puntuación <span class="text-danger">*</span></label>
+    <select class="form-select" id="puntuacion" name="puntuacion" required>
+      <% for (let i = 5; i >= 1; i -= 1) { %>
+      <option
+        value="<%= i %>"
+        <%= testimonio && testimonio.puntuacion === i ? 'selected' : (!testimonio && i === 5 ? 'selected' : '') %>
+      >
+        <%= i %> estrella<%= i === 1 ? '' : 's' %>
+      </option>
+      <% } %>
+    </select>
+  </div>
+
+  <div class="col-md-3">
+    <label for="orden" class="form-label">Orden en la home</label>
+    <input
+      type="number"
+      class="form-control"
+      id="orden"
+      name="orden"
+      value="<%= testimonio && testimonio.orden != null ? testimonio.orden : '' %>"
+      min="0"
+      step="1"
+      placeholder="Automático"
+    >
+    <div class="form-text">Menor número = primero. Vacío = al final.</div>
+  </div>
+
+  <div class="col-12">
+    <label for="comentario" class="form-label">Comentario <span class="text-danger">*</span></label>
+    <textarea
+      class="form-control"
+      id="comentario"
+      name="comentario"
+      rows="4"
+      required
+      maxlength="1000"
+      placeholder="Contanos qué le pareció la comida..."
+    ><%= testimonio ? testimonio.comentario : '' %></textarea>
+    <div class="form-text">Mínimo 5 caracteres. Máximo 1000.</div>
+  </div>
+
+  <div class="col-12">
+    <div class="form-check form-switch">
+      <input
+        class="form-check-input"
+        type="checkbox"
+        id="activo"
+        name="activo"
+        <%= !testimonio || testimonio.activo ? 'checked' : '' %>
+      >
+      <label class="form-check-label" for="activo">Visible en la página principal</label>
+    </div>
+  </div>
+</div>

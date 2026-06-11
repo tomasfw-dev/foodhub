@@ -129,3 +129,21 @@
 <% } else { %>
 <section class="section section--promos section--promos-empty" id="promociones" aria-hidden="true"></section>
 <% } %>
+
+<% if (testimonials.length > 0) { %>
+<section class="section section--testimonials" id="testimonios">
+  <div class="container">
+    <header class="section__header reveal">
+      <span class="section__eyebrow">Confianza</span>
+      <h2 class="section__title">Lo que dicen nuestros clientes</h2>
+      <p class="section__subtitle">Experiencias reales de quienes ya probaron nuestra cocina casera.</p>
+    </header>
+
+    <div class="testimonial-grid">
+      <% testimonials.forEach(function(testimonial) { %>
+        <%- include('../partials/testimonial-card', { testimonial: testimonial }) %>
+      <% }); %>
+    </div>
+  </div>
+</section>
+<% } %>

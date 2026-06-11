@@ -1,0 +1,21 @@
+<div class="mb-4">
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="<%= adminRoutes.TESTIMONIOS %>">Testimonios</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Nuevo</li>
+    </ol>
+  </nav>
+  <h1 class="h3 mb-1">Nuevo testimonio</h1>
+</div>
+
+<div class="card admin-form-card">
+  <div class="card-body p-4">
+    <form action="<%= adminRoutes.TESTIMONIOS %>" method="post">
+      <%- include('../../partials/admin/testimonio-form', { testimonio: testimonio }) %>
+      <div class="d-flex gap-2 mt-4">
+        <button type="submit" class="btn btn-primary">Guardar</button>
+        <a href="<%= adminRoutes.TESTIMONIOS %>" class="btn btn-outline-secondary">Cancelar</a>
+      </div>
+    </form>
+  </div>
+</div>

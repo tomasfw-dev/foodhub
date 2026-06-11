@@ -1,0 +1,15 @@
+<article class="testimonial-card reveal">
+  <div class="testimonial-card__stars" aria-label="<%= testimonial.puntuacion %> de 5 estrellas">
+    <% for (let i = 1; i <= 5; i += 1) { %>
+    <span class="testimonial-card__star<%= i <= testimonial.puntuacion ? ' is-filled' : '' %>" aria-hidden="true">★</span>
+    <% } %>
+  </div>
+
+  <blockquote class="testimonial-card__quote">
+    <p>“<%= testimonial.comentario %>”</p>
+  </blockquote>
+
+  <footer class="testimonial-card__footer">
+    <cite class="testimonial-card__author"><%= testimonial.nombreCliente %></cite>
+  </footer>
+</article>

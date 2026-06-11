@@ -1,6 +1,7 @@
 const menuService = require('../services/menu.service');
 const heroService = require('../services/hero.service');
 const heroHelpers = require('../utils/hero.helpers');
+const testimoniosService = require('../services/testimonios.service');
 const seoHelpers = require('../utils/seo.helpers');
 const logger = require('../utils/logger');
 
@@ -12,12 +13,16 @@ exports.getHome = async (req, res, next) => {
       whatsappUrl: res.locals.whatsappUrl,
     };
 
-    const [featuredItems, promotions, heroActivo] = await Promise.all([
+    const [featuredItems, promotions, heroActivo, testimonials] = await Promise.all([
       menuService.getFeaturedItems(),
       menuService.getPromotions(),
       heroService.obtenerActivo({ context: heroContext }).catch((err) => {
         logger.warn('Hero no disponible, usando fallback', { error: err.message });
         return null;
+      }),
+      testimoniosService.listarActivos().catch((err) => {
+        logger.warn('Testimonios no disponibles', { error: err.message });
+        return [];
       }),
     ]);
 
@@ -41,6 +46,7 @@ exports.getHome = async (req, res, next) => {
       featuredItems,
       promotions,
       hero,
+      testimonials,
       seo,
     });
   } catch (err) {
