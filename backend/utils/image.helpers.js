@@ -8,7 +8,10 @@ const uploadConfig = require('../config/upload.config');
 const paths = require('../config/paths');
 const logger = require('./logger');
 
+const constants = require('../config/constants');
+
 const DEFAULT_PRODUCT_IMAGE = '/images/placeholder-food.svg';
+const DEFAULT_HERO_IMAGE = constants.SITE.logoUrl;
 
 /**
  * Resuelve la URL pública de imagen de un producto.
@@ -111,4 +114,43 @@ exports.resolvePromocionImageUrl = (storedUrl) => {
   return DEFAULT_PRODUCT_IMAGE;
 };
 
+exports.resolveHeroImageUrl = (storedUrl) => {
+  if (!storedUrl || typeof storedUrl !== 'string' || !storedUrl.trim()) {
+    return DEFAULT_HERO_IMAGE;
+  }
+
+  const url = storedUrl.trim();
+
+  if (/^https?:\/\//i.test(url)) {
+    return url;
+  }
+
+  if (url.startsWith(`${uploadConfig.HERO_PUBLIC_PREFIX}/`)) {
+    const filename = path.basename(url);
+    const filePath = path.join(uploadConfig.HERO_DIR, filename);
+
+    if (exports.fileExists(filePath)) {
+      return url;
+    }
+
+    logger.warn('Imagen de hero no encontrada en disco', { url, filePath });
+    return DEFAULT_HERO_IMAGE;
+  }
+
+  if (url.startsWith('/')) {
+    const filePath = path.join(paths.publicDir, url.replace(/^\//, ''));
+
+    if (exports.fileExists(filePath)) {
+      return url;
+    }
+
+    logger.warn('Archivo de hero no encontrado', { url, filePath });
+    return DEFAULT_HERO_IMAGE;
+  }
+
+  logger.warn('URL de hero con formato no reconocido', { url });
+  return DEFAULT_HERO_IMAGE;
+};
+
 exports.DEFAULT_PROMOCION_IMAGE = DEFAULT_PRODUCT_IMAGE;
+exports.DEFAULT_HERO_IMAGE = DEFAULT_HERO_IMAGE;

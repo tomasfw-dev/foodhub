@@ -18,6 +18,7 @@ module.exports = {
     PROMOCIONES: '/admin/promociones',
     PROMOCIONES_CREATE: '/admin/promociones/create',
     CONFIGURACION: '/admin/configuracion',
+    HERO: '/admin/hero',
     PERFIL: '/admin/perfil',
   },
 

@@ -64,6 +64,11 @@
   -webkit-filter: brightness(0) contrast(1.25);
 }
 
+.hero__logo--color {
+  filter: none;
+  -webkit-filter: none;
+}
+
 .hero__eyebrow {
   font-family: var(--bc-font-display);
   font-size: var(--bc-text-xs);

@@ -1,0 +1,177 @@
+<div class="row g-3">
+  <div class="col-12">
+    <div class="form-check form-switch">
+      <input
+        class="form-check-input"
+        type="checkbox"
+        role="switch"
+        id="activo"
+        name="activo"
+        value="1"
+        <%= hero.activo ? 'checked' : '' %>
+      >
+      <label class="form-check-label" for="activo">
+        Hero activo en la landing
+      </label>
+      <div class="form-text">
+        Si está desactivado, la home muestra el contenido predeterminado del sitio.
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <label for="eyebrow" class="form-label">Texto superior (eyebrow) <span class="text-danger">*</span></label>
+    <input
+      type="text"
+      class="form-control"
+      id="eyebrow"
+      name="eyebrow"
+      value="<%= hero.eyebrow %>"
+      required
+      maxlength="200"
+      placeholder="Sabores de casa, calidad premium"
+    >
+  </div>
+
+  <div class="col-md-6">
+    <label for="subtitulo" class="form-label">Subtítulo <span class="text-danger">*</span></label>
+    <textarea
+      class="form-control"
+      id="subtitulo"
+      name="subtitulo"
+      rows="2"
+      required
+      maxlength="500"
+    ><%= hero.subtitulo %></textarea>
+  </div>
+
+  <div class="col-12">
+    <h2 class="h6 text-uppercase text-muted mb-2">Título principal</h2>
+    <p class="small text-muted mb-3">
+      El texto destacado se muestra con énfasis visual en la landing, como en el diseño actual.
+    </p>
+  </div>
+
+  <div class="col-md-4">
+    <label for="titulo_antes" class="form-label">Antes del destacado <span class="text-danger">*</span></label>
+    <input
+      type="text"
+      class="form-control"
+      id="titulo_antes"
+      name="titulo_antes"
+      value="<%= hero.titulo_antes %>"
+      required
+      maxlength="200"
+      placeholder="Sabores que"
+    >
+  </div>
+  <div class="col-md-4">
+    <label for="titulo_destacado" class="form-label">Texto destacado</label>
+    <input
+      type="text"
+      class="form-control"
+      id="titulo_destacado"
+      name="titulo_destacado"
+      value="<%= hero.titulo_destacado %>"
+      maxlength="120"
+      placeholder="abrazan"
+    >
+  </div>
+  <div class="col-md-4">
+    <label for="titulo_despues" class="form-label">Después del destacado</label>
+    <input
+      type="text"
+      class="form-control"
+      id="titulo_despues"
+      name="titulo_despues"
+      value="<%= hero.titulo_despues %>"
+      maxlength="200"
+      placeholder="el alma"
+    >
+  </div>
+
+  <div class="col-12">
+    <hr class="my-2">
+    <h2 class="h6 text-uppercase text-muted mb-3">Botones del hero</h2>
+  </div>
+
+  <div class="col-md-6">
+    <label for="btn_primario_texto" class="form-label">Texto botón principal <span class="text-danger">*</span></label>
+    <input
+      type="text"
+      class="form-control"
+      id="btn_primario_texto"
+      name="btn_primario_texto"
+      value="<%= hero.btn_primario_texto %>"
+      required
+      maxlength="120"
+      placeholder="Ver menú"
+    >
+  </div>
+  <div class="col-md-6">
+    <label for="btn_primario_url" class="form-label">URL botón principal <span class="text-danger">*</span></label>
+    <input
+      type="text"
+      class="form-control"
+      id="btn_primario_url"
+      name="btn_primario_url"
+      value="<%= hero.btn_primario_url %>"
+      required
+      maxlength="500"
+      placeholder="/menu"
+    >
+    <div class="form-text">Ruta interna (/menu) o URL completa (https://...).</div>
+  </div>
+
+  <div class="col-md-6">
+    <label for="btn_secundario_texto" class="form-label">Texto botón secundario</label>
+    <input
+      type="text"
+      class="form-control"
+      id="btn_secundario_texto"
+      name="btn_secundario_texto"
+      value="<%= hero.btn_secundario_texto %>"
+      maxlength="120"
+      placeholder="Pedir por WhatsApp"
+    >
+  </div>
+  <div class="col-md-6">
+    <label for="btn_secundario_url" class="form-label">URL botón secundario</label>
+    <input
+      type="text"
+      class="form-control"
+      id="btn_secundario_url"
+      name="btn_secundario_url"
+      value="<%= hero.btn_secundario_url %>"
+      maxlength="500"
+      placeholder="Dejar vacío para usar WhatsApp del negocio"
+    >
+    <div class="form-text">Opcional. Si está vacío y hay texto, se usa el WhatsApp configurado.</div>
+  </div>
+
+  <div class="col-12">
+    <label for="imagen" class="form-label">Imagen principal del hero</label>
+    <% if (hero.imagenUrl) { %>
+    <div class="mb-3">
+      <img
+        src="<%= hero.imagenUrl %>"
+        alt="Imagen actual del hero"
+        class="img-thumbnail bg-white"
+        style="max-height: 160px; max-width: 320px; object-fit: contain;"
+        onerror="this.onerror=null;this.src='/images/logo-bendita-comida.png';"
+      >
+      <p class="small text-muted mt-1 mb-0">Imagen actual. Subí un archivo para reemplazarla.</p>
+    </div>
+    <% } %>
+    <input
+      type="file"
+      class="form-control"
+      id="imagen"
+      name="imagen"
+      accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
+    >
+    <div class="form-text">
+      JPG, JPEG, PNG o WEBP. Máximo 5 MB. Recomendado: logo o imagen cuadrada sobre fondo claro.
+    </div>
+  </div>
+</div>

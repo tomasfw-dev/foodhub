@@ -32,6 +32,13 @@ exports.ensureOgUploadDir = () => {
   }
 };
 
+exports.ensureHeroUploadDir = () => {
+  if (!fs.existsSync(uploadConfig.HERO_DIR)) {
+    fs.mkdirSync(uploadConfig.HERO_DIR, { recursive: true });
+    logger.info('Directorio de hero creado', { dir: uploadConfig.HERO_DIR });
+  }
+};
+
 exports.generateUniqueFilename = (originalname) => {
   const ext = path.extname(originalname).toLowerCase();
   const uniqueId = `${Date.now()}-${crypto.randomBytes(8).toString('hex')}`;
@@ -51,6 +58,11 @@ exports.toLogoPublicUrl = (filename) => {
 exports.toOgPublicUrl = (filename) => {
   if (!filename) return null;
   return `${uploadConfig.OG_PUBLIC_PREFIX}/${filename}`;
+};
+
+exports.toHeroPublicUrl = (filename) => {
+  if (!filename) return null;
+  return `${uploadConfig.HERO_PUBLIC_PREFIX}/${filename}`;
 };
 
 exports.toPromocionPublicUrl = (filename) => {
@@ -112,6 +124,23 @@ exports.deleteOgImage = (publicUrl) => {
 
   fs.unlinkSync(filePath);
   logger.info('Imagen OG eliminada', { filename });
+};
+
+exports.deleteHeroImage = (publicUrl) => {
+  if (!publicUrl || !publicUrl.startsWith(`${uploadConfig.HERO_PUBLIC_PREFIX}/`)) {
+    return;
+  }
+
+  const filename = path.basename(publicUrl);
+  const filePath = path.join(uploadConfig.HERO_DIR, filename);
+
+  if (!fs.existsSync(filePath)) {
+    logger.warn('Imagen de hero a eliminar no encontrada', { filePath });
+    return;
+  }
+
+  fs.unlinkSync(filePath);
+  logger.info('Imagen de hero eliminada', { filename });
 };
 
 exports.deletePromocionImage = (publicUrl) => {
