@@ -60,7 +60,8 @@ comida-carito/
 ```
 
 Documentación SQL detallada: [`database/sqlserver/README.md`](database/sqlserver/README.md)  
-Headers de seguridad HTTP: [`docs/security-headers.md`](docs/security-headers.md)
+Headers de seguridad HTTP: [`docs/security-headers.md`](docs/security-headers.md)  
+**Guía staging / demo (instalación limpia):** [`docs/staging-demo.md`](docs/staging-demo.md)
 
 ---
 
