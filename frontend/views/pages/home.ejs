@@ -2,6 +2,23 @@
   <div class="hero__pattern" aria-hidden="true"></div>
 
   <div class="hero__content container">
+    <% if (hero.isDynamic && hero.tieneImagenHero && hero.imagenUrl) { %>
+    <a
+      href="<%= routes.HOME %>"
+      class="hero__logo-link"
+      aria-label="<%= appName %> — Inicio"
+    >
+      <img
+        src="<%= hero.imagenUrl %>"
+        alt="<%= appName %>"
+        class="hero__logo hero__logo--color"
+        width="320"
+        height="260"
+        decoding="async"
+        fetchpriority="high"
+      >
+    </a>
+    <% } else { %>
     <%- include('../partials/public-brand', {
       brandLinkClass: 'hero__logo-link',
       brandImgClass: 'hero__logo hero__logo--color',
@@ -10,8 +27,9 @@
       brandImgHeight: 260,
       brandImgPriority: true,
     }) %>
+    <% } %>
 
-    <p class="hero__eyebrow"><%= site.tagline %></p>
+    <p class="hero__eyebrow"><%= hero.isDynamic ? hero.eyebrow : site.tagline %></p>
 
     <h1 class="hero__title">
       <% if (hero.tituloDestacado) { %>

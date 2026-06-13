@@ -7,6 +7,7 @@ const logger = require('../../utils/logger');
 const config = require('../../config');
 const { resolveProductImageUrl } = require('../../utils/image.helpers');
 const { parseOrden, mapOrden } = require('../../utils/orden.helpers');
+const { parsePrecio } = require('../../utils/price.helpers');
 const uploadConfig = require('../../config/upload.config');
 const { validateStoredImagePath } = require('../../utils/upload.helpers');
 
@@ -123,11 +124,18 @@ exports.crear = async (datos) => {
     throw createError(err.status || 400, err.message);
   }
 
+  let precio = 0;
+  try {
+    precio = parsePrecio(datos.precio);
+  } catch (err) {
+    throw createError(err.status || 400, err.message);
+  }
+
   const rows = await db.query(queries.CREAR, {
     categoriaId: Number(datos.categoriaId),
     nombre,
     descripcion: datos.descripcion?.trim() || '',
-    precio: datos.precio != null ? Number(datos.precio) : 0,
+    precio,
     imagen: sanitizeImagenForWrite(datos.imagen, `${uploadConfig.PUBLIC_PREFIX}/`) ?? null,
     activo: datos.activo !== false && datos.activo !== 'false',
     destacado,
@@ -173,6 +181,15 @@ exports.editar = async (id, datos) => {
     }
   }
 
+  let precio = actual.precio;
+  if (datos.precio !== undefined) {
+    try {
+      precio = parsePrecio(datos.precio);
+    } catch (err) {
+      throw createError(err.status || 400, err.message);
+    }
+  }
+
   const rows = await db.query(queries.EDITAR, {
     id: Number(id),
     categoriaId:
@@ -180,7 +197,7 @@ exports.editar = async (id, datos) => {
     nombre,
     descripcion:
       datos.descripcion !== undefined ? datos.descripcion.trim() : actual.descripcion,
-    precio: datos.precio !== undefined ? Number(datos.precio) : actual.precio,
+    precio,
     imagen:
       datos.imagen !== undefined
         ? sanitizeImagenForWrite(datos.imagen, `${uploadConfig.PUBLIC_PREFIX}/`)

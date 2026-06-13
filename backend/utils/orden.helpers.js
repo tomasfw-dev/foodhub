@@ -19,6 +19,12 @@ exports.parseOrden = (value) => {
     throw err;
   }
 
+  if (numero > 2147483647) {
+    const err = new Error('El orden es demasiado alto.');
+    err.status = 400;
+    throw err;
+  }
+
   return numero;
 };
 

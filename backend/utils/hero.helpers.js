@@ -32,6 +32,7 @@ exports.buildFallback = (siteLocals, whatsappLocals, whatsappUrl, appName) => {
   return {
     isDynamic: false,
     activo: false,
+    tieneImagenHero: false,
     eyebrow,
     tituloAntes: FALLBACK.tituloAntes,
     tituloDestacado: FALLBACK.tituloDestacado,
@@ -71,6 +72,7 @@ exports.mapRowToView = (row, context = {}) => {
   return {
     isDynamic: true,
     activo: Boolean(row.activo),
+    tieneImagenHero: Boolean(row.imagen?.trim()),
     eyebrow: row.eyebrow,
     tituloAntes: row.titulo_antes,
     tituloDestacado: row.titulo_destacado || null,
@@ -110,7 +112,7 @@ exports.mapRowToAdmin = (row) => {
     btn_secundario_texto: row.btn_secundario_texto || '',
     btn_secundario_url: row.btn_secundario_url || '',
     imagen: row.imagen || '',
-    imagenUrl: resolveHeroImageUrl(row.imagen),
+    imagenUrl: row.imagen?.trim() ? resolveHeroImageUrl(row.imagen) : null,
     activo: Boolean(row.activo),
     fecha_modificacion: row.fecha_modificacion,
   };
