@@ -19,6 +19,8 @@
 <div class="card admin-form-card mb-4">
   <div class="card-body p-4">
     <form action="<%= adminRoutes.TESTIMONIOS_PENDIENTES %>/<%= testimonio.id %>/edit" method="post">
+
+    <%- include('../../partials/csrf-field') %>
       <%- include('../../partials/admin/testimonio-pendiente-form', { testimonio: testimonio }) %>
       <div class="d-flex flex-wrap gap-2 mt-4">
         <button type="submit" class="btn btn-primary">Guardar cambios</button>
@@ -33,6 +35,8 @@
     <h2 class="h6 mb-3">Acciones de moderación</h2>
     <div class="d-flex flex-wrap gap-2">
       <form action="<%= adminRoutes.TESTIMONIOS_PENDIENTES %>/<%= testimonio.id %>/aprobar" method="post" class="d-inline">
+
+      <%- include('../../partials/csrf-field') %>
         <button type="submit" class="btn btn-success">
           <i class="bi bi-check-lg me-1"></i>Aprobar y publicar
         </button>
@@ -43,6 +47,7 @@
         class="d-inline"
         onsubmit="return confirm('¿Rechazar este testimonio?');"
       >
+        <%- include('../../partials/csrf-field') %>
         <button type="submit" class="btn btn-outline-warning">
           <i class="bi bi-x-lg me-1"></i>Rechazar
         </button>
@@ -53,6 +58,7 @@
         class="d-inline ms-auto"
         onsubmit="return confirm('¿Eliminar este testimonio permanentemente?');"
       >
+        <%- include('../../partials/csrf-field') %>
         <button type="submit" class="btn btn-outline-danger">
           <i class="bi bi-trash me-1"></i>Eliminar
         </button>

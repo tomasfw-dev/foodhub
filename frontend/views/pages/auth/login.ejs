@@ -21,6 +21,7 @@
   <% } %>
 
   <form class="auth-form" method="POST" action="<%= routes.AUTH_LOGIN %>" novalidate>
+    <%- include('../../partials/csrf-field') %>
     <div class="mb-3">
       <label for="email" class="form-label">Email</label>
       <input

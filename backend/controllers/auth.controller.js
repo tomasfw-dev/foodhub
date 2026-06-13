@@ -81,7 +81,18 @@ exports.login = async (req, res, next) => {
 };
 
 /**
- * GET|POST /auth/logout — destruye la sesión
+ * GET /auth/logout — no destruye la sesión (evita logout CSRF por enlace).
+ */
+exports.logoutGet = (req, res) => {
+  if (req.session?.adminId) {
+    return res.redirect(constants.ADMIN_ROUTES.DASHBOARD);
+  }
+
+  return res.redirect(constants.ROUTES.AUTH_LOGIN);
+};
+
+/**
+ * POST /auth/logout — destruye la sesión
  */
 exports.logout = (req, res, next) => {
   const adminId = req.session?.adminId;

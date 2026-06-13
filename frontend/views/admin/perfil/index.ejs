@@ -9,6 +9,8 @@
       <div class="card-body p-4">
         <h2 class="h5 mb-3">Datos personales</h2>
         <form action="<%= adminRoutes.PERFIL %>" method="post">
+
+        <%- include('../../partials/csrf-field') %>
           <%- include('../../partials/admin/perfil-datos-form', { perfil: perfil }) %>
           <div class="d-flex gap-2 mt-4">
             <button type="submit" class="btn btn-primary">Guardar datos</button>
@@ -44,6 +46,8 @@
           Al cambiar la contraseña se cerrarán automáticamente las demás sesiones activas.
         </p>
         <form action="<%= adminRoutes.PERFIL %>/password" method="post">
+
+        <%- include('../../partials/csrf-field') %>
           <%- include('../../partials/admin/perfil-password-form') %>
           <div class="d-flex gap-2 mt-4">
             <button type="submit" class="btn btn-outline-primary">Actualizar contraseña</button>

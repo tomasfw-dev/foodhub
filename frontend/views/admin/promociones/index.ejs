@@ -88,6 +88,8 @@
               <i class="bi bi-pencil"></i>
             </a>
             <form action="/admin/promociones/<%= promocion.id %>/toggle-destacado" method="post" class="d-inline">
+
+            <%- include('../../partials/csrf-field') %>
               <button
                 type="submit"
                 class="btn btn-sm btn-outline-<%= promocion.destacado ? 'dark' : 'secondary' %>"
@@ -97,11 +99,15 @@
               </button>
             </form>
             <form action="/admin/promociones/<%= promocion.id %>/<%= promocion.activo ? 'desactivar' : 'activar' %>" method="post" class="d-inline">
+
+            <%- include('../../partials/csrf-field') %>
               <button type="submit" class="btn btn-sm btn-outline-<%= promocion.activo ? 'warning' : 'success' %>" title="<%= promocion.activo ? 'Desactivar' : 'Activar' %>">
                 <i class="bi bi-<%= promocion.activo ? 'pause' : 'play' %>-fill"></i>
               </button>
             </form>
             <form action="/admin/promociones/<%= promocion.id %>/delete" method="post" class="d-inline" onsubmit="return confirm('¿Eliminar esta promoción?');">
+
+            <%- include('../../partials/csrf-field') %>
               <button type="submit" class="btn btn-sm btn-outline-danger" title="Eliminar">
                 <i class="bi bi-trash"></i>
               </button>

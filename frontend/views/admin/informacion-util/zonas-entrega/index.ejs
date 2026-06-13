@@ -54,15 +54,21 @@
             <div class="d-inline-flex flex-wrap gap-1 justify-content-end">
               <% if (zona.activo) { %>
               <form action="<%= adminRoutes.ZONAS_ENTREGA %>/<%= zona.id %>/desactivar" method="post" class="d-inline">
+
+              <%- include('../../../partials/csrf-field') %>
                 <button type="submit" class="btn btn-sm btn-outline-secondary" title="Desactivar"><i class="bi bi-eye-slash"></i></button>
               </form>
               <% } else { %>
               <form action="<%= adminRoutes.ZONAS_ENTREGA %>/<%= zona.id %>/activar" method="post" class="d-inline">
+
+              <%- include('../../../partials/csrf-field') %>
                 <button type="submit" class="btn btn-sm btn-outline-success" title="Activar"><i class="bi bi-eye"></i></button>
               </form>
               <% } %>
               <a href="<%= adminRoutes.ZONAS_ENTREGA %>/<%= zona.id %>/edit" class="btn btn-sm btn-outline-secondary" title="Editar"><i class="bi bi-pencil"></i></a>
               <form action="<%= adminRoutes.ZONAS_ENTREGA %>/<%= zona.id %>/delete" method="post" class="d-inline" onsubmit="return confirm('¿Eliminar esta zona?');">
+
+              <%- include('../../../partials/csrf-field') %>
                 <button type="submit" class="btn btn-sm btn-outline-danger" title="Eliminar"><i class="bi bi-trash"></i></button>
               </form>
             </div>

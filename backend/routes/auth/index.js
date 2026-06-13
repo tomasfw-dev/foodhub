@@ -10,7 +10,7 @@ router.use(loadPlatformBrand);
 
 router.get('/login', redirectIfAuthenticated, authController.showLogin);
 router.post('/login', redirectIfAuthenticated, authController.login);
-router.get('/logout', authController.logout);
+router.get('/logout', authController.logoutGet);
 router.post('/logout', authController.logout);
 
 module.exports = router;

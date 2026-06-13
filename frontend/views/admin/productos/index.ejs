@@ -87,6 +87,8 @@
               <i class="bi bi-pencil"></i>
             </a>
             <form action="/admin/productos/<%= producto.id %>/toggle-destacado" method="post" class="d-inline">
+
+            <%- include('../../partials/csrf-field') %>
               <button
                 type="submit"
                 class="btn btn-sm btn-outline-<%= producto.destacado ? 'dark' : 'secondary' %>"
@@ -97,11 +99,15 @@
               </button>
             </form>
             <form action="/admin/productos/<%= producto.id %>/<%= producto.activo ? 'desactivar' : 'activar' %>" method="post" class="d-inline">
+
+            <%- include('../../partials/csrf-field') %>
               <button type="submit" class="btn btn-sm btn-outline-<%= producto.activo ? 'warning' : 'success' %>" title="<%= producto.activo ? 'Desactivar' : 'Activar' %>">
                 <i class="bi bi-<%= producto.activo ? 'pause' : 'play' %>-fill"></i>
               </button>
             </form>
             <form action="/admin/productos/<%= producto.id %>/delete" method="post" class="d-inline" onsubmit="return confirm('¿Eliminar este producto?');">
+
+            <%- include('../../partials/csrf-field') %>
               <button type="submit" class="btn btn-sm btn-outline-danger" title="Eliminar">
                 <i class="bi bi-trash"></i>
               </button>

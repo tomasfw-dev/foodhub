@@ -17,6 +17,8 @@
 <div class="card admin-form-card">
   <div class="card-body p-4">
     <form action="<%= adminRoutes.TESTIMONIOS %>/<%= testimonio.id %>/edit" method="post">
+
+    <%- include('../../partials/csrf-field') %>
       <%- include('../../partials/admin/testimonio-form', { testimonio: testimonio }) %>
       <div class="d-flex gap-2 mt-4">
         <button type="submit" class="btn btn-primary">Guardar cambios</button>

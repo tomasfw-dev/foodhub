@@ -11,6 +11,8 @@
 <div class="card admin-form-card">
   <div class="card-body p-4">
     <form action="<%= adminRoutes.CATEGORIAS %>" method="post">
+
+    <%- include('../../partials/csrf-field') %>
       <%- include('../../partials/admin/categoria-form', { categoria: categoria }) %>
       <div class="d-flex gap-2 mt-4">
         <button type="submit" class="btn btn-primary">Guardar</button>

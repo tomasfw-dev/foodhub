@@ -67,10 +67,13 @@
     </nav>
 
     <footer class="admin-sidebar__foot">
-      <a href="<%= routes.AUTH_LOGOUT %>" class="admin-sidebar__link admin-sidebar__link--danger">
-        <i class="bi bi-box-arrow-right admin-sidebar__link-icon" aria-hidden="true"></i>
-        <span class="admin-sidebar__link-text">Cerrar sesión</span>
-      </a>
+      <form action="<%= routes.AUTH_LOGOUT %>" method="post" class="admin-sidebar__logout-form">
+        <%- include('../csrf-field') %>
+        <button type="submit" class="admin-sidebar__link admin-sidebar__link--danger">
+          <i class="bi bi-box-arrow-right admin-sidebar__link-icon" aria-hidden="true"></i>
+          <span class="admin-sidebar__link-text">Cerrar sesión</span>
+        </button>
+      </form>
       <a
         href="<%= routes.HOME %>"
         class="admin-sidebar__link admin-sidebar__link--muted"

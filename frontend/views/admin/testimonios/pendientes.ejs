@@ -68,6 +68,7 @@
                 method="post"
                 class="d-inline"
               >
+                <%- include('../../partials/csrf-field') %>
                 <button type="submit" class="btn btn-sm btn-success" title="Aprobar">
                   <i class="bi bi-check-lg"></i>
                 </button>
@@ -78,6 +79,7 @@
                 class="d-inline"
                 onsubmit="return confirm('¿Rechazar este testimonio?');"
               >
+                <%- include('../../partials/csrf-field') %>
                 <button type="submit" class="btn btn-sm btn-outline-warning" title="Rechazar">
                   <i class="bi bi-x-lg"></i>
                 </button>
@@ -88,6 +90,7 @@
                 class="d-inline"
                 onsubmit="return confirm('¿Eliminar este testimonio?');"
               >
+                <%- include('../../partials/csrf-field') %>
                 <button type="submit" class="btn btn-sm btn-outline-danger" title="Eliminar">
                   <i class="bi bi-trash"></i>
                 </button>

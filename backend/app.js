@@ -8,6 +8,10 @@ const { notFoundHandler } = require('./middlewares/notFound.middleware');
 const { errorHandler } = require('./middlewares/error.middleware');
 const { flashMiddleware } = require('./middlewares/flash.middleware');
 const { loadSiteConfig } = require('./middlewares/siteConfig.middleware');
+const {
+  attachCsrfToken,
+  verifyCsrfUnlessMultipart,
+} = require('./middlewares/csrf.middleware');
 const createSessionMiddleware = require('./config/session.config');
 const imageHelper = require('./utils/image.helpers');
 const seoHelpers = require('./utils/seo.helpers');
@@ -38,7 +42,9 @@ app.locals.buildPageSeo = seoHelpers.buildPageSeo;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(createSessionMiddleware());
+app.use(attachCsrfToken);
 app.use(flashMiddleware);
+app.use(verifyCsrfUnlessMultipart);
 app.use(loadSiteConfig);
 
 // SEO (antes de static para robots.txt y sitemap.xml dinámicos)
