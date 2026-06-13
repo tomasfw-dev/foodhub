@@ -1,23 +1,18 @@
 const multer = require('multer');
+const uploadConfig = require('../config/upload.config');
 const { getClientErrorMessage, logApplicationError } = require('../utils/error.helpers');
 
-const ADMIN_PRODUCTOS = '/admin/productos';
 const ADMIN_CONFIGURACION = '/admin/configuracion';
-const ADMIN_PROMOCIONES = '/admin/promociones';
-const ADMIN_HERO = '/admin/hero';
 
 const GENERIC_UPLOAD_MESSAGE = 'Error al subir la imagen.';
 
 const UPLOAD_ERROR_PATTERN =
-  /permitid|MIME|archivo|imagen|ruta|válid|valid|procesar|directorio|externa/i;
+  /permitid|MIME|archivo|imagen|ruta|válid|valid|procesar|directorio|externa|demasiado pesad/i;
 
 function resolveUploadMessage(err, req) {
   if (err instanceof multer.MulterError) {
     if (err.code === 'LIMIT_FILE_SIZE') {
-      if (req.originalUrl.startsWith(ADMIN_PRODUCTOS)) {
-        return 'La imagen supera el tamaño máximo de 50 MB.';
-      }
-      return 'La imagen supera el tamaño máximo de 5 MB.';
+      return uploadConfig.resolveUploadSizeErrorMessage(req, err);
     }
     if (err.code === 'LIMIT_FILE_COUNT') {
       return 'Solo se permite una imagen por archivo.';
@@ -39,21 +34,21 @@ function resolveRedirectUrl(req) {
     return ADMIN_CONFIGURACION;
   }
 
-  if (req.originalUrl.startsWith(ADMIN_HERO)) {
-    return ADMIN_HERO;
+  if (req.originalUrl.startsWith('/admin/hero')) {
+    return '/admin/hero';
   }
 
-  if (req.originalUrl.startsWith(ADMIN_PROMOCIONES)) {
+  if (req.originalUrl.startsWith('/admin/promociones')) {
     const isEdit = req.originalUrl.includes('/edit');
     return isEdit
-      ? `${ADMIN_PROMOCIONES}/${req.params.id}/edit`
-      : `${ADMIN_PROMOCIONES}/create`;
+      ? `/admin/promociones/${req.params.id}/edit`
+      : '/admin/promociones/create';
   }
 
   const isEdit = req.originalUrl.includes('/edit');
   return isEdit
-    ? `${ADMIN_PRODUCTOS}/${req.params.id}/edit`
-    : `${ADMIN_PRODUCTOS}/create`;
+    ? `/admin/productos/${req.params.id}/edit`
+    : '/admin/productos/create';
 }
 
 exports.handleUploadError = (err, req, res, next) => {

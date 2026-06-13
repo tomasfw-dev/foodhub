@@ -1,7 +1,6 @@
 const multer = require('multer');
 const uploadConfig = require('../config/upload.config');
 const uploadService = require('../services/admin/upload.service');
-const logger = require('../utils/logger');
 const {
   createImageFileFilter,
   wrapUploadWithSanitization,
@@ -10,6 +9,10 @@ const { createUploadError } = require('../utils/upload.helpers');
 
 uploadService.ensureLogosUploadDir();
 uploadService.ensureOgUploadDir();
+
+const logoProfile = uploadConfig.getImageProfile('logos');
+const ogProfile = uploadConfig.getImageProfile('og');
+const maxUploadSize = Math.max(logoProfile.maxUploadSize, ogProfile.maxUploadSize);
 
 const storage = multer.diskStorage({
   destination: (_req, file, cb) => {
@@ -31,7 +34,6 @@ const storage = multer.diskStorage({
         return cb(createUploadError('Tipo de archivo no permitido. Use JPG, JPEG, PNG o WEBP.'));
       }
       const filename = uploadService.generateUniqueFilename(file.originalname);
-      logger.info('Archivo de configuración generado', { field: file.fieldname, filename });
       cb(null, filename);
     } catch (err) {
       cb(err);
@@ -42,7 +44,7 @@ const storage = multer.diskStorage({
 const upload = multer({
   storage,
   fileFilter: createImageFileFilter(),
-  limits: { fileSize: uploadConfig.MAX_FILE_SIZE, files: 2 },
+  limits: { fileSize: maxUploadSize, files: 2 },
 });
 
 exports.uploadConfiguracionImagenes = wrapUploadWithSanitization(
@@ -50,5 +52,11 @@ exports.uploadConfiguracionImagenes = wrapUploadWithSanitization(
     { name: uploadConfig.LOGO_FIELD_NAME, maxCount: 1 },
     { name: uploadConfig.OG_FIELD_NAME, maxCount: 1 },
   ]),
-  'fields'
+  'fields',
+  {
+    fieldProfiles: {
+      [uploadConfig.LOGO_FIELD_NAME]: 'logos',
+      [uploadConfig.OG_FIELD_NAME]: 'og',
+    },
+  }
 );

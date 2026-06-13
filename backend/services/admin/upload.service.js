@@ -8,12 +8,6 @@ const { createUploadError } = require('../../utils/upload.helpers');
 
 const ALLOWED_SHARP_FORMATS = new Set(['jpeg', 'png', 'webp']);
 
-const STANDARD_SHARP_FORMAT = {
-  jpeg: { ext: '.jpg', apply: (instance) => instance.jpeg({ quality: 85, mozjpeg: true }) },
-  png: { ext: '.png', apply: (instance) => instance.png() },
-  webp: { ext: '.webp', apply: (instance) => instance.webp({ quality: 85 }) },
-};
-
 function removeFile(filePath) {
   if (filePath && fs.existsSync(filePath)) {
     fs.unlinkSync(filePath);
@@ -55,53 +49,105 @@ function writeOptimizedBuffer(filePath, buffer, ext) {
   return finalFilename;
 }
 
-function buildProductPipeline(filePath) {
-  const { MAX_WIDTH, MAX_HEIGHT } = uploadConfig.PRODUCTO_IMAGE;
-
+function buildResizePipeline(filePath, profile) {
   return sharp(filePath, { failOn: 'error' })
     .rotate()
     .resize({
-      width: MAX_WIDTH,
-      height: MAX_HEIGHT,
-      fit: 'inside',
+      width: profile.width,
+      height: profile.height,
+      fit: profile.fit || 'inside',
       withoutEnlargement: true,
     });
 }
 
 /**
- * Optimiza imagen de producto: resize, WebP/JPG, límite de salida 2 MB.
+ * @param {import('../../config/upload.config').IMAGE_PROFILES[keyof typeof import('../../config/upload.config').IMAGE_PROFILES]} profile
+ * @param {{ hasAlpha?: boolean }} [metadataHints]
+ * @returns {{ ext: string, run: (pipeline: sharp.Sharp) => sharp.Sharp }[]}
+ */
+function buildOptimizationAttempts(profile, metadataHints = {}) {
+  const quality = profile.quality ?? 80;
+  const attempts = [];
+
+  const addWebp = () => {
+    attempts.push(
+      { ext: '.webp', run: (p) => p.webp({ quality }) },
+      { ext: '.webp', run: (p) => p.webp({ quality: 70 }) },
+      { ext: '.webp', run: (p) => p.webp({ quality: 60 }) }
+    );
+  };
+
+  const addPng = () => {
+    attempts.push(
+      { ext: '.png', run: (p) => p.png({ compressionLevel: 9, adaptiveFiltering: true }) },
+      { ext: '.png', run: (p) => p.png({ compressionLevel: 9, palette: true }) }
+    );
+  };
+
+  const addJpeg = () => {
+    if (!profile.jpegQuality) return;
+    attempts.push(
+      { ext: '.jpg', run: (p) => p.jpeg({ quality: profile.jpegQuality, mozjpeg: true }) },
+      { ext: '.jpg', run: (p) => p.jpeg({ quality: 72, mozjpeg: true }) }
+    );
+  };
+
+  if (profile.formatFallback === 'png' && metadataHints.hasAlpha) {
+    addWebp();
+    addPng();
+  } else if (profile.format === 'webp') {
+    addWebp();
+    if (profile.formatFallback === 'png') {
+      addPng();
+    }
+    addJpeg();
+  } else if (profile.format === 'png') {
+    addPng();
+    addWebp();
+  } else {
+    addWebp();
+    addJpeg();
+  }
+
+  return attempts;
+}
+
+/**
+ * Pipeline unificado: valida magic bytes, redimensiona, comprime y valida tamaño final.
  * @param {string} filePath
+ * @param {string} profileKey
  * @returns {Promise<string>}
  */
-async function optimizeProductImage(filePath) {
+async function optimizeImage(filePath, profileKey) {
+  if (!filePath || !fs.existsSync(filePath)) {
+    throw createUploadError('No se recibió ningún archivo de imagen.');
+  }
+
+  const profile = uploadConfig.getImageProfile(profileKey);
   const metadata = await readImageMetadata(filePath);
   assertAllowedFormat(metadata, filePath);
 
-  const pipeline = buildProductPipeline(filePath);
-  const maxOutput = uploadConfig.MAX_PRODUCTO_OUTPUT_SIZE;
-  const { WEBP_QUALITY, JPEG_QUALITY } = uploadConfig.PRODUCTO_IMAGE;
-
-  const attempts = [
-    { ext: '.webp', run: (p) => p.webp({ quality: WEBP_QUALITY }) },
-    { ext: '.webp', run: (p) => p.webp({ quality: 70 }) },
-    { ext: '.webp', run: (p) => p.webp({ quality: 60 }) },
-    { ext: '.jpg', run: (p) => p.jpeg({ quality: JPEG_QUALITY, mozjpeg: true }) },
-    { ext: '.jpg', run: (p) => p.jpeg({ quality: 72, mozjpeg: true }) },
-  ];
+  const pipeline = buildResizePipeline(filePath, profile);
+  const attempts = buildOptimizationAttempts(profile, { hasAlpha: metadata.hasAlpha });
 
   for (const attempt of attempts) {
     let buffer;
     try {
       buffer = await attempt.run(pipeline.clone()).toBuffer();
     } catch (err) {
-      logger.warn('Error al optimizar imagen de producto', { filePath, error: err.message });
+      logger.warn('Error al optimizar imagen', {
+        filePath,
+        profile: profileKey,
+        error: err.message,
+      });
       removeFile(filePath);
       throw createUploadError('No se pudo procesar la imagen. Verificá que sea un archivo válido.');
     }
 
-    if (buffer.length <= maxOutput) {
+    if (buffer.length <= profile.maxOutputSize) {
       const finalFilename = writeOptimizedBuffer(filePath, buffer, attempt.ext);
-      logger.info('Imagen de producto optimizada', {
+      logger.info('Imagen optimizada', {
+        profile: profileKey,
         filename: finalFilename,
         bytes: buffer.length,
         format: attempt.ext,
@@ -112,9 +158,11 @@ async function optimizeProductImage(filePath) {
 
   removeFile(filePath);
   throw createUploadError(
-    'La imagen optimizada sigue siendo demasiado pesada (máx. 2 MB). Probá con una foto más chica o con menos detalle.'
+    `La imagen optimizada sigue siendo demasiado pesada (máx. ${profile.outputLimitMessage}). Probá con una foto más chica o con menos detalle.`
   );
 }
+
+exports.optimizeImage = optimizeImage;
 
 exports.ensureProductosUploadDir = () => {
   if (!fs.existsSync(uploadConfig.PRODUCTOS_DIR)) {
@@ -186,43 +234,6 @@ exports.isAllowedExtension = (filename) => {
   const ext = path.extname(filename).toLowerCase();
   return uploadConfig.ALLOWED_EXTENSIONS.has(ext);
 };
-
-/**
- * Valida magic bytes y re-encodea (uploads estándar: logos, hero, promos, OG).
- * @param {string} filePath
- * @returns {Promise<string>}
- */
-exports.sanitizeUploadedImage = async (filePath) => {
-  if (!filePath || !fs.existsSync(filePath)) {
-    throw createUploadError('No se recibió ningún archivo de imagen.');
-  }
-
-  const metadata = await readImageMetadata(filePath);
-  assertAllowedFormat(metadata, filePath);
-
-  const formatConfig = STANDARD_SHARP_FORMAT[metadata.format];
-  let buffer;
-
-  try {
-    buffer = await formatConfig.apply(sharp(filePath).rotate()).toBuffer();
-  } catch (err) {
-    logger.warn('Imagen rechazada al re-encodear', { filePath, error: err.message });
-    removeFile(filePath);
-    throw createUploadError('No se pudo procesar la imagen. Verificá que sea un archivo válido.');
-  }
-
-  if (buffer.length > uploadConfig.MAX_FILE_SIZE) {
-    removeFile(filePath);
-    throw createUploadError('La imagen supera el tamaño máximo de 5 MB.');
-  }
-
-  const finalFilename = writeOptimizedBuffer(filePath, buffer, formatConfig.ext);
-  logger.info('Imagen sanitizada', { filename: finalFilename, bytes: buffer.length });
-  return finalFilename;
-};
-
-/** @type {typeof optimizeProductImage} */
-exports.sanitizeProductoImage = optimizeProductImage;
 
 exports.deleteProductoImage = (publicUrl) => {
   if (!publicUrl || !publicUrl.startsWith(`${uploadConfig.PUBLIC_PREFIX}/`)) {
