@@ -166,6 +166,11 @@ CREATE TABLE dbo.ConfiguracionNegocio (
     seo_description     NVARCHAR(320)   NULL,
     seo_keywords        NVARCHAR(500)   NULL,
     og_image            NVARCHAR(500)   NULL,
+    color_primario      NVARCHAR(7)     NULL,
+    color_secundario    NVARCHAR(7)     NULL,
+    color_fondo         NVARCHAR(7)     NULL,
+    color_texto         NVARCHAR(7)     NULL,
+    color_acento        NVARCHAR(7)     NULL,
     fecha_modificacion  DATETIME2(0)    NULL,
 
     CONSTRAINT PK_ConfiguracionNegocio PRIMARY KEY CLUSTERED (id),

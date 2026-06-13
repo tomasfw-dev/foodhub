@@ -15,7 +15,7 @@
 .navbar__bar {
   position: relative;
   z-index: 1002;
-  background-color: #ffffff;
+  background-color: var(--bc-paper);
   border-bottom: 1px solid var(--bc-border);
   transition: box-shadow var(--bc-duration) var(--bc-ease);
 }
@@ -78,7 +78,7 @@
   width: 44px;
   height: 44px;
   padding: 10px;
-  background: #ffffff;
+  background: var(--bc-paper);
   border: 1px solid var(--bc-ink);
   border-radius: var(--bc-radius-sm);
   cursor: pointer;
@@ -120,7 +120,7 @@
   justify-content: center;
   gap: var(--bc-space-5);
   padding: calc(72px + var(--bc-space-4)) var(--bc-space-4) var(--bc-space-5);
-  background-color: #ffffff;
+  background-color: var(--bc-paper);
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
@@ -176,7 +176,7 @@
   font-weight: 700;
   letter-spacing: var(--bc-tracking-display);
   text-transform: uppercase;
-  color: #000000;
+  color: var(--bc-text);
   transition: opacity var(--bc-duration-fast);
   position: relative;
 }
@@ -195,7 +195,7 @@
 
 .navbar__link:hover,
 .navbar__link.is-active {
-  color: #000000;
+  color: var(--bc-text);
   opacity: 1;
 }
 
@@ -211,7 +211,7 @@
 /* CTA — contraste garantizado en la barra */
 .navbar__cta.btn--primary {
   background-color: var(--bc-ink);
-  color: #ffffff;
+  color: var(--bc-text-inverse, var(--bc-paper));
   border: 1px solid var(--bc-ink);
   box-shadow: var(--bc-shadow-sm);
 }
@@ -219,7 +219,7 @@
 .navbar__cta.btn--primary:hover {
   background-color: var(--bc-ink-soft);
   border-color: var(--bc-ink-soft);
-  color: #ffffff;
+  color: var(--bc-text-inverse, var(--bc-paper));
 }
 
 .navbar__cta .btn__icon--whatsapp {

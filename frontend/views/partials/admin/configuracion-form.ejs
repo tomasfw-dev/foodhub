@@ -154,6 +154,56 @@
 
   <div class="col-12">
     <hr class="my-2">
+    <h2 class="h6 text-uppercase text-muted mb-3">Apariencia del sitio</h2>
+    <p class="small text-muted mb-3">
+      Colores de la web pública (navbar, hero, botones, cards, footer). Dejá un campo vacío para usar el valor del tema predeterminado.
+    </p>
+  </div>
+
+  <%
+    const themeFields = [
+      { key: 'color_primario', label: 'Color primario', hint: 'Botones, navbar, bordes destacados', defaultHex: '#000000' },
+      { key: 'color_secundario', label: 'Color secundario', hint: 'Hover y variantes del primario', defaultHex: '#1a1a1a' },
+      { key: 'color_fondo', label: 'Color de fondo', hint: 'Fondo general, cards y navbar', defaultHex: '#ffffff' },
+      { key: 'color_texto', label: 'Color de texto', hint: 'Texto principal del sitio', defaultHex: '#000000' },
+      { key: 'color_acento', label: 'Color de acento', hint: 'Badges, etiquetas y detalles', defaultHex: '#000000' },
+    ];
+  %>
+  <% themeFields.forEach(function(field) {
+    const value = configuracion[field.key] || '';
+    const pickerValue = /^#[0-9A-Fa-f]{6}$/i.test(value) ? value : field.defaultHex;
+  %>
+  <div class="col-md-6 col-lg-4">
+    <label for="<%= field.key %>" class="form-label"><%= field.label %></label>
+    <div class="input-group" data-theme-color>
+      <input
+        type="color"
+        class="form-control form-control-color flex-shrink-0"
+        data-theme-picker
+        value="<%= pickerValue %>"
+        title="Elegir <%= field.label.toLowerCase() %>"
+        aria-label="Selector visual de <%= field.label.toLowerCase() %>"
+      >
+      <input
+        type="text"
+        class="form-control font-monospace"
+        id="<%= field.key %>"
+        name="<%= field.key %>"
+        value="<%= value %>"
+        data-theme-hex
+        maxlength="7"
+        placeholder="<%= field.defaultHex %>"
+        pattern="^#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$"
+        spellcheck="false"
+        autocomplete="off"
+      >
+    </div>
+    <div class="form-text"><%= field.hint %>. Formato HEX, ej: <%= field.defaultHex %></div>
+  </div>
+  <% }); %>
+
+  <div class="col-12">
+    <hr class="my-2">
     <h2 class="h6 text-uppercase text-muted mb-3">SEO y redes sociales</h2>
     <p class="small text-muted mb-3">
       Mejoran cómo se ve el sitio en Google y al compartir enlaces por WhatsApp, Facebook e Instagram.
@@ -230,3 +280,33 @@
     </div>
   </div>
 </div>
+
+<script>
+(function () {
+  document.querySelectorAll('[data-theme-color]').forEach(function (wrap) {
+    var text = wrap.querySelector('[data-theme-hex]');
+    var picker = wrap.querySelector('[data-theme-picker]');
+    if (!text || !picker) return;
+
+    picker.addEventListener('input', function () {
+      text.value = picker.value.toLowerCase();
+    });
+
+    text.addEventListener('input', function () {
+      if (/^#[0-9A-Fa-f]{6}$/i.test(text.value)) {
+        picker.value = text.value;
+      }
+    });
+
+    text.addEventListener('blur', function () {
+      if (!text.value.trim()) return;
+      var v = text.value.trim();
+      if (!v.startsWith('#')) v = '#' + v;
+      if (/^#[0-9A-Fa-f]{6}$/i.test(v)) {
+        text.value = v.toLowerCase();
+        picker.value = v;
+      }
+    });
+  });
+})();
+</script>

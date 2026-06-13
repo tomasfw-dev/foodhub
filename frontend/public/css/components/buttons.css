@@ -56,10 +56,10 @@
   font-size: var(--bc-text-xs);
 }
 
-/* Primario — negro sólido */
+/* Primario — color de marca */
 .btn--primary {
   background-color: var(--bc-ink);
-  color: var(--bc-paper);
+  color: var(--bc-text-inverse, var(--bc-paper));
   border-color: var(--bc-ink);
   box-shadow: var(--bc-shadow-sm);
 }
@@ -79,7 +79,7 @@
 
 .btn--outline:hover {
   background-color: var(--bc-ink);
-  color: var(--bc-paper);
+  color: var(--bc-text-inverse, var(--bc-paper));
 }
 
 /* Ghost — texto con borde sutil */
@@ -108,7 +108,7 @@
 /* WhatsApp — único acento de color permitido */
 .btn--whatsapp {
   background-color: var(--bc-ink);
-  color: var(--bc-paper);
+  color: var(--bc-text-inverse, var(--bc-paper));
   border-color: var(--bc-ink);
   text-transform: uppercase;
 }

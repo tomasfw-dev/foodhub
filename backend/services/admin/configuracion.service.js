@@ -5,6 +5,7 @@ const db = require('../../database/connection');
 const queries = require('../../database/queries/configuracion.queries');
 const siteHelpers = require('../../utils/site.helpers');
 const seoHelpers = require('../../utils/seo.helpers');
+const themeHelpers = require('../../utils/theme.helpers');
 const uploadConfig = require('../../config/upload.config');
 const uploadService = require('./upload.service');
 const logger = require('../../utils/logger');
@@ -45,6 +46,11 @@ function mapRow(row) {
       seoHelpers.resolveOgImageUrl(row.og_image) ||
       siteHelpers.resolveBusinessLogoUrl(row.logo) ||
       '',
+    color_primario: row.color_primario || '',
+    color_secundario: row.color_secundario || '',
+    color_fondo: row.color_fondo || '',
+    color_texto: row.color_texto || '',
+    color_acento: row.color_acento || '',
     fecha_modificacion: row.fecha_modificacion,
   };
 }
@@ -123,6 +129,11 @@ exports.validar = (datos) => {
     errors.push('Las palabras clave SEO no pueden superar 500 caracteres.');
   }
 
+  const themeValidation = themeHelpers.validateThemeColors(datos);
+  if (!themeValidation.valid) {
+    errors.push(...themeValidation.errors);
+  }
+
   return {
     valid: errors.length === 0,
     errors,
@@ -140,6 +151,7 @@ exports.validar = (datos) => {
       seo_title: seoTitle,
       seo_description: seoDescription,
       seo_keywords: seoKeywords,
+      ...themeValidation.sanitized,
     },
   };
 };

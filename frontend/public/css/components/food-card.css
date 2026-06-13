@@ -85,9 +85,9 @@
   font-weight: 700;
   letter-spacing: var(--bc-tracking-ui);
   text-transform: uppercase;
-  color: var(--bc-ink);
+  color: var(--bc-accent, var(--bc-ink));
   background: var(--bc-paper);
-  border: 1px solid var(--bc-ink);
+  border: 1px solid var(--bc-accent, var(--bc-ink));
   border-radius: var(--bc-radius-pill);
   z-index: 1;
 }

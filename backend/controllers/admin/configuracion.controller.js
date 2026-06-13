@@ -2,6 +2,7 @@
  * Controlador admin — configuración del negocio.
  */
 const configuracionService = require('../../services/admin/configuracion.service');
+const themeHelpers = require('../../utils/theme.helpers');
 const logger = require('../../utils/logger');
 
 const ADMIN_CONFIG = '/admin/configuracion';
@@ -19,6 +20,7 @@ exports.editPage = async (req, res, next) => {
       activeMenu: 'configuracion',
       contentPartial: '../admin/configuracion/edit',
       configuracion,
+      hasCustomTheme: themeHelpers.hasCustomTheme(configuracion),
       flash: res.locals.flash,
     });
   } catch (err) {
@@ -35,7 +37,10 @@ exports.update = async (req, res) => {
     await configuracionService.actualizar(req.body, { logoFile, ogImageFile });
     res.redirect(`${ADMIN_CONFIG}?success=${encodeURIComponent('Configuración actualizada correctamente')}`);
   } catch (err) {
-    logger.error('Error al actualizar configuración', err);
-    redirectWithError(res, err.message || 'Error al guardar la configuración');
+    logger.error('Error al actualizar configuración', { error: err.message, status: err.status });
+    const message = err.status === 400
+      ? err.message
+      : (err.message || 'Error al guardar la configuración');
+    redirectWithError(res, message);
   }
 };

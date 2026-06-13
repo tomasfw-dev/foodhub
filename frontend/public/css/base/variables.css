@@ -28,6 +28,7 @@
 
   /* ── Funcional (único color fuera de B/N en UI) ── */
   --bc-whatsapp: #25d366;
+  --bc-accent: var(--bc-ink);
 
   /* ── Tipografía ── */
   --bc-font-display: 'DM Sans', system-ui, sans-serif;
@@ -91,7 +92,7 @@
   --color-primary: var(--bc-ink);
   --color-primary-light: var(--bc-gray-700);
   --color-primary-dark: var(--bc-ink-soft);
-  --color-accent: var(--bc-ink);
+  --color-accent: var(--bc-accent);
   --color-accent-glow: transparent;
 
   --color-text: var(--bc-text);

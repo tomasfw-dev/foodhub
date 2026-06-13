@@ -31,6 +31,7 @@ Ejecutar scripts `001` … `019` en orden numérico.
 | `016`–`017` | Testimonios + estado |
 | `018`–`019` | Información útil |
 | `020`–`021` | Migración logo / desacople marca pública |
+| `022` | Colores del tema en configuración |
 
 Seeds sueltos: `003`, `006`, `008`, `015`, `019`.
 
@@ -68,7 +69,7 @@ WHERE email = N'admin@demo.local';
 
 Tras instalar, configurar desde el panel admin:
 
-- **Configuración** — nombre, logo, contacto, SEO
+- **Configuración** — nombre, logo, contacto, SEO, **colores del tema**
 - **Hero home** — textos de la landing
 - **Menú, promociones, testimonios, información útil**
 

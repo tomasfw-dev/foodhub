@@ -20,6 +20,11 @@ module.exports = {
       seo_description,
       seo_keywords,
       og_image,
+      color_primario,
+      color_secundario,
+      color_fondo,
+      color_texto,
+      color_acento,
       fecha_modificacion
     FROM dbo.ConfiguracionNegocio
     WHERE id = 1
@@ -43,6 +48,11 @@ module.exports = {
       seo_description NVARCHAR(320),
       seo_keywords NVARCHAR(500),
       og_image NVARCHAR(500),
+      color_primario NVARCHAR(7),
+      color_secundario NVARCHAR(7),
+      color_fondo NVARCHAR(7),
+      color_texto NVARCHAR(7),
+      color_acento NVARCHAR(7),
       fecha_modificacion DATETIME2(0)
     );
 
@@ -63,6 +73,11 @@ module.exports = {
       seo_description = @seo_description,
       seo_keywords = @seo_keywords,
       og_image = @og_image,
+      color_primario = @color_primario,
+      color_secundario = @color_secundario,
+      color_fondo = @color_fondo,
+      color_texto = @color_texto,
+      color_acento = @color_acento,
       fecha_modificacion = SYSUTCDATETIME()
     OUTPUT
       INSERTED.id,
@@ -81,6 +96,11 @@ module.exports = {
       INSERTED.seo_description,
       INSERTED.seo_keywords,
       INSERTED.og_image,
+      INSERTED.color_primario,
+      INSERTED.color_secundario,
+      INSERTED.color_fondo,
+      INSERTED.color_texto,
+      INSERTED.color_acento,
       INSERTED.fecha_modificacion
     INTO @updated
     WHERE id = 1;

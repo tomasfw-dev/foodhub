@@ -7,6 +7,7 @@ const constants = require('../config/constants');
 const config = require('../config');
 const siteHelpers = require('../utils/site.helpers');
 const seoHelpers = require('../utils/seo.helpers');
+const themeHelpers = require('../utils/theme.helpers');
 const logger = require('../utils/logger');
 
 exports.loadSiteConfig = async (req, res, next) => {
@@ -22,6 +23,8 @@ exports.loadSiteConfig = async (req, res, next) => {
       locals.whatsapp.phone
     );
     res.locals.seoBase = seoHelpers.buildSeoBase(configRow, config.siteUrl);
+    res.locals.themeCss = themeHelpers.buildThemeStyleBlock(configRow);
+    res.locals.hasCustomTheme = themeHelpers.hasCustomTheme(configRow);
 
     return next();
   } catch (err) {
@@ -33,6 +36,8 @@ exports.loadSiteConfig = async (req, res, next) => {
     res.locals.whatsapp = fallback.whatsapp;
     res.locals.whatsappUrl = whatsappService.getDefaultUrl();
     res.locals.seoBase = seoHelpers.buildSeoBase(null, config.siteUrl);
+    res.locals.themeCss = '';
+    res.locals.hasCustomTheme = false;
 
     return next();
   }

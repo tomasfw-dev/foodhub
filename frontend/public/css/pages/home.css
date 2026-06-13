@@ -139,14 +139,14 @@
 
 .hero__cta.btn--primary {
   background-color: var(--bc-ink);
-  color: #ffffff;
+  color: var(--bc-text-inverse, var(--bc-paper));
   border-color: var(--bc-ink);
 }
 
 .hero__cta.btn--primary:hover {
   background-color: var(--bc-ink-soft);
   border-color: var(--bc-ink-soft);
-  color: #ffffff;
+  color: var(--bc-text-inverse, var(--bc-paper));
 }
 
 .hero__cta--whatsapp.btn--outline {
@@ -157,7 +157,7 @@
 
 .hero__cta--whatsapp.btn--outline:hover {
   background-color: var(--bc-ink);
-  color: #ffffff;
+  color: var(--bc-text-inverse, var(--bc-paper));
 }
 
 .hero__cta--whatsapp .btn__icon--whatsapp {
@@ -204,7 +204,7 @@
   padding: 0;
   border-radius: 50%;
   background: var(--bc-ink);
-  color: #ffffff;
+  color: var(--bc-text-inverse, var(--bc-paper));
   border: 1px solid var(--bc-ink);
   box-shadow: var(--bc-shadow-md);
   transition:

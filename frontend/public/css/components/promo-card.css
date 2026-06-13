@@ -33,9 +33,9 @@
 }
 
 .promo-card--featured .promo-card__tag {
-  color: var(--bc-paper);
-  background: var(--bc-ink);
-  border-color: var(--bc-ink);
+  color: var(--bc-text-inverse, var(--bc-paper));
+  background: var(--bc-accent, var(--bc-ink));
+  border-color: var(--bc-accent, var(--bc-ink));
 }
 
 .promo-card--featured .promo-card__title {
@@ -86,9 +86,9 @@
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--bc-ink);
+  color: var(--bc-accent, var(--bc-ink));
   background: var(--bc-paper);
-  border: 2px solid var(--bc-ink);
+  border: 2px solid var(--bc-accent, var(--bc-ink));
   border-radius: var(--radius-full);
   box-shadow: var(--shadow-sm);
 }
