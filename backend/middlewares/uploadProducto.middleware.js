@@ -32,10 +32,11 @@ const storage = multer.diskStorage({
 const upload = multer({
   storage,
   fileFilter: createImageFileFilter(),
-  limits: { fileSize: uploadConfig.MAX_FILE_SIZE, files: 1 },
+  limits: { fileSize: uploadConfig.MAX_PRODUCTO_UPLOAD_SIZE, files: 1 },
 });
 
 exports.uploadProductoImagen = wrapUploadWithSanitization(
   upload.single(uploadConfig.FIELD_NAME),
-  'single'
+  'single',
+  { profile: 'producto' }
 );

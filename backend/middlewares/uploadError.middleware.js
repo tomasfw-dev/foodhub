@@ -11,9 +11,12 @@ const GENERIC_UPLOAD_MESSAGE = 'Error al subir la imagen.';
 const UPLOAD_ERROR_PATTERN =
   /permitid|MIME|archivo|imagen|ruta|válid|valid|procesar|directorio|externa/i;
 
-function resolveUploadMessage(err) {
+function resolveUploadMessage(err, req) {
   if (err instanceof multer.MulterError) {
     if (err.code === 'LIMIT_FILE_SIZE') {
+      if (req.originalUrl.startsWith(ADMIN_PRODUCTOS)) {
+        return 'La imagen supera el tamaño máximo de 50 MB.';
+      }
       return 'La imagen supera el tamaño máximo de 5 MB.';
     }
     if (err.code === 'LIMIT_FILE_COUNT') {
@@ -63,7 +66,7 @@ exports.handleUploadError = (err, req, res, next) => {
 
   if (!isUploadError) return next(err);
 
-  const message = resolveUploadMessage(err);
+  const message = resolveUploadMessage(err, req);
   logApplicationError('Error de carga de imagen', err, req);
 
   const safeMessage = getClientErrorMessage(

@@ -13,6 +13,16 @@ Ejecutar **un solo archivo** con esquema final + seeds demo:
 3. Configurar `.env` (ver `.env.example` en la raíz).
 4. Definir contraseña del admin (ver abajo).
 
+### Vaciar la BD antes de reinstalar
+
+Si querés borrar todas las tablas y volver a instalar desde cero:
+
+```text
+000_drop_all.sql   →   000_install_completo.sql
+```
+
+`000_drop_all.sql` elimina tablas y datos; **no** borra imágenes en `frontend/public/uploads/`.
+
 ## Instalación incremental (bases existentes)
 
 Ejecutar scripts `001` … `019` en orden numérico.

@@ -22,10 +22,14 @@ function createImageFileFilter() {
   };
 }
 
-async function sanitizeReqFile(req) {
+async function sanitizeReqFile(req, profile = 'standard') {
   if (!req.file?.path) return;
 
-  const filename = await uploadService.sanitizeUploadedImage(req.file.path);
+  const filename =
+    profile === 'producto'
+      ? await uploadService.sanitizeProductoImage(req.file.path)
+      : await uploadService.sanitizeUploadedImage(req.file.path);
+
   req.file.filename = filename;
   req.file.path = path.join(path.dirname(req.file.path), filename);
 }
@@ -44,11 +48,13 @@ async function sanitizeReqFiles(req) {
 }
 
 /**
- * Ejecuta multer y sanitiza con sharp antes de continuar.
  * @param {(req: import('express').Request, res: import('express').Response, next: import('express').NextFunction) => void} multerHandler
  * @param {'single'|'fields'} mode
+ * @param {{ profile?: 'standard'|'producto' }} [options]
  */
-function wrapUploadWithSanitization(multerHandler, mode) {
+function wrapUploadWithSanitization(multerHandler, mode, options = {}) {
+  const profile = options.profile || 'standard';
+
   return (req, res, next) => {
     multerHandler(req, res, async (err) => {
       if (err) {
@@ -60,7 +66,7 @@ function wrapUploadWithSanitization(multerHandler, mode) {
         if (mode === 'fields') {
           await sanitizeReqFiles(req);
         } else {
-          await sanitizeReqFile(req);
+          await sanitizeReqFile(req, profile);
         }
         next();
       } catch (sanitizeErr) {

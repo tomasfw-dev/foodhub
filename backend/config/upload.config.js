@@ -23,7 +23,18 @@ module.exports = {
   LOGO_FIELD_NAME: 'logo',
   OG_FIELD_NAME: 'og_image',
   HERO_FIELD_NAME: 'imagen',
+  /** Límite de subida para logos, hero, promociones, OG (antes de optimizar). */
   MAX_FILE_SIZE: 5 * 1024 * 1024,
+  /** Límite de subida temporal para productos (Sharp optimiza después). */
+  MAX_PRODUCTO_UPLOAD_SIZE: 50 * 1024 * 1024,
+  /** Tamaño máximo del archivo de producto ya optimizado en disco. */
+  MAX_PRODUCTO_OUTPUT_SIZE: 2 * 1024 * 1024,
+  PRODUCTO_IMAGE: {
+    MAX_WIDTH: 1200,
+    MAX_HEIGHT: 1200,
+    WEBP_QUALITY: 80,
+    JPEG_QUALITY: 82,
+  },
   ALLOWED_EXTENSIONS: new Set(['.jpg', '.jpeg', '.png', '.webp']),
   ALLOWED_MIMES: new Set(['image/jpeg', 'image/png', 'image/webp']),
 };

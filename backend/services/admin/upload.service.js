@@ -6,6 +6,116 @@ const uploadConfig = require('../../config/upload.config');
 const logger = require('../../utils/logger');
 const { createUploadError } = require('../../utils/upload.helpers');
 
+const ALLOWED_SHARP_FORMATS = new Set(['jpeg', 'png', 'webp']);
+
+const STANDARD_SHARP_FORMAT = {
+  jpeg: { ext: '.jpg', apply: (instance) => instance.jpeg({ quality: 85, mozjpeg: true }) },
+  png: { ext: '.png', apply: (instance) => instance.png() },
+  webp: { ext: '.webp', apply: (instance) => instance.webp({ quality: 85 }) },
+};
+
+function removeFile(filePath) {
+  if (filePath && fs.existsSync(filePath)) {
+    fs.unlinkSync(filePath);
+  }
+}
+
+async function readImageMetadata(filePath) {
+  try {
+    return await sharp(filePath, { failOn: 'error' }).metadata();
+  } catch (err) {
+    logger.warn('Imagen rechazada: no se pudo leer con sharp', { filePath, error: err.message });
+    removeFile(filePath);
+    throw createUploadError(
+      'El archivo no es una imagen válida. Solo se aceptan JPG, JPEG, PNG o WEBP.'
+    );
+  }
+}
+
+function assertAllowedFormat(metadata, filePath) {
+  if (!metadata.format || !ALLOWED_SHARP_FORMATS.has(metadata.format)) {
+    removeFile(filePath);
+    throw createUploadError(
+      'Formato de imagen no permitido. Solo se aceptan JPG, JPEG, PNG o WEBP.'
+    );
+  }
+}
+
+function writeOptimizedBuffer(filePath, buffer, ext) {
+  const dir = path.dirname(filePath);
+  const baseName = path.basename(filePath, path.extname(filePath));
+  const finalFilename = `${baseName}${ext}`;
+  const finalPath = path.join(dir, finalFilename);
+
+  fs.writeFileSync(finalPath, buffer);
+  if (finalPath !== filePath) {
+    removeFile(filePath);
+  }
+
+  return finalFilename;
+}
+
+function buildProductPipeline(filePath) {
+  const { MAX_WIDTH, MAX_HEIGHT } = uploadConfig.PRODUCTO_IMAGE;
+
+  return sharp(filePath, { failOn: 'error' })
+    .rotate()
+    .resize({
+      width: MAX_WIDTH,
+      height: MAX_HEIGHT,
+      fit: 'inside',
+      withoutEnlargement: true,
+    });
+}
+
+/**
+ * Optimiza imagen de producto: resize, WebP/JPG, límite de salida 2 MB.
+ * @param {string} filePath
+ * @returns {Promise<string>}
+ */
+async function optimizeProductImage(filePath) {
+  const metadata = await readImageMetadata(filePath);
+  assertAllowedFormat(metadata, filePath);
+
+  const pipeline = buildProductPipeline(filePath);
+  const maxOutput = uploadConfig.MAX_PRODUCTO_OUTPUT_SIZE;
+  const { WEBP_QUALITY, JPEG_QUALITY } = uploadConfig.PRODUCTO_IMAGE;
+
+  const attempts = [
+    { ext: '.webp', run: (p) => p.webp({ quality: WEBP_QUALITY }) },
+    { ext: '.webp', run: (p) => p.webp({ quality: 70 }) },
+    { ext: '.webp', run: (p) => p.webp({ quality: 60 }) },
+    { ext: '.jpg', run: (p) => p.jpeg({ quality: JPEG_QUALITY, mozjpeg: true }) },
+    { ext: '.jpg', run: (p) => p.jpeg({ quality: 72, mozjpeg: true }) },
+  ];
+
+  for (const attempt of attempts) {
+    let buffer;
+    try {
+      buffer = await attempt.run(pipeline.clone()).toBuffer();
+    } catch (err) {
+      logger.warn('Error al optimizar imagen de producto', { filePath, error: err.message });
+      removeFile(filePath);
+      throw createUploadError('No se pudo procesar la imagen. Verificá que sea un archivo válido.');
+    }
+
+    if (buffer.length <= maxOutput) {
+      const finalFilename = writeOptimizedBuffer(filePath, buffer, attempt.ext);
+      logger.info('Imagen de producto optimizada', {
+        filename: finalFilename,
+        bytes: buffer.length,
+        format: attempt.ext,
+      });
+      return finalFilename;
+    }
+  }
+
+  removeFile(filePath);
+  throw createUploadError(
+    'La imagen optimizada sigue siendo demasiado pesada (máx. 2 MB). Probá con una foto más chica o con menos detalle.'
+  );
+}
+
 exports.ensureProductosUploadDir = () => {
   if (!fs.existsSync(uploadConfig.PRODUCTOS_DIR)) {
     fs.mkdirSync(uploadConfig.PRODUCTOS_DIR, { recursive: true });
@@ -77,68 +187,42 @@ exports.isAllowedExtension = (filename) => {
   return uploadConfig.ALLOWED_EXTENSIONS.has(ext);
 };
 
-const SHARP_FORMAT_CONFIG = {
-  jpeg: { ext: '.jpg', apply: (instance) => instance.jpeg({ quality: 85, mozjpeg: true }) },
-  png: { ext: '.png', apply: (instance) => instance.png() },
-  webp: { ext: '.webp', apply: (instance) => instance.webp({ quality: 85 }) },
-};
-
 /**
- * Valida magic bytes y re-encodea la imagen con sharp (elimina contenido incrustado).
- * @param {string} filePath - Ruta absoluta del archivo subido por multer
- * @returns {Promise<string>} Nombre de archivo final (puede cambiar la extensión)
+ * Valida magic bytes y re-encodea (uploads estándar: logos, hero, promos, OG).
+ * @param {string} filePath
+ * @returns {Promise<string>}
  */
 exports.sanitizeUploadedImage = async (filePath) => {
   if (!filePath || !fs.existsSync(filePath)) {
     throw createUploadError('No se recibió ningún archivo de imagen.');
   }
 
-  let metadata;
-  try {
-    metadata = await sharp(filePath, { failOn: 'error' }).metadata();
-  } catch (err) {
-    logger.warn('Imagen rechazada: no se pudo leer con sharp', { filePath, error: err.message });
-    fs.unlinkSync(filePath);
-    throw createUploadError(
-      'El archivo no es una imagen válida. Solo se aceptan JPG, JPEG, PNG o WEBP.'
-    );
-  }
+  const metadata = await readImageMetadata(filePath);
+  assertAllowedFormat(metadata, filePath);
 
-  const formatConfig = SHARP_FORMAT_CONFIG[metadata.format];
-  if (!formatConfig) {
-    fs.unlinkSync(filePath);
-    throw createUploadError(
-      'Formato de imagen no permitido. Solo se aceptan JPG, JPEG, PNG o WEBP.'
-    );
-  }
-
+  const formatConfig = STANDARD_SHARP_FORMAT[metadata.format];
   let buffer;
+
   try {
     buffer = await formatConfig.apply(sharp(filePath).rotate()).toBuffer();
   } catch (err) {
     logger.warn('Imagen rechazada al re-encodear', { filePath, error: err.message });
-    fs.unlinkSync(filePath);
+    removeFile(filePath);
     throw createUploadError('No se pudo procesar la imagen. Verificá que sea un archivo válido.');
   }
 
   if (buffer.length > uploadConfig.MAX_FILE_SIZE) {
-    fs.unlinkSync(filePath);
+    removeFile(filePath);
     throw createUploadError('La imagen supera el tamaño máximo de 5 MB.');
   }
 
-  const dir = path.dirname(filePath);
-  const baseName = path.basename(filePath, path.extname(filePath));
-  const finalFilename = `${baseName}${formatConfig.ext}`;
-  const finalPath = path.join(dir, finalFilename);
-
-  fs.writeFileSync(finalPath, buffer);
-  if (finalPath !== filePath) {
-    fs.unlinkSync(filePath);
-  }
-
+  const finalFilename = writeOptimizedBuffer(filePath, buffer, formatConfig.ext);
   logger.info('Imagen sanitizada', { filename: finalFilename, bytes: buffer.length });
   return finalFilename;
 };
+
+/** @type {typeof optimizeProductImage} */
+exports.sanitizeProductoImage = optimizeProductImage;
 
 exports.deleteProductoImage = (publicUrl) => {
   if (!publicUrl || !publicUrl.startsWith(`${uploadConfig.PUBLIC_PREFIX}/`)) {
@@ -217,7 +301,7 @@ exports.deletePromocionImage = (publicUrl) => {
   const filePath = path.join(uploadConfig.PROMOCIONES_DIR, filename);
 
   if (!fs.existsSync(filePath)) {
-    logger.warn('Imagen de promoción a eliminar no encontrada', { filePath });
+    logger.warn('Imagen de promoción no encontrada', { filePath });
     return;
   }
 
