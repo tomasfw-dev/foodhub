@@ -1,17 +1,14 @@
 <footer class="site-footer" id="contacto">
   <div class="container">
     <div class="site-footer__brand">
-      <a href="<%= routes.HOME %>" class="site-footer__logo" aria-label="<%= appName %> — Inicio">
-        <img
-          src="<%= site.logoUrl %>"
-          alt="<%= appName %>"
-          class="site-footer__logo-img"
-          width="220"
-          height="220"
-          loading="lazy"
-          decoding="async"
-        >
-      </a>
+      <%- include('./public-brand', {
+        brandLinkClass: 'site-footer__logo',
+        brandImgClass: 'site-footer__logo-img',
+        brandTextClass: 'site-footer__brand-name',
+        brandImgWidth: 220,
+        brandImgHeight: 220,
+        brandImgLoading: 'lazy',
+      }) %>
       <p class="site-footer__tagline"><%= site.tagline %></p>
     </div>
 
@@ -33,9 +30,12 @@
             </a>
           </li>
           <% } %>
+          <% if (site.email) { %>
           <li>
             <a href="mailto:<%= site.email %>" class="site-footer__link"><%= site.email %></a>
           </li>
+          <% } %>
+          <% if (site.instagram) { %>
           <li>
             <a
               href="<%= site.instagram %>"
@@ -43,9 +43,10 @@
               rel="noopener noreferrer"
               class="site-footer__link"
             >
-              Instagram · <%= site.instagramHandle %>
+              Instagram<% if (site.instagramHandle) { %> · <%= site.instagramHandle %><% } %>
             </a>
           </li>
+          <% } %>
         </ul>
       </div>
 
@@ -63,12 +64,12 @@
 
       <div class="site-footer__col">
         <h3 class="site-footer__heading">Horarios</h3>
-        <p class="site-footer__text"><%= site.hours %></p>
+        <p class="site-footer__text"><%= site.hours || 'Consultá por WhatsApp' %></p>
       </div>
 
       <div class="site-footer__col">
         <h3 class="site-footer__heading">Ubicación</h3>
-        <p class="site-footer__text"><%= site.location %></p>
+        <p class="site-footer__text"><%= site.location || 'Consultá por WhatsApp' %></p>
         <p class="site-footer__note">Retiro y envíos por zona — consultá por WhatsApp</p>
       </div>
     </div>

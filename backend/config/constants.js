@@ -1,5 +1,35 @@
+/** Marca de la plataforma (solo admin, login, docs). */
+const PLATFORM_NAME = 'FoodHub';
+const PLATFORM_LOGO_URL = '/images/logo-default.png';
+
+/** Nombre visible del negocio cuando no hay configuración en BD. */
+const DEFAULT_APP_NAME = 'Mi negocio';
+
+/** Valores por defecto del sitio público (fallback sin BD). */
+const DEFAULT_SITE_CONFIG = {
+  tagline: 'Carta online y pedidos por WhatsApp',
+  instagram: '',
+  instagramHandle: '',
+  email: '',
+  location: '',
+  hours: '',
+};
+
 module.exports = {
-  APP_NAME: 'Bendita-Comida',
+  PLATFORM_NAME,
+  PLATFORM_LOGO_URL,
+  DEFAULT_APP_NAME,
+  DEFAULT_SITE_CONFIG,
+
+  /** @deprecated Usar DEFAULT_APP_NAME */
+  get APP_NAME() {
+    return DEFAULT_APP_NAME;
+  },
+
+  /** @deprecated Usar DEFAULT_SITE_CONFIG */
+  get SITE() {
+    return DEFAULT_SITE_CONFIG;
+  },
 
   ROUTES: {
     HOME: '/',
@@ -32,15 +62,5 @@ module.exports = {
     PREGUNTAS_FRECUENTES: '/admin/informacion-util/preguntas-frecuentes',
     PREGUNTAS_FRECUENTES_CREATE: '/admin/informacion-util/preguntas-frecuentes/create',
     PERFIL: '/admin/perfil',
-  },
-
-  SITE: {
-    logoUrl: '/images/logo-bendita-comida.png',
-    tagline: 'Sabores de casa, calidad premium',
-    instagram: 'https://instagram.com/comidacarito',
-    instagramHandle: '@comidacarito',
-    email: 'hola@comidacarito.com',
-    location: 'Buenos Aires, Argentina',
-    hours: 'Lun – Sáb · 11:00 a 21:00',
   },
 };

@@ -1,16 +1,13 @@
 <header class="navbar" id="navbar">
   <div class="navbar__bar">
     <div class="navbar__inner">
-      <a href="<%= routes.HOME %>" class="navbar__logo" aria-label="<%= appName %> — Inicio">
-        <img
-          src="<%= site.logoUrl %>"
-          alt="<%= appName %>"
-          class="navbar__logo-img"
-          width="164"
-          height="72"
-          decoding="async"
-        >
-      </a>
+      <%- include('./public-brand', {
+        brandLinkClass: 'navbar__logo',
+        brandImgClass: 'navbar__logo-img',
+        brandTextClass: 'navbar__logo-text',
+        brandImgWidth: 164,
+        brandImgHeight: 72,
+      }) %>
 
       <button
         class="navbar__toggle"
@@ -26,6 +23,7 @@
 
       <nav class="navbar__menu" id="navbar-menu" aria-label="Navegación principal">
         <div class="navbar__menu-brand">
+          <% if (site.hasLogo && site.logoUrl) { %>
           <img
             src="<%= site.logoUrl %>"
             alt=""
@@ -35,6 +33,9 @@
             decoding="async"
             aria-hidden="true"
           >
+          <% } else { %>
+          <span class="navbar__menu-brand-text" aria-hidden="true"><%= appName %></span>
+          <% } %>
           <hr class="navbar__menu-divider" aria-hidden="true">
         </div>
 

@@ -4,84 +4,82 @@
   id="adminSidebar"
   aria-labelledby="adminSidebarLabel"
 >
-  <div class="offcanvas-header d-lg-none">
-    <h5 class="offcanvas-title" id="adminSidebarLabel"><%= appName %></h5>
-    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#adminSidebar" aria-label="Cerrar"></button>
+  <span id="adminSidebarLabel" class="visually-hidden"><%= platformName %> — Panel administrativo</span>
+
+  <div class="offcanvas-header d-lg-none admin-sidebar__mobile-bar">
+    <span class="admin-sidebar__mobile-title">Menú admin</span>
+    <button
+      type="button"
+      class="btn-close"
+      data-bs-dismiss="offcanvas"
+      data-bs-target="#adminSidebar"
+      aria-label="Cerrar menú"
+    ></button>
   </div>
 
-  <div class="offcanvas-body d-flex flex-column p-0">
-    <div class="admin-sidebar__brand px-4 py-4 d-none d-lg-block">
-      <span class="admin-sidebar__logo"><%= appName %></span>
-      <small class="d-block text-muted">Panel administrativo</small>
-      <% if (typeof adminUser !== 'undefined' && adminUser) { %>
-      <small class="d-block text-muted mt-1"><%= adminUser.nombre %></small>
-      <% } %>
-    </div>
+  <div class="offcanvas-body admin-sidebar__inner">
+    <header class="admin-sidebar__head">
+      <a href="<%= adminRoutes.DASHBOARD %>" class="admin-sidebar__logo-link" aria-label="<%= platformName %> — Dashboard">
+        <img
+          src="<%= platformLogoUrl %>"
+          alt="<%= platformName %>"
+          class="admin-sidebar__logo"
+          width="240"
+          height="88"
+          decoding="async"
+        >
+      </a>
 
-    <nav class="admin-sidebar__nav nav flex-column px-3 flex-grow-1">
+      <div class="admin-sidebar__meta">
+        <span class="admin-sidebar__badge">Panel administrativo</span>
+        <% if (typeof adminUser !== 'undefined' && adminUser) { %>
+        <div class="admin-sidebar__user">
+          <i class="bi bi-person-circle admin-sidebar__user-icon" aria-hidden="true"></i>
+          <span class="admin-sidebar__user-name"><%= adminUser.nombre %></span>
+        </div>
+        <% } %>
+      </div>
+    </header>
+
+    <nav class="admin-sidebar__menu" aria-label="Módulos administrativos">
+      <%
+        const adminMenuItems = [
+          { key: 'dashboard', href: adminRoutes.DASHBOARD, icon: 'bi-speedometer2', label: 'Dashboard' },
+          { key: 'categorias', href: adminRoutes.CATEGORIAS, icon: 'bi-folder', label: 'Categorías' },
+          { key: 'productos', href: adminRoutes.PRODUCTOS, icon: 'bi-basket', label: 'Productos' },
+          { key: 'promociones', href: adminRoutes.PROMOCIONES, icon: 'bi-tag', label: 'Promociones' },
+          { key: 'hero', href: adminRoutes.HERO, icon: 'bi-image', label: 'Hero home' },
+          { key: 'testimonios', href: adminRoutes.TESTIMONIOS, icon: 'bi-chat-quote', label: 'Testimonios' },
+          { key: 'informacion-util', href: adminRoutes.INFORMACION_UTIL, icon: 'bi-info-circle', label: 'Información útil' },
+          { key: 'configuracion', href: adminRoutes.CONFIGURACION, icon: 'bi-gear', label: 'Configuración' },
+          { key: 'perfil', href: adminRoutes.PERFIL, icon: 'bi-person', label: 'Mi perfil' },
+        ];
+      %>
+      <% adminMenuItems.forEach(function(item) { %>
       <a
-        href="<%= adminRoutes.DASHBOARD %>"
-        class="nav-link<%= activeMenu === 'dashboard' ? ' active' : '' %>"
+        href="<%= item.href %>"
+        class="admin-sidebar__link<%= activeMenu === item.key ? ' is-active' : '' %>"
       >
-        <i class="bi bi-speedometer2 me-2"></i>Dashboard
+        <i class="bi <%= item.icon %> admin-sidebar__link-icon" aria-hidden="true"></i>
+        <span class="admin-sidebar__link-text"><%= item.label %></span>
       </a>
-      <a
-        href="<%= adminRoutes.CATEGORIAS %>"
-        class="nav-link<%= activeMenu === 'categorias' ? ' active' : '' %>"
-      >
-        <i class="bi bi-folder me-2"></i>Categorías
-      </a>
-      <a
-        href="<%= adminRoutes.PRODUCTOS %>"
-        class="nav-link<%= activeMenu === 'productos' ? ' active' : '' %>"
-      >
-        <i class="bi bi-basket me-2"></i>Productos
-      </a>
-      <a
-        href="<%= adminRoutes.PROMOCIONES %>"
-        class="nav-link<%= activeMenu === 'promociones' ? ' active' : '' %>"
-      >
-        <i class="bi bi-tag me-2"></i>Promociones
-      </a>
-      <a
-        href="<%= adminRoutes.HERO %>"
-        class="nav-link<%= activeMenu === 'hero' ? ' active' : '' %>"
-      >
-        <i class="bi bi-image me-2"></i>Hero home
-      </a>
-      <a
-        href="<%= adminRoutes.TESTIMONIOS %>"
-        class="nav-link<%= activeMenu === 'testimonios' ? ' active' : '' %>"
-      >
-        <i class="bi bi-chat-quote me-2"></i>Testimonios
-      </a>
-      <a
-        href="<%= adminRoutes.INFORMACION_UTIL %>"
-        class="nav-link<%= activeMenu === 'informacion-util' ? ' active' : '' %>"
-      >
-        <i class="bi bi-info-circle me-2"></i>Información útil
-      </a>
-      <a
-        href="<%= adminRoutes.CONFIGURACION %>"
-        class="nav-link<%= activeMenu === 'configuracion' ? ' active' : '' %>"
-      >
-        <i class="bi bi-gear me-2"></i>Configuración
-      </a>
-      <a
-        href="<%= adminRoutes.PERFIL %>"
-        class="nav-link<%= activeMenu === 'perfil' ? ' active' : '' %>"
-      >
-        <i class="bi bi-person-circle me-2"></i>Mi perfil
-      </a>
+      <% }); %>
     </nav>
 
-    <div class="admin-sidebar__footer px-3 py-4 mt-auto">
-      <a href="<%= routes.AUTH_LOGOUT %>" class="nav-link text-danger">
-        <i class="bi bi-box-arrow-right me-2"></i>Cerrar sesión
+    <footer class="admin-sidebar__foot">
+      <a href="<%= routes.AUTH_LOGOUT %>" class="admin-sidebar__link admin-sidebar__link--danger">
+        <i class="bi bi-box-arrow-right admin-sidebar__link-icon" aria-hidden="true"></i>
+        <span class="admin-sidebar__link-text">Cerrar sesión</span>
       </a>
-      <a href="<%= routes.HOME %>" class="nav-link small text-muted" target="_blank" rel="noopener">
-        <i class="bi bi-globe me-2"></i>Ver sitio
+      <a
+        href="<%= routes.HOME %>"
+        class="admin-sidebar__link admin-sidebar__link--muted"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <i class="bi bi-globe admin-sidebar__link-icon" aria-hidden="true"></i>
+        <span class="admin-sidebar__link-text">Ver sitio</span>
       </a>
-    </div>
+    </footer>
   </div>
 </aside>

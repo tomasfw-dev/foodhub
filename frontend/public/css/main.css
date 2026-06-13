@@ -61,6 +61,19 @@ body.menu-open {
   letter-spacing: var(--bc-tracking-display);
 }
 
+.site-header__logo--image {
+  display: inline-flex;
+  align-items: center;
+}
+
+.site-header__logo-img {
+  display: block;
+  width: auto;
+  height: 48px;
+  max-width: min(45vw, 220px);
+  object-fit: contain;
+}
+
 .site-header__nav {
   display: flex;
   gap: var(--bc-space-4);

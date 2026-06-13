@@ -1,5 +1,5 @@
 /*
-  Bendita-Comida — Valores iniciales del hero (contenido actual de la landing)
+  Plataforma gastronómica — Hero inicial de la landing (demo)
   Ejecutar después de 014_schema_hero_home.sql
 */
 
@@ -25,21 +25,21 @@ BEGIN
     )
     VALUES (
         1,
-        N'Sabores de casa, calidad premium',
-        N'Sabores que',
-        N'abrazan',
-        N'el alma',
-        N'Cocina casera premium, ingredientes seleccionados y el cariño de siempre en cada plato.',
+        N'Carta online y pedidos por WhatsApp',
+        N'Bienvenidos a',
+        N'nuestro local',
+        NULL,
+        N'Descubrí la carta, elegí tus favoritos y consultanos por WhatsApp.',
         N'Ver menú',
         N'/menu',
         N'Pedir por WhatsApp',
         NULL,
-        N'/images/logo-bendita-comida.png',
+        NULL,
         1,
         SYSUTCDATETIME()
     );
 
-    PRINT 'Hero de la home inicializado.';
+    PRINT 'Hero demo de la home inicializado.';
 END
 ELSE
 BEGIN

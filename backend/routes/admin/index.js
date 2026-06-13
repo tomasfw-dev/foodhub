@@ -10,8 +10,11 @@ const heroRoutes = require('./hero.routes');
 const testimoniosRoutes = require('./testimonios.routes');
 const informacionUtilRoutes = require('./informacion-util');
 
+const { loadPlatformBrand } = require('../../middlewares/platformBrand.middleware');
+
 const router = Router();
 
+router.use(loadPlatformBrand);
 router.use(requireAuth);
 
 router.use('/', dashboardRoutes);

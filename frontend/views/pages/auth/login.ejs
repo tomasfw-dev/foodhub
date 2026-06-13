@@ -1,15 +1,15 @@
 <div class="auth-card">
   <div class="auth-card__brand text-center mb-4">
     <img
-      src="<%= site.logoUrl %>"
-      alt="<%= appName %>"
+      src="<%= platformLogoUrl %>"
+      alt="<%= platformName %>"
       class="auth-card__logo"
-      width="180"
-      height="150"
+      width="300"
+      height="112"
       decoding="async"
     >
-    <h1 class="auth-card__title">Panel administrativo</h1>
-    <p class="auth-card__subtitle">Ingresá con tu cuenta de administradora</p>
+    <h1 class="auth-card__title"><%= platformName %></h1>
+    <p class="auth-card__subtitle">Panel administrativo</p>
   </div>
 
   <% if (typeof success !== 'undefined' && success) { %>

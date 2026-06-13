@@ -1,31 +1,86 @@
-# SQL Server — Bendita-Comida
+# SQL Server — FoodHub (plataforma gastronómica white-label)
 
-## Ejecución
+## Instalación rápida (recomendada)
 
-1. Crear la base (opcional, descomentar en el script).
-2. Ejecutar `001_schema_bendita_comida.sql` en SSMS o Azure Data Studio.
-3. Opcional: `003_seed_menu_ejemplo.sql` para datos de prueba del menú.
-4. Consultas de referencia del menú: `002_menu_queries.sql`.
-5. Consulta del dashboard admin: `004_dashboard_queries.sql`.
+Ejecutar **un solo archivo** con esquema final + seeds demo:
 
-## Modelo
+```text
+000_install_completo.sql
+```
+
+1. Descomentar `CREATE DATABASE` / `USE` en el script si hace falta.
+2. Ejecutar en SSMS o Azure Data Studio.
+3. Configurar `.env` (ver `.env.example` en la raíz).
+4. Definir contraseña del admin (ver abajo).
+
+## Instalación incremental (bases existentes)
+
+Ejecutar scripts `001` … `019` en orden numérico.
+
+| Script | Contenido |
+|--------|-----------|
+| `001` | Administradores, Categorías, Productos |
+| `007` | ConfiguracionNegocio |
+| `008` | Seed configuración demo |
+| `009` | sesion_version en admin |
+| `010` | Promociones |
+| `011` | Productos.destacado |
+| `012` | orden en categorías/productos |
+| `013` | SEO en configuración |
+| `014`–`015` | Hero home |
+| `016`–`017` | Testimonios + estado |
+| `018`–`019` | Información útil |
+| `020`–`021` | Migración logo / desacople marca pública |
+
+Seeds sueltos: `003`, `006`, `008`, `015`, `019`.
+
+## Marca pública vs plataforma
+
+- **Sitio público:** nombre, slogan y logo desde `ConfiguracionNegocio`. Sin logo → se muestra el nombre del negocio.
+- **Admin / login:** marca **FoodHub** (`/images/logo-default.png`).
+
+Bases existentes con logo de plataforma en configuración:
+
+```text
+021_migrate_marca_publica.sql
+```
+
+## Administrador inicial
+
+- Email demo: `admin@demo.local`
+- El repositorio **no** incluye contraseñas en texto plano.
+
+Generar hash bcrypt:
+
+```bash
+node backend/scripts/hash-password.js "tu_contraseña_segura"
+```
+
+Actualizar en SQL Server:
+
+```sql
+UPDATE dbo.Administradores
+SET password_hash = N'...pegar_hash...'
+WHERE email = N'admin@demo.local';
+```
+
+## Personalización por negocio
+
+Tras instalar, configurar desde el panel admin:
+
+- **Configuración** — nombre, logo, contacto, SEO
+- **Hero home** — textos de la landing
+- **Menú, promociones, testimonios, información útil**
+
+Logo fallback interno (solo admin): `/images/logo-default.png`
+
+## Modelo principal
 
 ```
-Administradores (independiente)
+ConfiguracionNegocio (singleton)
+HeroHome (singleton)
+Administradores
 
 Categorias 1 ──────< N Productos
+Promociones | Testimonios | ZonasEntrega | FormasPago | PreguntasFrecuentes
 ```
-
-## Convenciones
-
-| Campo | Uso |
-|-------|-----|
-| `activo` | Habilita/deshabilita sin borrar el registro |
-| `fecha_baja` | Soft delete (`NULL` = vigente) |
-| `fecha_modificacion` | Actualizada por trigger en `UPDATE` |
-
-## Índices
-
-- **Administradores**: filtro por `activo` (login).
-- **Categorias**: listados admin y menú por `activo` + `fecha_baja`.
-- **Productos**: `categoria_id` (FK), catálogo filtrado, búsqueda por `nombre`.

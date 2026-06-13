@@ -1,16 +1,13 @@
 <footer class="site-footer site-footer--simple">
   <div class="container">
-    <a href="<%= routes.HOME %>" class="site-footer__logo site-footer__logo--simple" aria-label="<%= appName %> — Inicio">
-      <img
-        src="<%= site.logoUrl %>"
-        alt="<%= appName %>"
-        class="site-footer__logo-img"
-        width="140"
-        height="140"
-        loading="lazy"
-        decoding="async"
-      >
-    </a>
+    <%- include('./public-brand', {
+      brandLinkClass: 'site-footer__logo site-footer__logo--simple',
+      brandImgClass: 'site-footer__logo-img',
+      brandTextClass: 'site-footer__brand-name site-footer__brand-name--simple',
+      brandImgWidth: 140,
+      brandImgHeight: 140,
+      brandImgLoading: 'lazy',
+    }) %>
     <p>&copy; <%= new Date().getFullYear() %> <%= appName %>. Todos los derechos reservados.</p>
   </div>
 </footer>

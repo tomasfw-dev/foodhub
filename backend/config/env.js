@@ -7,7 +7,7 @@ module.exports = {
 
   DB_SERVER: process.env.DB_SERVER || 'localhost',
   DB_PORT: parseInt(process.env.DB_PORT, 10) || 1433,
-  DB_NAME: process.env.DB_NAME || 'BenditaComida',
+  DB_NAME: process.env.DB_NAME || 'FoodHub',
   DB_USER: process.env.DB_USER || '',
   DB_PASSWORD: process.env.DB_PASSWORD || '',
   DB_ENCRYPT: process.env.DB_ENCRYPT !== 'false',

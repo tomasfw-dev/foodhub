@@ -11,7 +11,7 @@ const logger = require('./logger');
 const constants = require('../config/constants');
 
 const DEFAULT_PRODUCT_IMAGE = '/images/placeholder-food.svg';
-const DEFAULT_HERO_IMAGE = constants.SITE.logoUrl;
+const DEFAULT_HERO_IMAGE = constants.PLATFORM_LOGO_URL;
 
 /**
  * Resuelve la URL pública de imagen de un producto.

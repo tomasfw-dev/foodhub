@@ -1,14 +1,15 @@
 /*
-  Bendita-Comida — Esquema SQL Server
+  FoodHub — Esquema base SQL Server
   Tablas: Administradores, Categorias, Productos
 
-  Ejecutar en orden. Requiere SQL Server 2016+ (DATETIME2, DROP IF EXISTS).
+  Instalación nueva: preferir 000_install_completo.sql
+  Este script: migración incremental o desarrollo por módulos.
 */
 
 -- Opcional: base de datos dedicada
--- CREATE DATABASE BenditaComida;
+-- CREATE DATABASE FoodHub;
 -- GO
--- USE BenditaComida;
+-- USE FoodHub;
 -- GO
 
 SET NOCOUNT ON;
@@ -168,5 +169,5 @@ BEGIN
 END;
 GO
 
-PRINT 'Esquema Bendita-Comida creado correctamente.';
+PRINT 'Esquema base FoodHub creado correctamente.';
 GO

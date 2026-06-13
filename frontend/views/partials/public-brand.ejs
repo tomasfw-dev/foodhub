@@ -1,0 +1,24 @@
+<%#
+  Marca pública del negocio: logo si existe, nombre si no.
+  Variables: brandLinkClass, brandImgClass, brandTextClass, brandImgWidth, brandImgHeight
+%>
+<a
+  href="<%= routes.HOME %>"
+  class="<%= typeof brandLinkClass !== 'undefined' ? brandLinkClass : 'public-brand' %>"
+  aria-label="<%= appName %> — Inicio"
+>
+  <% if (site.hasLogo && site.logoUrl) { %>
+  <img
+    src="<%= site.logoUrl %>"
+    alt="<%= appName %>"
+    class="<%= typeof brandImgClass !== 'undefined' ? brandImgClass : 'public-brand__img' %>"
+    <% if (typeof brandImgWidth !== 'undefined') { %>width="<%= brandImgWidth %>"<% } %>
+    <% if (typeof brandImgHeight !== 'undefined') { %>height="<%= brandImgHeight %>"<% } %>
+    decoding="async"
+    <% if (typeof brandImgLoading !== 'undefined') { %>loading="<%= brandImgLoading %>"<% } %>
+    <% if (typeof brandImgPriority !== 'undefined' && brandImgPriority) { %>fetchpriority="high"<% } %>
+  >
+  <% } else { %>
+  <span class="<%= typeof brandTextClass !== 'undefined' ? brandTextClass : 'public-brand__text' %>"><%= appName %></span>
+  <% } %>
+</a>

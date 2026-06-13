@@ -57,6 +57,18 @@
   -webkit-filter: brightness(0) contrast(1.25);
 }
 
+.navbar__logo-text,
+.navbar__menu-brand-text {
+  font-family: var(--bc-font-display);
+  font-size: clamp(1rem, 3.5vw, 1.35rem);
+  font-weight: 700;
+  color: var(--bc-ink);
+  text-transform: uppercase;
+  letter-spacing: var(--bc-tracking-display);
+  line-height: 1.1;
+  max-width: min(50vw, 260px);
+}
+
 /* Toggle hamburguesa */
 .navbar__toggle {
   display: flex;

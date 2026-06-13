@@ -1,5 +1,5 @@
 /*
-  Bendita-Comida — Valores iniciales de configuración del negocio
+  Plataforma gastronómica — Configuración inicial del negocio (demo)
   Ejecutar después de 007_schema_configuracion_negocio.sql
 */
 
@@ -25,21 +25,21 @@ BEGIN
     )
     VALUES (
         1,
-        N'Bendita-Comida',
-        N'Sabores de casa, calidad premium',
+        N'Mi negocio',
+        N'Carta online y pedidos por WhatsApp',
         NULL,
         NULL,
-        N'https://instagram.com/comidacarito',
         NULL,
-        N'Buenos Aires, Argentina',
-        N'Lun – Sáb · 11:00 a 21:00',
-        N'hola@comidacarito.com',
-        N'/images/logo-bendita-comida.png',
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
         N'Hola! Quiero hacer un pedido.',
         SYSUTCDATETIME()
     );
 
-    PRINT 'Configuración del negocio inicializada.';
+    PRINT 'Configuración demo del negocio inicializada.';
 END
 ELSE
 BEGIN

@@ -19,10 +19,14 @@ const app = express();
 app.set('view engine', 'ejs');
 app.set('views', paths.viewsDir);
 
-// Variables globales para todas las vistas
+// Variables globales para todas las vistas (marca del negocio se carga en loadSiteConfig)
 app.locals.appName = config.appName;
 app.locals.whatsapp = config.whatsapp;
-app.locals.site = constants.SITE;
+app.locals.site = {
+  hasLogo: false,
+  logoUrl: null,
+  ...constants.DEFAULT_SITE_CONFIG,
+};
 app.locals.routes = constants.ROUTES;
 app.locals.adminRoutes = constants.ADMIN_ROUTES;
 app.locals.resolveProductImageUrl = imageHelper.resolveProductImageUrl;

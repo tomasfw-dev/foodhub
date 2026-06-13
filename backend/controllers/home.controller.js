@@ -28,7 +28,12 @@ exports.getHome = async (req, res, next) => {
 
     const hero =
       heroActivo ||
-      heroHelpers.buildFallback(res.locals.site, res.locals.whatsapp, res.locals.whatsappUrl);
+      heroHelpers.buildFallback(
+        res.locals.site,
+        res.locals.whatsapp,
+        res.locals.whatsappUrl,
+        res.locals.appName
+      );
 
     const seo = seoHelpers.buildPageSeo(res.locals.seoBase, {
       useDefaultTitle: true,

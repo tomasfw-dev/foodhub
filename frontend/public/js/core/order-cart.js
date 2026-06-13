@@ -4,7 +4,7 @@
 (function () {
   'use strict';
 
-  var STORAGE_KEY = 'bendita-comida-pedido';
+  var STORAGE_KEY = 'negocio-pedido-v1';
   var STORAGE_VERSION = 1;
   var MAX_ITEMS = 50;
   var MAX_NAME_LENGTH = 200;
@@ -105,7 +105,13 @@
   }
 
   function buildWhatsAppMessage(items) {
-    var lines = ['Hola, me gustaría realizar el siguiente pedido:', ''];
+    var businessName = String(root.getAttribute('data-business-name') || '').trim();
+    var configuredIntro = String(root.getAttribute('data-whatsapp-intro') || '').trim();
+    var intro = configuredIntro
+      || (businessName
+        ? 'Hola, quiero hacer un pedido en ' + businessName + ':'
+        : 'Hola, me gustaría realizar el siguiente pedido:');
+    var lines = [intro, ''];
     var totals = getTotals(items);
 
     items.forEach(function (item) {

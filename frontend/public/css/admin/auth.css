@@ -13,7 +13,7 @@
 
 .auth-main {
   width: 100%;
-  max-width: 420px;
+  max-width: 440px;
 }
 
 .auth-card {
@@ -25,12 +25,12 @@
 }
 
 .auth-card__logo {
+  display: block;
   width: auto;
-  height: 120px;
-  max-width: 200px;
-  margin: 0 auto var(--bc-space-3);
+  height: 112px;
+  max-width: min(100%, 300px);
+  margin: 0 auto var(--bc-space-4);
   object-fit: contain;
-  filter: brightness(0) contrast(1.25);
 }
 
 .auth-card__title {

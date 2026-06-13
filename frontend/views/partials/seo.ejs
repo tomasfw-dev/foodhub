@@ -12,22 +12,30 @@
     });
   }
 
+  const fallbackAppName = (typeof appName !== 'undefined' && appName) ? appName : 'Mi negocio';
+  const fallbackTagline = (typeof site !== 'undefined' && site && site.tagline)
+    ? site.tagline
+    : 'Carta online y pedidos por WhatsApp';
+
   if (!meta) {
     meta = {
-      title: typeof appName !== 'undefined' ? appName : 'Bendita-Comida',
-      description: typeof site !== 'undefined' ? `${site.tagline} — Comidas caseras premium` : '',
-      keywords: typeof appName !== 'undefined' ? appName : '',
+      title: fallbackAppName,
+      description: `${fallbackAppName}. ${fallbackTagline}.`,
+      keywords: fallbackAppName,
       canonical: '',
-      ogTitle: typeof appName !== 'undefined' ? appName : 'Bendita-Comida',
-      ogDescription: typeof site !== 'undefined' ? site.tagline : '',
-      ogImage: typeof site !== 'undefined' ? site.logoUrl : '',
+      ogTitle: fallbackAppName,
+      ogDescription: fallbackTagline,
+      ogImage: '',
       ogUrl: '',
-      twitterTitle: typeof appName !== 'undefined' ? appName : 'Bendita-Comida',
-      twitterDescription: typeof site !== 'undefined' ? site.tagline : '',
-      twitterImage: typeof site !== 'undefined' ? site.logoUrl : '',
-      siteName: typeof appName !== 'undefined' ? appName : 'Bendita-Comida',
+      twitterTitle: fallbackAppName,
+      twitterDescription: fallbackTagline,
+      twitterImage: '',
+      siteName: fallbackAppName,
+      hasImage: false,
     };
   }
+
+  const hasSocialImage = Boolean(meta.hasImage || meta.ogImage || meta.twitterImage);
 %>
 <title><%= meta.title %></title>
 <meta name="description" content="<%= meta.description %>">
@@ -41,10 +49,14 @@
 <meta property="og:site_name" content="<%= meta.siteName %>">
 <meta property="og:title" content="<%= meta.ogTitle %>">
 <meta property="og:description" content="<%= meta.ogDescription %>">
+<% if (hasSocialImage) { %>
 <meta property="og:image" content="<%= meta.ogImage %>">
+<% } %>
 <meta property="og:url" content="<%= meta.ogUrl %>">
 
-<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:card" content="<%= hasSocialImage ? 'summary_large_image' : 'summary' %>">
 <meta name="twitter:title" content="<%= meta.twitterTitle %>">
 <meta name="twitter:description" content="<%= meta.twitterDescription %>">
+<% if (hasSocialImage) { %>
 <meta name="twitter:image" content="<%= meta.twitterImage %>">
+<% } %>

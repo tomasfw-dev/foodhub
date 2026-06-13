@@ -4,7 +4,9 @@ const constants = require('./constants');
 module.exports = {
   env: env.NODE_ENV,
   port: env.PORT,
-  appName: constants.APP_NAME,
+  appName: constants.DEFAULT_APP_NAME,
+  platformName: constants.PLATFORM_NAME,
+  platformLogoUrl: constants.PLATFORM_LOGO_URL,
   whatsapp: {
     phone: env.WHATSAPP_PHONE,
     defaultMessage: env.WHATSAPP_DEFAULT_MESSAGE,

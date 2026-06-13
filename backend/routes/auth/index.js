@@ -2,7 +2,11 @@ const { Router } = require('express');
 const authController = require('../../controllers/auth.controller');
 const { redirectIfAuthenticated } = require('../../middlewares/auth.middleware');
 
+const { loadPlatformBrand } = require('../../middlewares/platformBrand.middleware');
+
 const router = Router();
+
+router.use(loadPlatformBrand);
 
 router.get('/login', redirectIfAuthenticated, authController.showLogin);
 router.post('/login', redirectIfAuthenticated, authController.login);

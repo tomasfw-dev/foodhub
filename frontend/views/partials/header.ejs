@@ -1,6 +1,18 @@
 <header class="site-header">
   <div class="container">
+    <% if (site.hasLogo && site.logoUrl) { %>
+    <a href="<%= routes.HOME %>" class="site-header__logo site-header__logo--image" aria-label="<%= appName %> — Inicio">
+      <img
+        src="<%= site.logoUrl %>"
+        alt="<%= appName %>"
+        class="site-header__logo-img"
+        height="48"
+        decoding="async"
+      >
+    </a>
+    <% } else { %>
     <a href="<%= routes.HOME %>" class="site-header__logo"><%= appName %></a>
+    <% } %>
     <nav class="site-header__nav">
       <a href="<%= routes.HOME %>">Inicio</a>
       <a href="<%= routes.MENU %>">Menú</a>

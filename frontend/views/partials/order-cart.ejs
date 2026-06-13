@@ -4,6 +4,8 @@
   hidden
   aria-hidden="true"
   data-whatsapp-phone="<%= whatsapp && whatsapp.phone ? whatsapp.phone : '' %>"
+  data-business-name="<%= appName %>"
+  data-whatsapp-intro="<%= whatsapp && whatsapp.defaultMessage ? whatsapp.defaultMessage : '' %>"
 >
   <div class="order-cart__toast" id="order-cart-toast" role="status" aria-live="polite" hidden></div>
 

@@ -41,7 +41,10 @@ function mapRow(row) {
     seo_description: row.seo_description || '',
     seo_keywords: row.seo_keywords || '',
     og_image: row.og_image || '',
-    ogImageUrl: seoHelpers.resolveOgImageUrl(row.og_image) || siteHelpers.resolveLogoUrl(row.logo),
+    ogImageUrl:
+      seoHelpers.resolveOgImageUrl(row.og_image) ||
+      siteHelpers.resolveBusinessLogoUrl(row.logo) ||
+      '',
     fecha_modificacion: row.fecha_modificacion,
   };
 }

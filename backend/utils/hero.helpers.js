@@ -4,18 +4,19 @@
 const constants = require('../config/constants');
 const { resolveHeroImageUrl } = require('./image.helpers');
 
+const { DEFAULT_APP_NAME, DEFAULT_SITE_CONFIG, PLATFORM_LOGO_URL } = constants;
+
 const FALLBACK = {
-  eyebrow: constants.SITE.tagline,
-  tituloAntes: 'Sabores que',
-  tituloDestacado: 'abrazan',
-  tituloDespues: 'el alma',
-  subtitulo:
-    'Cocina casera premium, ingredientes seleccionados y el cariño de siempre en cada plato.',
+  eyebrow: DEFAULT_SITE_CONFIG.tagline,
+  tituloAntes: 'Bienvenidos a',
+  tituloDestacado: 'nuestro local',
+  tituloDespues: null,
+  subtitulo: 'Descubrí la carta, elegí tus favoritos y consultanos por WhatsApp.',
   btnPrimarioTexto: 'Ver menú',
   btnPrimarioUrl: constants.ROUTES.MENU,
   btnSecundarioTexto: 'Pedir por WhatsApp',
   btnSecundarioUrl: null,
-  imagen: constants.SITE.logoUrl,
+  imagen: null,
 };
 
 /**
@@ -23,8 +24,8 @@ const FALLBACK = {
  * @param {object|null} whatsappLocals — res.locals.whatsapp
  * @param {string|null} whatsappUrl
  */
-exports.buildFallback = (siteLocals, whatsappLocals, whatsappUrl) => {
-  const logoUrl = siteLocals?.logoUrl || constants.SITE.logoUrl;
+exports.buildFallback = (siteLocals, whatsappLocals, whatsappUrl, appName) => {
+  const logoUrl = siteLocals?.hasLogo ? siteLocals.logoUrl : null;
   const eyebrow = siteLocals?.tagline || FALLBACK.eyebrow;
   const hasWhatsapp = Boolean(whatsappLocals?.phone);
 
@@ -42,8 +43,8 @@ exports.buildFallback = (siteLocals, whatsappLocals, whatsappUrl) => {
     btnSecundarioUrl: hasWhatsapp ? whatsappUrl || null : null,
     btnSecundarioEsWhatsapp: hasWhatsapp,
     imagenUrl: logoUrl,
-    imagenMonocroma: logoUrl.includes('logo-bendita-comida') || logoUrl.startsWith('/images/logo-'),
-    imagenAlt: constants.APP_NAME,
+    imagenMonocroma: exports.esImagenMonocroma(logoUrl),
+    imagenAlt: appName || DEFAULT_APP_NAME,
   };
 };
 
@@ -82,18 +83,17 @@ exports.mapRowToView = (row, context = {}) => {
     btnSecundarioEsWhatsapp,
     imagenUrl: resolveHeroImageUrl(row.imagen),
     imagenMonocroma: exports.esImagenMonocroma(row.imagen),
-    imagenAlt: context.appName || constants.APP_NAME,
+    imagenAlt: context.appName || DEFAULT_APP_NAME,
   };
 };
 
-/** Logo de marca por defecto → filtro negro del diseño. Uploads → color real. */
+/** Logo de plataforma en /images/logo-default → filtro monocromático (solo admin/legacy). */
 exports.esImagenMonocroma = (storedUrl) => {
   if (!storedUrl?.trim()) return true;
-  const url = storedUrl.trim();
+  const url = String(storedUrl).trim();
   return (
-    url === constants.SITE.logoUrl ||
-    url.endsWith('logo-bendita-comida.png') ||
-    url.startsWith('/images/logo-')
+    url === PLATFORM_LOGO_URL ||
+    url.endsWith('logo-default.png')
   );
 };
 
