@@ -13,6 +13,7 @@ const {
   verifyCsrfUnlessMultipart,
 } = require('./middlewares/csrf.middleware');
 const { globalRateLimiter } = require('./middlewares/rateLimit.middleware');
+const createHelmetMiddleware = require('./config/helmet.config');
 const createSessionMiddleware = require('./config/session.config');
 const imageHelper = require('./utils/image.helpers');
 const seoHelpers = require('./utils/seo.helpers');
@@ -20,9 +21,13 @@ const seoRoutes = require('./routes/seo.routes');
 
 const app = express();
 
+app.disable('x-powered-by');
+
 if (config.env === 'production') {
   app.set('trust proxy', 1);
 }
+
+app.use(createHelmetMiddleware(config.env === 'production'));
 
 // Configuración de vistas EJS
 app.set('view engine', 'ejs');
