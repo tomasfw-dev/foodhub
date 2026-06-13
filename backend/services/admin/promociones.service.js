@@ -5,11 +5,27 @@ const db = require('../../database/connection');
 const queries = require('../../database/queries/promociones.queries');
 const logger = require('../../utils/logger');
 const { resolvePromocionImageUrl } = require('../../utils/image.helpers');
+const uploadConfig = require('../../config/upload.config');
+const { validateStoredImagePath } = require('../../utils/upload.helpers');
 
 function createError(status, message) {
   const err = new Error(message);
   err.status = status;
   return err;
+}
+
+function sanitizeImagenForWrite(imagen, requiredPrefix) {
+  if (imagen === undefined) return undefined;
+  if (imagen === null || !String(imagen).trim()) return null;
+
+  const trimmed = String(imagen).trim();
+  if (/^https?:\/\//i.test(trimmed)) {
+    throw createError(400, 'La imagen no puede ser una URL externa.');
+  }
+
+  const result = validateStoredImagePath(trimmed, { requiredPrefix });
+  if (!result.ok) throw createError(400, result.message);
+  return result.url;
 }
 
 function toDateOnly(value) {
@@ -160,7 +176,9 @@ exports.validar = (datos) => {
       precio_promocional,
       fecha_inicio,
       fecha_fin,
-      imagen: datos.imagen?.trim() || null,
+      imagen:
+        sanitizeImagenForWrite(datos.imagen, `${uploadConfig.PROMOCIONES_PUBLIC_PREFIX}/`) ??
+        null,
       activo: parseBoolean(datos.activo, true),
       destacado: parseBoolean(datos.destacado, false),
     },
@@ -190,7 +208,10 @@ exports.editar = async (id, datos) => {
     fecha_inicio:
       datos.fecha_inicio !== undefined ? datos.fecha_inicio : actual.fecha_inicio_input,
     fecha_fin: datos.fecha_fin !== undefined ? datos.fecha_fin : actual.fecha_fin_input,
-    imagen: datos.imagen !== undefined ? datos.imagen : actual.imagen,
+    imagen:
+      datos.imagen !== undefined
+        ? sanitizeImagenForWrite(datos.imagen, `${uploadConfig.PROMOCIONES_PUBLIC_PREFIX}/`)
+        : actual.imagen,
     activo: datos.activo !== undefined ? datos.activo : actual.activo,
     destacado: datos.destacado !== undefined ? datos.destacado : actual.destacado,
   };

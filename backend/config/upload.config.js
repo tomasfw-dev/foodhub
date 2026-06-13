@@ -11,6 +11,14 @@ module.exports = {
   HERO_PUBLIC_PREFIX: '/uploads/hero',
   PROMOCIONES_DIR: paths.uploadsPromocionesDir,
   PROMOCIONES_PUBLIC_PREFIX: '/uploads/promociones',
+  /** Prefijos públicos válidos para imagenActual y rutas locales en BD. */
+  ALLOWED_PUBLIC_PREFIXES: [
+    '/uploads/productos/',
+    '/uploads/promociones/',
+    '/uploads/hero/',
+    '/uploads/logos/',
+    '/uploads/og/',
+  ],
   FIELD_NAME: 'imagen',
   LOGO_FIELD_NAME: 'logo',
   OG_FIELD_NAME: 'og_image',

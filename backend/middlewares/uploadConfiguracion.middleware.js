@@ -1,8 +1,12 @@
-const path = require('path');
 const multer = require('multer');
 const uploadConfig = require('../config/upload.config');
 const uploadService = require('../services/admin/upload.service');
 const logger = require('../utils/logger');
+const {
+  createImageFileFilter,
+  wrapUploadWithSanitization,
+} = require('./upload.middleware.helpers');
+const { createUploadError } = require('../utils/upload.helpers');
 
 uploadService.ensureLogosUploadDir();
 uploadService.ensureOgUploadDir();
@@ -19,12 +23,12 @@ const storage = multer.diskStorage({
       return cb(null, uploadConfig.OG_DIR);
     }
 
-    return cb(new Error('Campo de archivo no permitido.'));
+    return cb(createUploadError('Campo de archivo no permitido.'));
   },
   filename: (_req, file, cb) => {
     try {
       if (!uploadService.isAllowedExtension(file.originalname)) {
-        return cb(new Error('Tipo de archivo no permitido. Use JPG, JPEG, PNG o WEBP.'));
+        return cb(createUploadError('Tipo de archivo no permitido. Use JPG, JPEG, PNG o WEBP.'));
       }
       const filename = uploadService.generateUniqueFilename(file.originalname);
       logger.info('Archivo de configuración generado', { field: file.fieldname, filename });
@@ -35,33 +39,16 @@ const storage = multer.diskStorage({
   },
 });
 
-const fileFilter = (_req, file, cb) => {
-  const ext = path.extname(file.originalname).toLowerCase();
-
-  if (!uploadConfig.ALLOWED_EXTENSIONS.has(ext)) {
-    return cb(new Error('Extensión no permitida. Use JPG, JPEG, PNG o WEBP.'));
-  }
-
-  if (!uploadConfig.ALLOWED_MIMES.has(file.mimetype)) {
-    return cb(new Error('Tipo MIME no permitido.'));
-  }
-
-  cb(null, true);
-};
-
 const upload = multer({
   storage,
-  fileFilter,
+  fileFilter: createImageFileFilter(),
   limits: { fileSize: uploadConfig.MAX_FILE_SIZE, files: 2 },
 });
 
-exports.uploadConfiguracionImagenes = (req, res, next) => {
+exports.uploadConfiguracionImagenes = wrapUploadWithSanitization(
   upload.fields([
     { name: uploadConfig.LOGO_FIELD_NAME, maxCount: 1 },
     { name: uploadConfig.OG_FIELD_NAME, maxCount: 1 },
-  ])(req, res, (err) => {
-    if (!err) return next();
-    err.isUploadError = true;
-    next(err);
-  });
-};
+  ]),
+  'fields'
+);

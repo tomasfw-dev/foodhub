@@ -4,8 +4,54 @@ const { getClientErrorMessage, logApplicationError } = require('../utils/error.h
 const ADMIN_PRODUCTOS = '/admin/productos';
 const ADMIN_CONFIGURACION = '/admin/configuracion';
 const ADMIN_PROMOCIONES = '/admin/promociones';
+const ADMIN_HERO = '/admin/hero';
 
 const GENERIC_UPLOAD_MESSAGE = 'Error al subir la imagen.';
+
+const UPLOAD_ERROR_PATTERN =
+  /permitid|MIME|archivo|imagen|ruta|válid|valid|procesar|directorio|externa/i;
+
+function resolveUploadMessage(err) {
+  if (err instanceof multer.MulterError) {
+    if (err.code === 'LIMIT_FILE_SIZE') {
+      return 'La imagen supera el tamaño máximo de 5 MB.';
+    }
+    if (err.code === 'LIMIT_FILE_COUNT') {
+      return 'Solo se permite una imagen por archivo.';
+    }
+    if (err.code === 'LIMIT_UNEXPECTED_FILE') {
+      return 'Campo de archivo no permitido.';
+    }
+  }
+
+  if (err.message && UPLOAD_ERROR_PATTERN.test(err.message)) {
+    return err.message;
+  }
+
+  return GENERIC_UPLOAD_MESSAGE;
+}
+
+function resolveRedirectUrl(req) {
+  if (req.originalUrl.startsWith(ADMIN_CONFIGURACION)) {
+    return ADMIN_CONFIGURACION;
+  }
+
+  if (req.originalUrl.startsWith(ADMIN_HERO)) {
+    return ADMIN_HERO;
+  }
+
+  if (req.originalUrl.startsWith(ADMIN_PROMOCIONES)) {
+    const isEdit = req.originalUrl.includes('/edit');
+    return isEdit
+      ? `${ADMIN_PROMOCIONES}/${req.params.id}/edit`
+      : `${ADMIN_PROMOCIONES}/create`;
+  }
+
+  const isEdit = req.originalUrl.includes('/edit');
+  return isEdit
+    ? `${ADMIN_PRODUCTOS}/${req.params.id}/edit`
+    : `${ADMIN_PRODUCTOS}/create`;
+}
 
 exports.handleUploadError = (err, req, res, next) => {
   if (!err) return next();
@@ -13,46 +59,17 @@ exports.handleUploadError = (err, req, res, next) => {
   const isUploadError =
     err.isUploadError ||
     err instanceof multer.MulterError ||
-    /permitid|MIME|archivo/i.test(err.message || '');
+    UPLOAD_ERROR_PATTERN.test(err.message || '');
 
   if (!isUploadError) return next(err);
 
-  let message = GENERIC_UPLOAD_MESSAGE;
-
-  if (err instanceof multer.MulterError) {
-    if (err.code === 'LIMIT_FILE_SIZE') {
-      message = 'La imagen supera el tamaño máximo de 5 MB.';
-    } else if (err.code === 'LIMIT_FILE_COUNT') {
-      message = 'Solo se permite una imagen por producto.';
-    } else if (/permitid|MIME|archivo/i.test(err.message || '')) {
-      message = err.message;
-    }
-  } else if (/permitid|MIME|archivo/i.test(err.message || '')) {
-    message = err.message;
-  }
-
+  const message = resolveUploadMessage(err);
   logApplicationError('Error de carga de imagen', err, req);
-
-  let redirectUrl = ADMIN_PRODUCTOS;
-
-  if (req.originalUrl.startsWith(ADMIN_CONFIGURACION)) {
-    redirectUrl = ADMIN_CONFIGURACION;
-  } else if (req.originalUrl.startsWith(ADMIN_PROMOCIONES)) {
-    const isEdit = req.originalUrl.includes('/edit');
-    redirectUrl = isEdit
-      ? `${ADMIN_PROMOCIONES}/${req.params.id}/edit`
-      : `${ADMIN_PROMOCIONES}/create`;
-  } else {
-    const isEdit = req.originalUrl.includes('/edit');
-    redirectUrl = isEdit
-      ? `${ADMIN_PRODUCTOS}/${req.params.id}/edit`
-      : `${ADMIN_PRODUCTOS}/create`;
-  }
 
   const safeMessage = getClientErrorMessage(
     { ...err, status: err.status || 400 },
     { fallback: message }
   );
 
-  return res.redirect(`${redirectUrl}?error=${encodeURIComponent(safeMessage)}`);
+  return res.redirect(`${resolveRedirectUrl(req)}?error=${encodeURIComponent(safeMessage)}`);
 };

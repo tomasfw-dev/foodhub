@@ -4,8 +4,10 @@
 const productosService = require('../../services/admin/productos.service');
 const categoriasService = require('../../services/admin/categorias.service');
 const uploadService = require('../../services/admin/upload.service');
+const uploadConfig = require('../../config/upload.config');
 const logger = require('../../utils/logger');
 const { resolveErrorForClient, sendJsonError } = require('../../utils/error.helpers');
+const { assertStoredImagePath } = require('../../utils/upload.helpers');
 
 const ADMIN = '/admin/productos';
 
@@ -22,19 +24,27 @@ function resolveImagen(req) {
     return uploadService.toPublicUrl(req.file.filename);
   }
   if (req.body.imagenActual) {
-    return req.body.imagenActual.trim();
+    return assertStoredImagePath(req.body.imagenActual, {
+      requiredPrefix: `${uploadConfig.PUBLIC_PREFIX}/`,
+    });
   }
   return null;
 }
 
 function parseFormBody(req) {
+  const imagenActual = req.body.imagenActual
+    ? assertStoredImagePath(req.body.imagenActual, {
+        requiredPrefix: `${uploadConfig.PUBLIC_PREFIX}/`,
+      })
+    : null;
+
   return {
     categoriaId: req.body.categoriaId,
     nombre: req.body.nombre,
     descripcion: req.body.descripcion,
     precio: req.body.precio,
     imagen: resolveImagen(req),
-    imagenAnterior: req.body.imagenActual || null,
+    imagenAnterior: imagenActual,
     badge: req.body.badge,
     activo: req.body.activo === 'on' || req.body.activo === 'true' || req.body.activo === true,
     destacado: req.body.destacado === 'on' || req.body.destacado === 'true' || req.body.destacado === true,

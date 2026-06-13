@@ -3,8 +3,10 @@
  */
 const promocionesService = require('../../services/admin/promociones.service');
 const uploadService = require('../../services/admin/upload.service');
+const uploadConfig = require('../../config/upload.config');
 const logger = require('../../utils/logger');
 const { resolveErrorForClient } = require('../../utils/error.helpers');
+const { assertStoredImagePath } = require('../../utils/upload.helpers');
 const constants = require('../../config/constants');
 
 const ADMIN = constants.ADMIN_ROUTES.PROMOCIONES;
@@ -18,12 +20,20 @@ function resolveImagen(req) {
     return uploadService.toPromocionPublicUrl(req.file.filename);
   }
   if (req.body.imagenActual) {
-    return req.body.imagenActual.trim();
+    return assertStoredImagePath(req.body.imagenActual, {
+      requiredPrefix: `${uploadConfig.PROMOCIONES_PUBLIC_PREFIX}/`,
+    });
   }
   return null;
 }
 
 function parseFormBody(req) {
+  const imagenActual = req.body.imagenActual
+    ? assertStoredImagePath(req.body.imagenActual, {
+        requiredPrefix: `${uploadConfig.PROMOCIONES_PUBLIC_PREFIX}/`,
+      })
+    : null;
+
   return {
     nombre: req.body.nombre,
     descripcion: req.body.descripcion,
@@ -31,7 +41,7 @@ function parseFormBody(req) {
     fecha_inicio: req.body.fecha_inicio,
     fecha_fin: req.body.fecha_fin,
     imagen: resolveImagen(req),
-    imagenAnterior: req.body.imagenActual || null,
+    imagenAnterior: imagenActual,
     activo: req.body.activo === 'on' || req.body.activo === 'true' || req.body.activo === true,
     destacado: req.body.destacado === 'on' || req.body.destacado === 'true' || req.body.destacado === true,
   };

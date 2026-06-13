@@ -1,8 +1,10 @@
 const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
+const sharp = require('sharp');
 const uploadConfig = require('../../config/upload.config');
 const logger = require('../../utils/logger');
+const { createUploadError } = require('../../utils/upload.helpers');
 
 exports.ensureProductosUploadDir = () => {
   if (!fs.existsSync(uploadConfig.PRODUCTOS_DIR)) {
@@ -73,6 +75,69 @@ exports.toPromocionPublicUrl = (filename) => {
 exports.isAllowedExtension = (filename) => {
   const ext = path.extname(filename).toLowerCase();
   return uploadConfig.ALLOWED_EXTENSIONS.has(ext);
+};
+
+const SHARP_FORMAT_CONFIG = {
+  jpeg: { ext: '.jpg', apply: (instance) => instance.jpeg({ quality: 85, mozjpeg: true }) },
+  png: { ext: '.png', apply: (instance) => instance.png() },
+  webp: { ext: '.webp', apply: (instance) => instance.webp({ quality: 85 }) },
+};
+
+/**
+ * Valida magic bytes y re-encodea la imagen con sharp (elimina contenido incrustado).
+ * @param {string} filePath - Ruta absoluta del archivo subido por multer
+ * @returns {Promise<string>} Nombre de archivo final (puede cambiar la extensión)
+ */
+exports.sanitizeUploadedImage = async (filePath) => {
+  if (!filePath || !fs.existsSync(filePath)) {
+    throw createUploadError('No se recibió ningún archivo de imagen.');
+  }
+
+  let metadata;
+  try {
+    metadata = await sharp(filePath, { failOn: 'error' }).metadata();
+  } catch (err) {
+    logger.warn('Imagen rechazada: no se pudo leer con sharp', { filePath, error: err.message });
+    fs.unlinkSync(filePath);
+    throw createUploadError(
+      'El archivo no es una imagen válida. Solo se aceptan JPG, JPEG, PNG o WEBP.'
+    );
+  }
+
+  const formatConfig = SHARP_FORMAT_CONFIG[metadata.format];
+  if (!formatConfig) {
+    fs.unlinkSync(filePath);
+    throw createUploadError(
+      'Formato de imagen no permitido. Solo se aceptan JPG, JPEG, PNG o WEBP.'
+    );
+  }
+
+  let buffer;
+  try {
+    buffer = await formatConfig.apply(sharp(filePath).rotate()).toBuffer();
+  } catch (err) {
+    logger.warn('Imagen rechazada al re-encodear', { filePath, error: err.message });
+    fs.unlinkSync(filePath);
+    throw createUploadError('No se pudo procesar la imagen. Verificá que sea un archivo válido.');
+  }
+
+  if (buffer.length > uploadConfig.MAX_FILE_SIZE) {
+    fs.unlinkSync(filePath);
+    throw createUploadError('La imagen supera el tamaño máximo de 5 MB.');
+  }
+
+  const dir = path.dirname(filePath);
+  const baseName = path.basename(filePath, path.extname(filePath));
+  const finalFilename = `${baseName}${formatConfig.ext}`;
+  const finalPath = path.join(dir, finalFilename);
+
+  fs.writeFileSync(finalPath, buffer);
+  if (finalPath !== filePath) {
+    fs.unlinkSync(filePath);
+  }
+
+  logger.info('Imagen sanitizada', { filename: finalFilename, bytes: buffer.length });
+  return finalFilename;
 };
 
 exports.deleteProductoImage = (publicUrl) => {

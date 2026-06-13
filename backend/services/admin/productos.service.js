@@ -7,6 +7,8 @@ const logger = require('../../utils/logger');
 const config = require('../../config');
 const { resolveProductImageUrl } = require('../../utils/image.helpers');
 const { parseOrden, mapOrden } = require('../../utils/orden.helpers');
+const uploadConfig = require('../../config/upload.config');
+const { validateStoredImagePath } = require('../../utils/upload.helpers');
 
 const MAX_DESTACADOS = config.menuFeaturedLimit;
 
@@ -14,6 +16,20 @@ function createError(status, message) {
   const err = new Error(message);
   err.status = status;
   return err;
+}
+
+function sanitizeImagenForWrite(imagen, requiredPrefix) {
+  if (imagen === undefined) return undefined;
+  if (imagen === null || !String(imagen).trim()) return null;
+
+  const trimmed = String(imagen).trim();
+  if (/^https?:\/\//i.test(trimmed)) {
+    throw createError(400, 'La imagen no puede ser una URL externa.');
+  }
+
+  const result = validateStoredImagePath(trimmed, { requiredPrefix });
+  if (!result.ok) throw createError(400, result.message);
+  return result.url;
 }
 
 function mapRow(row) {
@@ -112,7 +128,7 @@ exports.crear = async (datos) => {
     nombre,
     descripcion: datos.descripcion?.trim() || '',
     precio: datos.precio != null ? Number(datos.precio) : 0,
-    imagen: datos.imagen?.trim() || null,
+    imagen: sanitizeImagenForWrite(datos.imagen, `${uploadConfig.PUBLIC_PREFIX}/`) ?? null,
     activo: datos.activo !== false && datos.activo !== 'false',
     destacado,
     orden,
@@ -165,7 +181,10 @@ exports.editar = async (id, datos) => {
     descripcion:
       datos.descripcion !== undefined ? datos.descripcion.trim() : actual.descripcion,
     precio: datos.precio !== undefined ? Number(datos.precio) : actual.precio,
-    imagen: datos.imagen !== undefined ? datos.imagen?.trim() || null : actual.imagen,
+    imagen:
+      datos.imagen !== undefined
+        ? sanitizeImagenForWrite(datos.imagen, `${uploadConfig.PUBLIC_PREFIX}/`)
+        : actual.imagen,
     activo: datos.activo !== undefined ? Boolean(datos.activo) : actual.activo,
     destacado,
     orden,
