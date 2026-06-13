@@ -12,12 +12,17 @@ const {
   attachCsrfToken,
   verifyCsrfUnlessMultipart,
 } = require('./middlewares/csrf.middleware');
+const { globalRateLimiter } = require('./middlewares/rateLimit.middleware');
 const createSessionMiddleware = require('./config/session.config');
 const imageHelper = require('./utils/image.helpers');
 const seoHelpers = require('./utils/seo.helpers');
 const seoRoutes = require('./routes/seo.routes');
 
 const app = express();
+
+if (config.env === 'production') {
+  app.set('trust proxy', 1);
+}
 
 // Configuración de vistas EJS
 app.set('view engine', 'ejs');
@@ -41,6 +46,7 @@ app.locals.buildPageSeo = seoHelpers.buildPageSeo;
 // Middlewares base
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(globalRateLimiter);
 app.use(createSessionMiddleware());
 app.use(attachCsrfToken);
 app.use(flashMiddleware);

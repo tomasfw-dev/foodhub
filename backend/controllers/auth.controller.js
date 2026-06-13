@@ -28,10 +28,12 @@ exports.showLogin = (req, res) => {
   }
 
   const success = req.query.message ? String(req.query.message) : null;
+  const error = req.query.error ? String(req.query.error) : null;
 
   return renderLogin(res, {
     title: 'Iniciar sesión',
     success,
+    error,
   });
 };
 
