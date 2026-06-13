@@ -4,6 +4,7 @@
 const promocionesService = require('../../services/admin/promociones.service');
 const uploadService = require('../../services/admin/upload.service');
 const logger = require('../../utils/logger');
+const { resolveErrorForClient } = require('../../utils/error.helpers');
 const constants = require('../../config/constants');
 
 const ADMIN = constants.ADMIN_ROUTES.PROMOCIONES;
@@ -81,7 +82,7 @@ exports.editPage = async (req, res) => {
       flash: res.locals.flash,
     });
   } catch (err) {
-    redirectWithError(res, ADMIN, err.message);
+    redirectWithError(res, ADMIN, resolveErrorForClient(err, { req, context: 'Error en promociones' }));
   }
 };
 
@@ -92,8 +93,7 @@ exports.store = async (req, res) => {
     res.redirect(`${ADMIN}?success=${encodeURIComponent('Promoción creada')}`);
   } catch (err) {
     cleanupUploadedFile(req);
-    logger.error('Error al crear promoción', err);
-    redirectWithError(res, constants.ADMIN_ROUTES.PROMOCIONES_CREATE, err.message);
+    redirectWithError(res, constants.ADMIN_ROUTES.PROMOCIONES_CREATE, resolveErrorForClient(err, { req, context: 'Error al crear promoción' }));
   }
 };
 
@@ -109,8 +109,7 @@ exports.update = async (req, res) => {
     res.redirect(`${ADMIN}?success=${encodeURIComponent('Promoción actualizada')}`);
   } catch (err) {
     cleanupUploadedFile(req);
-    logger.error('Error al actualizar promoción', err);
-    redirectWithError(res, `${ADMIN}/${req.params.id}/edit`, err.message);
+    redirectWithError(res, `${ADMIN}/${req.params.id}/edit`, resolveErrorForClient(err, { req, context: 'Error al actualizar promoción' }));
   }
 };
 
@@ -120,8 +119,7 @@ exports.destroy = async (req, res) => {
     uploadService.deletePromocionImage(promocion.imagen);
     res.redirect(`${ADMIN}?success=${encodeURIComponent('Promoción eliminada')}`);
   } catch (err) {
-    logger.error('Error al eliminar promoción', err);
-    redirectWithError(res, ADMIN, err.message);
+    redirectWithError(res, ADMIN, resolveErrorForClient(err, { req, context: 'Error al eliminar promoción' }));
   }
 };
 
@@ -143,7 +141,7 @@ exports.toggleActivo = async (req, res) => {
       `${ADMIN}?success=${encodeURIComponent(activar ? 'Promoción activada' : 'Promoción desactivada')}`
     );
   } catch (err) {
-    redirectWithError(res, ADMIN, err.message);
+    redirectWithError(res, ADMIN, resolveErrorForClient(err, { req, context: 'Error en promociones' }));
   }
 };
 
@@ -156,6 +154,6 @@ exports.toggleDestacado = async (req, res) => {
 
     res.redirect(`${ADMIN}?success=${encodeURIComponent(mensaje)}`);
   } catch (err) {
-    redirectWithError(res, ADMIN, err.message);
+    redirectWithError(res, ADMIN, resolveErrorForClient(err, { req, context: 'Error en promociones' }));
   }
 };

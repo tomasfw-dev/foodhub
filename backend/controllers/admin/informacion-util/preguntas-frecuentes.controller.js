@@ -1,5 +1,6 @@
 const preguntasFrecuentesService = require('../../../services/preguntas-frecuentes.service');
 const logger = require('../../../utils/logger');
+const { resolveErrorForClient } = require('../../../utils/error.helpers');
 const constants = require('../../../config/constants');
 
 const ADMIN = constants.ADMIN_ROUTES.PREGUNTAS_FRECUENTES;
@@ -54,7 +55,7 @@ exports.editPage = async (req, res) => {
       flash: res.locals.flash,
     });
   } catch (err) {
-    redirectWithError(res, ADMIN, err.message);
+    redirectWithError(res, ADMIN, resolveErrorForClient(err, { req, context: 'Error en preguntas frecuentes' }));
   }
 };
 
@@ -64,7 +65,7 @@ exports.store = async (req, res) => {
     res.redirect(`${ADMIN}?success=${encodeURIComponent('Pregunta frecuente creada')}`);
   } catch (err) {
     logger.error('Error al crear pregunta frecuente', err);
-    redirectWithError(res, constants.ADMIN_ROUTES.PREGUNTAS_FRECUENTES_CREATE, err.message);
+    redirectWithError(res, constants.ADMIN_ROUTES.PREGUNTAS_FRECUENTES_CREATE, resolveErrorForClient(err, { req, context: 'Error en preguntas frecuentes' }));
   }
 };
 
@@ -74,7 +75,7 @@ exports.update = async (req, res) => {
     res.redirect(`${ADMIN}?success=${encodeURIComponent('Pregunta frecuente actualizada')}`);
   } catch (err) {
     logger.error('Error al actualizar pregunta frecuente', err);
-    redirectWithError(res, `${ADMIN}/${req.params.id}/edit`, err.message);
+    redirectWithError(res, `${ADMIN}/${req.params.id}/edit`, resolveErrorForClient(err, { req, context: 'Error en preguntas frecuentes' }));
   }
 };
 
@@ -84,7 +85,7 @@ exports.destroy = async (req, res) => {
     res.redirect(`${ADMIN}?success=${encodeURIComponent('Pregunta frecuente eliminada')}`);
   } catch (err) {
     logger.error('Error al eliminar pregunta frecuente', err);
-    redirectWithError(res, ADMIN, err.message);
+    redirectWithError(res, ADMIN, resolveErrorForClient(err, { req, context: 'Error en preguntas frecuentes' }));
   }
 };
 
@@ -102,6 +103,6 @@ exports.toggleActivo = async (req, res) => {
     );
   } catch (err) {
     logger.error('Error al cambiar estado de pregunta frecuente', err);
-    redirectWithError(res, ADMIN, err.message);
+    redirectWithError(res, ADMIN, resolveErrorForClient(err, { req, context: 'Error en preguntas frecuentes' }));
   }
 };

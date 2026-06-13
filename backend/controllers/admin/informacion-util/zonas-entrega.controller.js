@@ -1,5 +1,6 @@
 const zonasEntregaService = require('../../../services/zonas-entrega.service');
 const logger = require('../../../utils/logger');
+const { resolveErrorForClient } = require('../../../utils/error.helpers');
 const constants = require('../../../config/constants');
 
 const ADMIN = constants.ADMIN_ROUTES.ZONAS_ENTREGA;
@@ -55,7 +56,7 @@ exports.editPage = async (req, res) => {
       flash: res.locals.flash,
     });
   } catch (err) {
-    redirectWithError(res, ADMIN, err.message);
+    redirectWithError(res, ADMIN, resolveErrorForClient(err, { req, context: 'Error en zonas de entrega' }));
   }
 };
 
@@ -65,7 +66,7 @@ exports.store = async (req, res) => {
     res.redirect(`${ADMIN}?success=${encodeURIComponent('Zona de entrega creada')}`);
   } catch (err) {
     logger.error('Error al crear zona de entrega', err);
-    redirectWithError(res, constants.ADMIN_ROUTES.ZONAS_ENTREGA_CREATE, err.message);
+    redirectWithError(res, constants.ADMIN_ROUTES.ZONAS_ENTREGA_CREATE, resolveErrorForClient(err, { req, context: 'Error en zonas de entrega' }));
   }
 };
 
@@ -75,7 +76,7 @@ exports.update = async (req, res) => {
     res.redirect(`${ADMIN}?success=${encodeURIComponent('Zona de entrega actualizada')}`);
   } catch (err) {
     logger.error('Error al actualizar zona de entrega', err);
-    redirectWithError(res, `${ADMIN}/${req.params.id}/edit`, err.message);
+    redirectWithError(res, `${ADMIN}/${req.params.id}/edit`, resolveErrorForClient(err, { req, context: 'Error en zonas de entrega' }));
   }
 };
 
@@ -85,7 +86,7 @@ exports.destroy = async (req, res) => {
     res.redirect(`${ADMIN}?success=${encodeURIComponent('Zona de entrega eliminada')}`);
   } catch (err) {
     logger.error('Error al eliminar zona de entrega', err);
-    redirectWithError(res, ADMIN, err.message);
+    redirectWithError(res, ADMIN, resolveErrorForClient(err, { req, context: 'Error en zonas de entrega' }));
   }
 };
 
@@ -103,6 +104,6 @@ exports.toggleActivo = async (req, res) => {
     );
   } catch (err) {
     logger.error('Error al cambiar estado de zona', err);
-    redirectWithError(res, ADMIN, err.message);
+    redirectWithError(res, ADMIN, resolveErrorForClient(err, { req, context: 'Error en zonas de entrega' }));
   }
 };

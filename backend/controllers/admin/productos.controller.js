@@ -5,12 +5,12 @@ const productosService = require('../../services/admin/productos.service');
 const categoriasService = require('../../services/admin/categorias.service');
 const uploadService = require('../../services/admin/upload.service');
 const logger = require('../../utils/logger');
+const { resolveErrorForClient, sendJsonError } = require('../../utils/error.helpers');
 
 const ADMIN = '/admin/productos';
 
-function handleError(res, err) {
-  const status = err.status || 500;
-  return res.status(status).json({ error: err.message });
+function handleError(res, err, req) {
+  return sendJsonError(res, err, { context: 'Error en API de productos', req });
 }
 
 function redirectWithError(res, url, message) {
@@ -106,7 +106,7 @@ exports.editPage = async (req, res, next) => {
       flash: res.locals.flash,
     });
   } catch (err) {
-    redirectWithError(res, ADMIN, err.message);
+    redirectWithError(res, ADMIN, resolveErrorForClient(err, { req, context: 'Error al cargar producto' }));
   }
 };
 
@@ -118,8 +118,7 @@ exports.store = async (req, res) => {
     res.redirect(`${ADMIN}?success=${encodeURIComponent('Producto creado')}`);
   } catch (err) {
     cleanupUploadedFile(req);
-    logger.error('Error al crear producto', err);
-    redirectWithError(res, `${ADMIN}/create`, err.message);
+    redirectWithError(res, `${ADMIN}/create`, resolveErrorForClient(err, { req, context: 'Error al crear producto' }));
   }
 };
 
@@ -136,8 +135,7 @@ exports.update = async (req, res) => {
     res.redirect(`${ADMIN}?success=${encodeURIComponent('Producto actualizado')}`);
   } catch (err) {
     cleanupUploadedFile(req);
-    logger.error('Error al actualizar producto', err);
-    redirectWithError(res, `${ADMIN}/${req.params.id}/edit`, err.message);
+    redirectWithError(res, `${ADMIN}/${req.params.id}/edit`, resolveErrorForClient(err, { req, context: 'Error al actualizar producto' }));
   }
 };
 
@@ -148,8 +146,7 @@ exports.destroy = async (req, res) => {
     logger.info('Producto eliminado', { id: req.params.id });
     res.redirect(`${ADMIN}?success=${encodeURIComponent('Producto eliminado')}`);
   } catch (err) {
-    logger.error('Error al eliminar producto', err);
-    redirectWithError(res, ADMIN, err.message);
+    redirectWithError(res, ADMIN, resolveErrorForClient(err, { req, context: 'Error al eliminar producto' }));
   }
 };
 
@@ -167,7 +164,7 @@ exports.toggleActivo = async (req, res) => {
     }
     res.redirect(`${ADMIN}?success=${encodeURIComponent(activar ? 'Producto activado' : 'Producto desactivado')}`);
   } catch (err) {
-    redirectWithError(res, ADMIN, err.message);
+    redirectWithError(res, ADMIN, resolveErrorForClient(err, { req, context: 'Error al cambiar estado del producto' }));
   }
 };
 
@@ -180,8 +177,7 @@ exports.toggleDestacado = async (req, res) => {
 
     res.redirect(`${ADMIN}?success=${encodeURIComponent(mensaje)}`);
   } catch (err) {
-    logger.error('Error al cambiar destacado de producto', err);
-    redirectWithError(res, ADMIN, err.message);
+    redirectWithError(res, ADMIN, resolveErrorForClient(err, { req, context: 'Error al cambiar destacado del producto' }));
   }
 };
 
@@ -196,7 +192,7 @@ exports.listar = async (req, res) => {
     const data = await productosService.listar(filtros);
     res.json({ data });
   } catch (err) {
-    handleError(res, err);
+    handleError(res, err, req);
   }
 };
 
@@ -205,7 +201,7 @@ exports.crear = async (req, res) => {
     const producto = await productosService.crear(req.body);
     res.status(201).json({ data: producto });
   } catch (err) {
-    handleError(res, err);
+    handleError(res, err, req);
   }
 };
 
@@ -214,7 +210,7 @@ exports.editar = async (req, res) => {
     const producto = await productosService.editar(req.params.id, req.body);
     res.json({ data: producto });
   } catch (err) {
-    handleError(res, err);
+    handleError(res, err, req);
   }
 };
 
@@ -223,7 +219,7 @@ exports.eliminar = async (req, res) => {
     const producto = await productosService.eliminar(req.params.id);
     res.json({ data: producto, message: 'Producto eliminado' });
   } catch (err) {
-    handleError(res, err);
+    handleError(res, err, req);
   }
 };
 
@@ -232,7 +228,7 @@ exports.activar = async (req, res) => {
     const producto = await productosService.activar(req.params.id);
     res.json({ data: producto, message: 'Producto activado' });
   } catch (err) {
-    handleError(res, err);
+    handleError(res, err, req);
   }
 };
 
@@ -241,6 +237,6 @@ exports.desactivar = async (req, res) => {
     const producto = await productosService.desactivar(req.params.id);
     res.json({ data: producto, message: 'Producto desactivado' });
   } catch (err) {
-    handleError(res, err);
+    handleError(res, err, req);
   }
 };

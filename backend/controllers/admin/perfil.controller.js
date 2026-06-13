@@ -2,6 +2,7 @@
  * Controlador admin — perfil de administradora.
  */
 const perfilService = require('../../services/admin/perfil.service');
+const { resolveErrorForClient } = require('../../utils/error.helpers');
 const logger = require('../../utils/logger');
 const constants = require('../../config/constants');
 
@@ -36,7 +37,6 @@ exports.indexPage = async (req, res, next) => {
       flash: res.locals.flash,
     });
   } catch (err) {
-    logger.error('Error al cargar perfil', err);
     next(err);
   }
 };
@@ -50,8 +50,14 @@ exports.updateDatos = async (req, res) => {
 
     redirectWithSuccess(res, 'Datos del perfil actualizados correctamente.');
   } catch (err) {
-    logger.error('Error al actualizar perfil', err);
-    redirectWithError(res, err.message || 'Error al guardar los datos del perfil');
+    redirectWithError(
+      res,
+      resolveErrorForClient(err, {
+        req,
+        context: 'Error al actualizar perfil',
+        fallback: 'Error al guardar los datos del perfil',
+      })
+    );
   }
 };
 
@@ -80,7 +86,13 @@ exports.updatePassword = async (req, res, next) => {
       });
     });
   } catch (err) {
-    logger.error('Error al cambiar contraseña', err);
-    redirectWithError(res, err.message || 'Error al cambiar la contraseña');
+    redirectWithError(
+      res,
+      resolveErrorForClient(err, {
+        req,
+        context: 'Error al cambiar contraseña',
+        fallback: 'Error al cambiar la contraseña',
+      })
+    );
   }
 };

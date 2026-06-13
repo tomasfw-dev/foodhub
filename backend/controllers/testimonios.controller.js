@@ -2,6 +2,7 @@
  * Controlador público — envío de testimonios.
  */
 const testimoniosService = require('../services/testimonios.service');
+const { resolveErrorForClient } = require('../utils/error.helpers');
 const logger = require('../utils/logger');
 const constants = require('../config/constants');
 
@@ -28,7 +29,13 @@ exports.store = async (req, res) => {
 
     return redirectHomeSuccess(res, testimoniosService.MENSAJE_EXITO_PUBLICO);
   } catch (err) {
-    logger.error('Error al recibir testimonio público', err);
-    return redirectHomeError(res, err.message || 'No se pudo enviar el testimonio.');
+    return redirectHomeError(
+      res,
+      resolveErrorForClient(err, {
+        req,
+        context: 'Error al recibir testimonio público',
+        fallback: 'No se pudo enviar el testimonio.',
+      })
+    );
   }
 };

@@ -3,12 +3,12 @@
  */
 const categoriasService = require('../../services/admin/categorias.service');
 const logger = require('../../utils/logger');
+const { resolveErrorForClient, sendJsonError } = require('../../utils/error.helpers');
 
 const ADMIN = '/admin/categorias';
 
-function handleError(res, err) {
-  const status = err.status || 500;
-  return res.status(status).json({ error: err.message });
+function handleError(res, err, req) {
+  return sendJsonError(res, err, { context: 'Error en API de categorías', req });
 }
 
 function redirectWithError(res, url, message) {
@@ -63,7 +63,7 @@ exports.editPage = async (req, res) => {
       flash: res.locals.flash,
     });
   } catch (err) {
-    redirectWithError(res, ADMIN, err.message);
+    redirectWithError(res, ADMIN, resolveErrorForClient(err, { req, context: 'Error al cargar categoría' }));
   }
 };
 
@@ -72,7 +72,7 @@ exports.store = async (req, res) => {
     await categoriasService.crear(parseFormBody(req.body));
     res.redirect(`${ADMIN}?success=${encodeURIComponent('Categoría creada')}`);
   } catch (err) {
-    redirectWithError(res, `${ADMIN}/create`, err.message);
+    redirectWithError(res, `${ADMIN}/create`, resolveErrorForClient(err, { req, context: 'Error al crear categoría' }));
   }
 };
 
@@ -81,7 +81,7 @@ exports.update = async (req, res) => {
     await categoriasService.editar(req.params.id, parseFormBody(req.body));
     res.redirect(`${ADMIN}?success=${encodeURIComponent('Categoría actualizada')}`);
   } catch (err) {
-    redirectWithError(res, `${ADMIN}/${req.params.id}/edit`, err.message);
+    redirectWithError(res, `${ADMIN}/${req.params.id}/edit`, resolveErrorForClient(err, { req, context: 'Error al actualizar categoría' }));
   }
 };
 
@@ -90,7 +90,7 @@ exports.destroy = async (req, res) => {
     await categoriasService.eliminar(req.params.id);
     res.redirect(`${ADMIN}?success=${encodeURIComponent('Categoría eliminada')}`);
   } catch (err) {
-    redirectWithError(res, ADMIN, err.message);
+    redirectWithError(res, ADMIN, resolveErrorForClient(err, { req, context: 'Error al eliminar categoría' }));
   }
 };
 
@@ -101,7 +101,7 @@ exports.listar = async (req, res) => {
     const data = await categoriasService.listar();
     res.json({ data });
   } catch (err) {
-    handleError(res, err);
+    handleError(res, err, req);
   }
 };
 
@@ -110,7 +110,7 @@ exports.crear = async (req, res) => {
     const categoria = await categoriasService.crear(req.body);
     res.status(201).json({ data: categoria });
   } catch (err) {
-    handleError(res, err);
+    handleError(res, err, req);
   }
 };
 
@@ -119,7 +119,7 @@ exports.editar = async (req, res) => {
     const categoria = await categoriasService.editar(req.params.id, req.body);
     res.json({ data: categoria });
   } catch (err) {
-    handleError(res, err);
+    handleError(res, err, req);
   }
 };
 
@@ -128,6 +128,6 @@ exports.eliminar = async (req, res) => {
     const categoria = await categoriasService.eliminar(req.params.id);
     res.json({ data: categoria, message: 'Categoría eliminada' });
   } catch (err) {
-    handleError(res, err);
+    handleError(res, err, req);
   }
 };

@@ -1,9 +1,11 @@
 const multer = require('multer');
-const logger = require('../utils/logger');
+const { getClientErrorMessage, logApplicationError } = require('../utils/error.helpers');
 
 const ADMIN_PRODUCTOS = '/admin/productos';
 const ADMIN_CONFIGURACION = '/admin/configuracion';
 const ADMIN_PROMOCIONES = '/admin/promociones';
+
+const GENERIC_UPLOAD_MESSAGE = 'Error al subir la imagen.';
 
 exports.handleUploadError = (err, req, res, next) => {
   if (!err) return next();
@@ -15,21 +17,21 @@ exports.handleUploadError = (err, req, res, next) => {
 
   if (!isUploadError) return next(err);
 
-  let message = 'Error al subir la imagen.';
+  let message = GENERIC_UPLOAD_MESSAGE;
 
   if (err instanceof multer.MulterError) {
     if (err.code === 'LIMIT_FILE_SIZE') {
       message = 'La imagen supera el tamaño máximo de 5 MB.';
     } else if (err.code === 'LIMIT_FILE_COUNT') {
       message = 'Solo se permite una imagen por producto.';
-    } else {
+    } else if (/permitid|MIME|archivo/i.test(err.message || '')) {
       message = err.message;
     }
-  } else if (err.message) {
+  } else if (/permitid|MIME|archivo/i.test(err.message || '')) {
     message = err.message;
   }
 
-  logger.error('Error de carga de imagen', err);
+  logApplicationError('Error de carga de imagen', err, req);
 
   let redirectUrl = ADMIN_PRODUCTOS;
 
@@ -47,5 +49,10 @@ exports.handleUploadError = (err, req, res, next) => {
       : `${ADMIN_PRODUCTOS}/create`;
   }
 
-  return res.redirect(`${redirectUrl}?error=${encodeURIComponent(message)}`);
+  const safeMessage = getClientErrorMessage(
+    { ...err, status: err.status || 400 },
+    { fallback: message }
+  );
+
+  return res.redirect(`${redirectUrl}?error=${encodeURIComponent(safeMessage)}`);
 };

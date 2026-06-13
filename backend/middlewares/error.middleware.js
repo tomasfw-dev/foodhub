@@ -1,5 +1,11 @@
 const constants = require('../config/constants');
-const logger = require('../utils/logger');
+const {
+  getHttpStatus,
+  isServerError,
+  getClientErrorMessage,
+  getClientHtmlErrorMessage,
+  logApplicationError,
+} = require('../utils/error.helpers');
 const { logCsrfFailure } = require('./csrf.middleware');
 
 function redirectWithCsrfError(req, res, message) {
@@ -39,21 +45,18 @@ exports.errorHandler = (err, req, res, _next) => {
     return res.status(403).json({ error: message });
   }
 
-  logger.error('Error no controlado', err);
+  const status = getHttpStatus(err);
 
-  const status = err.status || 500;
+  if (isServerError(status)) {
+    logApplicationError('Error no controlado', err, req);
+  }
 
   if (req.accepts('html')) {
     return res.status(status).render('pages/errors/500', {
       title: 'Error',
-      message: process.env.NODE_ENV === 'development' ? err.message : 'Ocurrió un error.',
+      message: getClientHtmlErrorMessage(err),
     });
   }
 
-  const jsonMessage =
-    process.env.NODE_ENV === 'development'
-      ? err.message || 'Error interno del servidor'
-      : 'Error interno del servidor';
-
-  res.status(status).json({ error: jsonMessage });
+  res.status(status).json({ error: getClientErrorMessage(err) });
 };

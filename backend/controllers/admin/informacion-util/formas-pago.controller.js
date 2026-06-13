@@ -1,5 +1,6 @@
 const formasPagoService = require('../../../services/formas-pago.service');
 const logger = require('../../../utils/logger');
+const { resolveErrorForClient } = require('../../../utils/error.helpers');
 const constants = require('../../../config/constants');
 
 const ADMIN = constants.ADMIN_ROUTES.FORMAS_PAGO;
@@ -54,7 +55,7 @@ exports.editPage = async (req, res) => {
       flash: res.locals.flash,
     });
   } catch (err) {
-    redirectWithError(res, ADMIN, err.message);
+    redirectWithError(res, ADMIN, resolveErrorForClient(err, { req, context: 'Error en formas de pago' }));
   }
 };
 
@@ -64,7 +65,7 @@ exports.store = async (req, res) => {
     res.redirect(`${ADMIN}?success=${encodeURIComponent('Forma de pago creada')}`);
   } catch (err) {
     logger.error('Error al crear forma de pago', err);
-    redirectWithError(res, constants.ADMIN_ROUTES.FORMAS_PAGO_CREATE, err.message);
+    redirectWithError(res, constants.ADMIN_ROUTES.FORMAS_PAGO_CREATE, resolveErrorForClient(err, { req, context: 'Error en formas de pago' }));
   }
 };
 
@@ -74,7 +75,7 @@ exports.update = async (req, res) => {
     res.redirect(`${ADMIN}?success=${encodeURIComponent('Forma de pago actualizada')}`);
   } catch (err) {
     logger.error('Error al actualizar forma de pago', err);
-    redirectWithError(res, `${ADMIN}/${req.params.id}/edit`, err.message);
+    redirectWithError(res, `${ADMIN}/${req.params.id}/edit`, resolveErrorForClient(err, { req, context: 'Error en formas de pago' }));
   }
 };
 
@@ -84,7 +85,7 @@ exports.destroy = async (req, res) => {
     res.redirect(`${ADMIN}?success=${encodeURIComponent('Forma de pago eliminada')}`);
   } catch (err) {
     logger.error('Error al eliminar forma de pago', err);
-    redirectWithError(res, ADMIN, err.message);
+    redirectWithError(res, ADMIN, resolveErrorForClient(err, { req, context: 'Error en formas de pago' }));
   }
 };
 
@@ -102,6 +103,6 @@ exports.toggleActivo = async (req, res) => {
     );
   } catch (err) {
     logger.error('Error al cambiar estado de forma de pago', err);
-    redirectWithError(res, ADMIN, err.message);
+    redirectWithError(res, ADMIN, resolveErrorForClient(err, { req, context: 'Error en formas de pago' }));
   }
 };

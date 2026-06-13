@@ -2,7 +2,7 @@
  * Controlador admin — hero de la landing.
  */
 const heroService = require('../../services/hero.service');
-const logger = require('../../utils/logger');
+const { resolveErrorForClient } = require('../../utils/error.helpers');
 
 const ADMIN_HERO = '/admin/hero';
 
@@ -22,7 +22,6 @@ exports.editPage = async (req, res, next) => {
       flash: res.locals.flash,
     });
   } catch (err) {
-    logger.error('Error al cargar hero de la home', err);
     next(err);
   }
 };
@@ -32,7 +31,13 @@ exports.update = async (req, res) => {
     await heroService.actualizar(req.body, req.file);
     res.redirect(`${ADMIN_HERO}?success=${encodeURIComponent('Hero actualizado correctamente')}`);
   } catch (err) {
-    logger.error('Error al actualizar hero', err);
-    redirectWithError(res, err.message || 'Error al guardar el hero');
+    redirectWithError(
+      res,
+      resolveErrorForClient(err, {
+        req,
+        context: 'Error al actualizar hero',
+        fallback: 'Error al guardar el hero',
+      })
+    );
   }
 };

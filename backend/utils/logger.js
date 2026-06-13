@@ -1,8 +1,6 @@
 /**
  * Logger simple para consola (reemplazable por winston/pino).
  */
-const config = require('../config');
-
 function formatMeta(meta) {
   if (!meta) return '';
   if (meta instanceof Error) return ` | ${meta.message}`;
@@ -20,7 +18,9 @@ exports.warn = (message, meta) => {
 
 exports.error = (message, meta) => {
   console.error(`[ERROR] ${new Date().toISOString()} ${message}${formatMeta(meta)}`);
-  if (meta instanceof Error && config.env === 'development') {
+  if (meta instanceof Error && meta.stack) {
+    console.error(meta.stack);
+  } else if (meta && typeof meta === 'object' && meta.stack) {
     console.error(meta.stack);
   }
 };

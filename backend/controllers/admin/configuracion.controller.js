@@ -3,7 +3,7 @@
  */
 const configuracionService = require('../../services/admin/configuracion.service');
 const themeHelpers = require('../../utils/theme.helpers');
-const logger = require('../../utils/logger');
+const { resolveErrorForClient } = require('../../utils/error.helpers');
 
 const ADMIN_CONFIG = '/admin/configuracion';
 
@@ -24,7 +24,6 @@ exports.editPage = async (req, res, next) => {
       flash: res.locals.flash,
     });
   } catch (err) {
-    logger.error('Error al cargar configuración del negocio', err);
     next(err);
   }
 };
@@ -37,10 +36,13 @@ exports.update = async (req, res) => {
     await configuracionService.actualizar(req.body, { logoFile, ogImageFile });
     res.redirect(`${ADMIN_CONFIG}?success=${encodeURIComponent('Configuración actualizada correctamente')}`);
   } catch (err) {
-    logger.error('Error al actualizar configuración', { error: err.message, status: err.status });
-    const message = err.status === 400
-      ? err.message
-      : (err.message || 'Error al guardar la configuración');
-    redirectWithError(res, message);
+    redirectWithError(
+      res,
+      resolveErrorForClient(err, {
+        req,
+        context: 'Error al actualizar configuración',
+        fallback: 'Error al guardar la configuración',
+      })
+    );
   }
 };

@@ -3,6 +3,7 @@
  */
 const testimoniosService = require('../../services/testimonios.service');
 const logger = require('../../utils/logger');
+const { resolveErrorForClient } = require('../../utils/error.helpers');
 const constants = require('../../config/constants');
 
 const ADMIN = constants.ADMIN_ROUTES.TESTIMONIOS;
@@ -90,7 +91,7 @@ exports.editPage = async (req, res) => {
       flash: res.locals.flash,
     });
   } catch (err) {
-    redirectWithError(res, ADMIN, err.message);
+    redirectWithError(res, ADMIN, resolveErrorForClient(err, { req, context: 'Error en testimonios admin' }));
   }
 };
 
@@ -106,7 +107,7 @@ exports.editPendientePage = async (req, res) => {
       flash: res.locals.flash,
     });
   } catch (err) {
-    redirectWithError(res, ADMIN_PENDIENTES, err.message);
+    redirectWithError(res, ADMIN_PENDIENTES, resolveErrorForClient(err, { req, context: 'Error en testimonios admin' }));
   }
 };
 
@@ -116,7 +117,7 @@ exports.store = async (req, res) => {
     res.redirect(`${ADMIN}?success=${encodeURIComponent('Testimonio creado correctamente')}`);
   } catch (err) {
     logger.error('Error al crear testimonio', err);
-    redirectWithError(res, `${ADMIN}/create`, err.message);
+    redirectWithError(res, `${ADMIN}/create`, resolveErrorForClient(err, { req, context: 'Error en testimonios admin' }));
   }
 };
 
@@ -126,7 +127,7 @@ exports.update = async (req, res) => {
     res.redirect(`${ADMIN}?success=${encodeURIComponent('Testimonio actualizado correctamente')}`);
   } catch (err) {
     logger.error('Error al actualizar testimonio', err);
-    redirectWithError(res, `${ADMIN}/${req.params.id}/edit`, err.message);
+    redirectWithError(res, `${ADMIN}/${req.params.id}/edit`, resolveErrorForClient(err, { req, context: 'Error en testimonios admin' }));
   }
 };
 
@@ -136,7 +137,7 @@ exports.updatePendiente = async (req, res) => {
     res.redirect(`${ADMIN_PENDIENTES}?success=${encodeURIComponent('Testimonio pendiente actualizado')}`);
   } catch (err) {
     logger.error('Error al editar testimonio pendiente', err);
-    redirectWithError(res, `${ADMIN_PENDIENTES}/${req.params.id}/edit`, err.message);
+    redirectWithError(res, `${ADMIN_PENDIENTES}/${req.params.id}/edit`, resolveErrorForClient(err, { req, context: 'Error en testimonios admin' }));
   }
 };
 
@@ -146,7 +147,7 @@ exports.destroy = async (req, res) => {
     res.redirect(`${ADMIN}?success=${encodeURIComponent('Testimonio eliminado')}`);
   } catch (err) {
     logger.error('Error al eliminar testimonio', err);
-    redirectWithError(res, ADMIN, err.message);
+    redirectWithError(res, ADMIN, resolveErrorForClient(err, { req, context: 'Error en testimonios admin' }));
   }
 };
 
@@ -156,7 +157,7 @@ exports.destroyPendiente = async (req, res) => {
     res.redirect(`${ADMIN_PENDIENTES}?success=${encodeURIComponent('Testimonio eliminado')}`);
   } catch (err) {
     logger.error('Error al eliminar testimonio pendiente', err);
-    redirectWithError(res, ADMIN_PENDIENTES, err.message);
+    redirectWithError(res, ADMIN_PENDIENTES, resolveErrorForClient(err, { req, context: 'Error en testimonios admin' }));
   }
 };
 
@@ -166,7 +167,7 @@ exports.aprobar = async (req, res) => {
     res.redirect(`${ADMIN_PENDIENTES}?success=${encodeURIComponent('Testimonio aprobado y publicado')}`);
   } catch (err) {
     logger.error('Error al aprobar testimonio', err);
-    redirectWithError(res, ADMIN_PENDIENTES, err.message);
+    redirectWithError(res, ADMIN_PENDIENTES, resolveErrorForClient(err, { req, context: 'Error en testimonios admin' }));
   }
 };
 
@@ -176,7 +177,7 @@ exports.rechazar = async (req, res) => {
     res.redirect(`${ADMIN_PENDIENTES}?success=${encodeURIComponent('Testimonio rechazado')}`);
   } catch (err) {
     logger.error('Error al rechazar testimonio', err);
-    redirectWithError(res, ADMIN_PENDIENTES, err.message);
+    redirectWithError(res, ADMIN_PENDIENTES, resolveErrorForClient(err, { req, context: 'Error en testimonios admin' }));
   }
 };
 
@@ -201,6 +202,6 @@ exports.toggleActivo = async (req, res) => {
     );
   } catch (err) {
     logger.error('Error al cambiar estado del testimonio', err);
-    redirectWithError(res, ADMIN, err.message);
+    redirectWithError(res, ADMIN, resolveErrorForClient(err, { req, context: 'Error en testimonios admin' }));
   }
 };
