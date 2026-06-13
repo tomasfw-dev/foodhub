@@ -5,10 +5,6 @@ const env = require('./env');
 
 const isProduction = env.NODE_ENV === 'production';
 
-if (isProduction && !env.SESSION_SECRET) {
-  throw new Error('SESSION_SECRET es obligatorio en producción');
-}
-
 module.exports = {
   enabled: true,
   sessionSecret: env.SESSION_SECRET || 'dev-only-change-in-production',

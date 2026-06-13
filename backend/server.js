@@ -1,5 +1,10 @@
 require('dotenv').config();
 
+const env = require('./config/env');
+const { validateEnvironment } = require('./config/env.validate');
+
+validateEnvironment(env);
+
 const app = require('./app');
 const config = require('./config');
 const { closePool } = require('./database/connection');
