@@ -1,5 +1,5 @@
-/*
-  Bendita-Comida — Versión de sesión para invalidar sesiones tras cambio de contraseña
+﻿/*
+  FoodHub — Versión de sesión para invalidar sesiones tras cambio de contraseña
   Ejecutar en bases existentes después de 001_schema_bendita_comida.sql
 */
 

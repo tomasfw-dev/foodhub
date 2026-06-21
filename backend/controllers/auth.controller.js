@@ -1,5 +1,5 @@
-/**
- * Controlador de autenticación — Bendita-Comida
+﻿/**
+ * Controlador de autenticación — FoodHub
  */
 const constants = require('../config/constants');
 const authService = require('../services/auth.service');

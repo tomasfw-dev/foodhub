@@ -1,6 +1,6 @@
-/**
+﻿/**
  * Compatibilidad con Bootstrap 5
- * Variables alineadas al sistema Bendita-Comida cuando BS está presente.
+ * Variables alineadas al sistema FoodHub cuando BS está presente.
  */
 :root {
   --bs-body-font-family: var(--bc-font-body);

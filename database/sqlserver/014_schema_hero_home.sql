@@ -1,5 +1,5 @@
-/*
-  Bendita-Comida — Hero administrable de la landing (registro único id = 1)
+﻿/*
+  FoodHub — Hero administrable de la landing (registro único id = 1)
 */
 
 SET NOCOUNT ON;

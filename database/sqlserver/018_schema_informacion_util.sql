@@ -1,5 +1,5 @@
-/*
-  Bendita-Comida — Información útil (zonas, pagos, FAQ)
+﻿/*
+  FoodHub — Información útil (zonas, pagos, FAQ)
   Ejecutar después de 017_schema_testimonios_estado.sql
 */
 

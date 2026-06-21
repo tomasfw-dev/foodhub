@@ -1,5 +1,5 @@
-/*
-  Bendita-Comida — Configuración global del negocio
+﻿/*
+  FoodHub — Configuración global del negocio
   Una única fila (id = 1)
 */
 

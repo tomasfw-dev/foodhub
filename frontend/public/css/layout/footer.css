@@ -1,6 +1,6 @@
 /**
- * Footer — Bendita-Comida
- * Mobile first · monocromático · logo protagonista
+ * Footer — FoodHub
+ * Mobile first · logo del negocio en color real
  */
 
 .site-footer {
@@ -30,8 +30,6 @@
   width: auto;
   height: clamp(140px, 36vw, 200px);
   object-fit: contain;
-  filter: brightness(0) contrast(1.25);
-  -webkit-filter: brightness(0) contrast(1.25);
 }
 
 .site-footer__brand-name {

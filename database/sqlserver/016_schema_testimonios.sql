@@ -1,5 +1,5 @@
-/*
-  Bendita-Comida — Testimonios de clientes (home pública)
+﻿/*
+  FoodHub — Testimonios de clientes (home pública)
 */
 
 SET NOCOUNT ON;

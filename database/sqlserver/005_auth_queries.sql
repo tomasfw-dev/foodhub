@@ -1,5 +1,5 @@
-/*
-  Bendita-Comida — Consultas de autenticación
+﻿/*
+  FoodHub — Consultas de autenticación
   Tabla: dbo.Administradores
 */
 

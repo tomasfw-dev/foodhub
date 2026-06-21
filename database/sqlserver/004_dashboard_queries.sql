@@ -1,5 +1,5 @@
-/*
-  Bendita-Comida — Consulta del dashboard administrativo
+﻿/*
+  FoodHub — Consulta del dashboard administrativo
   Un solo round-trip a SQL Server.
 */
 SELECT

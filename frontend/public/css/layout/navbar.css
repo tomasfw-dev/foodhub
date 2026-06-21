@@ -1,6 +1,6 @@
 /**
- * Navbar — Bendita-Comida
- * Mobile first · monocromático · logo protagonista
+ * Navbar — FoodHub
+ * Mobile first · logo del negocio en color real
  */
 
 .navbar {
@@ -37,7 +37,7 @@
   min-height: 80px;
 }
 
-/* Logo protagonista — esquina izquierda, negro nítido */
+/* Logo protagonista — esquina izquierda, colores originales del negocio */
 .navbar__logo {
   display: flex;
   align-items: center;
@@ -53,8 +53,6 @@
   height: 64px;
   max-width: min(50vw, 260px);
   object-fit: contain;
-  filter: brightness(0) contrast(1.25);
-  -webkit-filter: brightness(0) contrast(1.25);
 }
 
 .navbar__logo-text,
@@ -150,8 +148,6 @@
   height: clamp(120px, 32vw, 180px);
   max-width: 100%;
   object-fit: contain;
-  filter: brightness(0) contrast(1.25);
-  -webkit-filter: brightness(0) contrast(1.25);
 }
 
 .navbar__menu-divider {

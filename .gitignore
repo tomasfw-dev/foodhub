@@ -29,3 +29,18 @@ coverage/
 # Builds
 dist/
 build/
+
+# Backups y dumps
+*.bak
+*.dump
+*.sql.gz
+backups/
+
+# Certificados / claves
+*.pem
+*.key
+*.p12
+*.pfx
+
+# Cursor IDE
+.cursor/

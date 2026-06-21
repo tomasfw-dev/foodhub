@@ -1,5 +1,5 @@
-/**
- * Middlewares de autenticación y autorización — Bendita-Comida
+﻿/**
+ * Middlewares de autenticación y autorización — FoodHub
  */
 const constants = require('../config/constants');
 const authService = require('../services/auth.service');

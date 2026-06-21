@@ -1,5 +1,5 @@
-/*
-  Bendita-Comida — Promociones (landing / home)
+﻿/*
+  FoodHub — Promociones (landing / home)
 */
 
 SET NOCOUNT ON;

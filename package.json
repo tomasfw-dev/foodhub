@@ -1,7 +1,7 @@
 {
-  "name": "comida-carito",
+  "name": "foodhub",
   "version": "1.0.0",
-  "description": "Sitio web para emprendimiento de comidas caseras",
+  "description": "Plataforma gastronómica white-label — carta online, panel admin y pedidos por WhatsApp.",
   "main": "backend/server.js",
   "scripts": {
     "start": "node backend/server.js",

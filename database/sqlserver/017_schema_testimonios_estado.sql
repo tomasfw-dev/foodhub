@@ -1,5 +1,5 @@
-/*
-  Bendita-Comida — Estado de moderación en Testimonios
+﻿/*
+  FoodHub — Estado de moderación en Testimonios
   Ejecutar después de 016_schema_testimonios.sql
 */
 

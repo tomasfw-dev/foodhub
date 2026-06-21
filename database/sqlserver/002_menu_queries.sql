@@ -1,5 +1,5 @@
-/*
-  Bendita-Comida — Consultas del menú público
+﻿/*
+  FoodHub — Consultas del menú público
   Tablas: dbo.Categorias, dbo.Productos
 */
 

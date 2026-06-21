@@ -1,5 +1,5 @@
-/**
- * Servicio de autenticación — Bendita-Comida
+﻿/**
+ * Servicio de autenticación — FoodHub
  */
 const bcrypt = require('bcrypt');
 

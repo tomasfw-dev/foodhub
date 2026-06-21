@@ -51,7 +51,7 @@ Opcional: usuario SQL dedicado (recomendado si staging está en servidor compart
 ```sql
 USE FoodHub_Staging;
 GO
-CREATE LOGIN foodhub_staging WITH PASSWORD = 'ContraseñaSeguraStaging123!';
+CREATE LOGIN foodhub_staging WITH PASSWORD = '<DB_PASSWORD>';
 CREATE USER foodhub_staging FOR LOGIN foodhub_staging;
 ALTER ROLE db_owner ADD MEMBER foodhub_staging;
 GO
@@ -152,7 +152,7 @@ El seed crea `admin@demo.local` con un hash bcrypt **temporal**. Definir una con
 Desde la raíz del proyecto:
 
 ```bash
-node backend/scripts/hash-password.js "StagingDemo2026!"
+node backend/scripts/hash-password.js "<TU_PASSWORD_SEGURA>"
 ```
 
 Copiar el hash de salida (empieza con `$2b$12$...`).
@@ -191,14 +191,14 @@ PORT=3000
 
 SITE_URL=http://localhost:3000
 
-SESSION_SECRET="generar_secreto_unico_de_al_menos_32_caracteres_staging"
+SESSION_SECRET="<SESSION_SECRET>"
 SESSION_MAX_AGE_MS=86400000
 
 DB_SERVER=localhost
 DB_PORT=1433
 DB_NAME=FoodHub_Staging
 DB_USER=sa
-DB_PASSWORD=tu_password_local
+DB_PASSWORD=<DB_PASSWORD>
 DB_ENCRYPT=true
 DB_TRUST_SERVER_CERTIFICATE=true
 
@@ -218,14 +218,14 @@ PORT=3000
 
 SITE_URL=https://staging.tudominio.com
 
-SESSION_SECRET="secreto_aleatorio_largo_y_unico_minimo_32_chars"
+SESSION_SECRET="<SESSION_SECRET>"
 SESSION_MAX_AGE_MS=86400000
 
 DB_SERVER=servidor-sql.interno
 DB_PORT=1433
 DB_NAME=FoodHub_Staging
 DB_USER=foodhub_staging
-DB_PASSWORD=ContraseñaSeguraStaging123!
+DB_PASSWORD=<DB_PASSWORD>
 DB_ENCRYPT=true
 DB_TRUST_SERVER_CERTIFICATE=false
 

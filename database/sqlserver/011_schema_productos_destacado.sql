@@ -1,5 +1,5 @@
-/*
-  Bendita-Comida — Campo destacado en Productos
+﻿/*
+  FoodHub — Campo destacado en Productos
   Ejecutar en bases existentes después de 001_schema_bendita_comida.sql
 */
 

@@ -1,5 +1,5 @@
-/*
-  Bendita-Comida — Orden configurable de categorías y productos
+﻿/*
+  FoodHub — Orden configurable de categorías y productos
   Ejecutar en bases existentes después de 001_schema_bendita_comida.sql
 */
 

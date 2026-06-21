@@ -1,5 +1,5 @@
-/*
-  Bendita-Comida — Campos SEO / Open Graph en ConfiguracionNegocio
+﻿/*
+  FoodHub — Campos SEO / Open Graph en ConfiguracionNegocio
   Ejecutar en bases existentes después de 007_schema_configuracion_negocio.sql
 */
 
