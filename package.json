@@ -5,7 +5,10 @@
   "main": "backend/server.js",
   "scripts": {
     "start": "node backend/server.js",
-    "dev": "node --watch backend/server.js"
+    "dev": "node --watch backend/server.js",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage"
   },
   "keywords": [
     "comidas-caseras",
@@ -15,6 +18,10 @@
   "license": "ISC",
   "engines": {
     "node": ">=18.0.0"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "supertest": "^7.1.0"
   },
   "dependencies": {
     "bcrypt": "^5.1.1",
