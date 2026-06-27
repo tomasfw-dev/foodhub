@@ -19,6 +19,30 @@ function createError(status, message) {
   return err;
 }
 
+function mensajeLimiteDestacados() {
+  return `Solo podés tener hasta ${MAX_DESTACADOS} productos destacados en la home.`;
+}
+
+async function resolveDestacadoWriteResult(rows, productoId, destacado) {
+  if (rows.length) {
+    return mapRow(rows[0]);
+  }
+
+  if (destacado) {
+    try {
+      await exports.obtenerPorId(productoId);
+    } catch (err) {
+      if (err.status === 404) {
+        throw createError(404, 'Producto no encontrado');
+      }
+      throw err;
+    }
+    throw createError(400, mensajeLimiteDestacados());
+  }
+
+  throw createError(404, 'Producto no encontrado');
+}
+
 function sanitizeImagenForWrite(imagen, requiredPrefix) {
   if (imagen === undefined) return undefined;
   if (imagen === null || !String(imagen).trim()) return null;
@@ -70,10 +94,7 @@ async function validarLimiteDestacados(destacado, productoId = null) {
   const yaDestacado = actual?.destacado;
 
   if (!yaDestacado && total >= MAX_DESTACADOS) {
-    throw createError(
-      400,
-      `Solo podés tener hasta ${MAX_DESTACADOS} productos destacados en la home.`
-    );
+    throw createError(400, mensajeLimiteDestacados());
   }
 }
 
@@ -205,11 +226,10 @@ exports.editar = async (id, datos) => {
     activo: datos.activo !== undefined ? Boolean(datos.activo) : actual.activo,
     destacado,
     orden,
+    limiteDestacados: MAX_DESTACADOS,
   });
 
-  if (!rows.length) throw createError(404, 'Producto no encontrado');
-
-  const producto = mapRow(rows[0]);
+  const producto = await resolveDestacadoWriteResult(rows, id, destacado);
   logger.info('Producto actualizado en BD', {
     id: producto.id,
     imagen: producto.imagen,
@@ -225,11 +245,10 @@ exports.actualizarDestacado = async (id, destacado) => {
   const rows = await db.query(queries.ACTUALIZAR_DESTACADO, {
     id: Number(id),
     destacado: Boolean(destacado),
+    limiteDestacados: MAX_DESTACADOS,
   });
 
-  if (!rows.length) throw createError(404, 'Producto no encontrado');
-
-  const producto = mapRow(rows[0]);
+  const producto = await resolveDestacadoWriteResult(rows, id, Boolean(destacado));
   logger.info('Destacado de producto actualizado', {
     id: producto.id,
     destacado: producto.destacado,

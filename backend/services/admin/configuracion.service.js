@@ -55,6 +55,24 @@ function mapRow(row) {
   };
 }
 
+function cleanupUploadedFiles({ logoUrl, ogUrl }) {
+  if (logoUrl) {
+    uploadService.deleteLogoImage(logoUrl);
+  }
+  if (ogUrl) {
+    uploadService.deleteOgImage(ogUrl);
+  }
+}
+
+function cleanupReplacedFiles({ previousLogo, previousOg, newLogo, newOg }) {
+  if (newLogo && previousLogo?.startsWith(`${uploadConfig.LOGO_PUBLIC_PREFIX}/`) && previousLogo !== newLogo) {
+    uploadService.deleteLogoImage(previousLogo);
+  }
+  if (newOg && previousOg?.startsWith(`${uploadConfig.OG_PUBLIC_PREFIX}/`) && previousOg !== newOg) {
+    uploadService.deleteOgImage(previousOg);
+  }
+}
+
 exports.invalidateCache = () => {
   cachedConfig = null;
   cacheTimestamp = 0;
@@ -161,43 +179,43 @@ exports.actualizar = async (datos, files = {}) => {
   const actual = await exports.obtener({ useCache: false });
   const validation = exports.validar(datos);
 
+  const newLogoUrl = logoFile ? uploadService.toLogoPublicUrl(logoFile.filename) : null;
+  const newOgUrl = ogImageFile ? uploadService.toOgPublicUrl(ogImageFile.filename) : null;
+
   if (!validation.valid) {
+    cleanupUploadedFiles({ logoUrl: newLogoUrl, ogUrl: newOgUrl });
     throw createError(400, validation.errors.join(' '));
   }
 
-  let logo = actual.logo;
-  let og_image = actual.og_image;
+  const logo = newLogoUrl ?? actual.logo;
+  const og_image = newOgUrl ?? actual.og_image;
 
-  if (logoFile) {
-    if (actual.logo?.startsWith(`${uploadConfig.LOGO_PUBLIC_PREFIX}/`)) {
-      uploadService.deleteLogoImage(actual.logo);
+  try {
+    const rows = await db.query(queries.ACTUALIZAR, {
+      ...validation.sanitized,
+      logo,
+      og_image,
+    });
+
+    if (!rows.length) {
+      throw createError(500, 'No se pudo actualizar la configuración.');
     }
-    logo = uploadService.toLogoPublicUrl(logoFile.filename);
-    logger.info('Logo del negocio actualizado', { logo });
+
+    cleanupReplacedFiles({
+      previousLogo: actual.logo,
+      previousOg: actual.og_image,
+      newLogo: newLogoUrl,
+      newOg: newOgUrl,
+    });
+
+    exports.invalidateCache();
+
+    const updated = mapRow(rows[0]);
+    logger.info('Configuración del negocio actualizada', { id: updated.id });
+
+    return updated;
+  } catch (err) {
+    cleanupUploadedFiles({ logoUrl: newLogoUrl, ogUrl: newOgUrl });
+    throw err;
   }
-
-  if (ogImageFile) {
-    if (actual.og_image?.startsWith(`${uploadConfig.OG_PUBLIC_PREFIX}/`)) {
-      uploadService.deleteOgImage(actual.og_image);
-    }
-    og_image = uploadService.toOgPublicUrl(ogImageFile.filename);
-    logger.info('Imagen Open Graph actualizada', { og_image });
-  }
-
-  const rows = await db.query(queries.ACTUALIZAR, {
-    ...validation.sanitized,
-    logo,
-    og_image,
-  });
-
-  if (!rows.length) {
-    throw createError(500, 'No se pudo actualizar la configuración.');
-  }
-
-  exports.invalidateCache();
-
-  const updated = mapRow(rows[0]);
-  logger.info('Configuración del negocio actualizada', { id: updated.id });
-
-  return updated;
 };

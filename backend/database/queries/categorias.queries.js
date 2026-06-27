@@ -67,4 +67,12 @@ module.exports = {
 
     SELECT id FROM @deleted;
   `,
+
+  CONTAR_PRODUCTOS_ACTIVOS: `
+    SELECT COUNT(*) AS total
+    FROM dbo.Productos
+    WHERE categoria_id = @categoriaId
+      AND fecha_baja IS NULL
+      AND activo = 1
+  `,
 };

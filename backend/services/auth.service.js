@@ -6,6 +6,7 @@ const bcrypt = require('bcrypt');
 const db = require('../database/connection');
 const queries = require('../database/queries/auth.queries');
 const logger = require('../utils/logger');
+const { validateAdminPasswordPolicy } = require('../utils/password.helpers');
 
 const BCRYPT_ROUNDS = 12;
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -36,8 +37,8 @@ exports.validateLoginInput = (email, password) => {
     return { valid: false, message: 'Ingresá un email válido.' };
   }
 
-  if (!password || String(password).length < 6) {
-    return { valid: false, message: 'La contraseña debe tener al menos 6 caracteres.' };
+  if (!password || !String(password).length) {
+    return { valid: false, message: 'Ingresá tu contraseña.' };
   }
 
   return { valid: true, email: normalizedEmail };
@@ -103,6 +104,10 @@ exports.authenticate = async (email, password) => {
  * Genera hash bcrypt (utilidad para seeds / cambio de contraseña futuro).
  */
 exports.hashPassword = async (plainPassword) => {
+  const policy = validateAdminPasswordPolicy(plainPassword);
+  if (!policy.valid) {
+    throw new AuthError(policy.errors.join(' '), 'VALIDATION_ERROR');
+  }
   return bcrypt.hash(plainPassword, BCRYPT_ROUNDS);
 };
 

@@ -6,7 +6,7 @@ let pool = null;
 
 const DECIMAL_10_2 = sql.Decimal(10, 2);
 const DECIMAL_KEYS = new Set(['precio', 'precio_promocional', 'costo_envio']);
-const INT_KEYS = new Set(['orden', 'puntuacion', 'sesion_version', 'limite']);
+const INT_KEYS = new Set(['orden', 'puntuacion', 'sesion_version', 'limite', 'limiteDestacados']);
 
 function bindInput(request, key, value) {
   if (DECIMAL_KEYS.has(key)) {

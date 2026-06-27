@@ -15,10 +15,10 @@ describe('auth.service', () => {
       expect(result.message).toMatch(/email válido/i);
     });
 
-    it('rechaza contraseña corta', () => {
-      const result = authService.validateLoginInput('admin@test.com', '12345');
+    it('rechaza contraseña vacía', () => {
+      const result = authService.validateLoginInput('admin@test.com', '');
       expect(result.valid).toBe(false);
-      expect(result.message).toMatch(/6 caracteres/i);
+      expect(result.message).toMatch(/contraseña/i);
     });
 
     it('normaliza espacios en email', () => {

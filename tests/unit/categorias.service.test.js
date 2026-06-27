@@ -48,4 +48,14 @@ describe('categorias.service', () => {
       status: 404,
     });
   });
+
+  it('impide eliminar categoría con productos activos', async () => {
+    const db = require('../../backend/database/connection');
+    db.query.mockResolvedValueOnce([{ total: 2 }]);
+
+    await expect(categoriasService.eliminar(1)).rejects.toMatchObject({
+      status: 400,
+      message: expect.stringMatching(/productos activos/i),
+    });
+  });
 });

@@ -40,7 +40,7 @@ Cada instalación corresponde a **un negocio**: un deploy, una base de datos, un
 ## Estructura del proyecto
 
 ```
-comida-carito/
+foodhub/
 ├── backend/                 # Servidor Express (API, rutas, lógica)
 │   ├── server.js            # Punto de entrada
 │   ├── app.js
@@ -174,10 +174,20 @@ En `NODE_ENV=production` la app valida la configuración al arrancar y **no inic
 
 4. **Ejecutar script SQL** (`000_install_completo.sql` o migraciones incrementales) y cambiar contraseña admin.
 
-5. **Configurar reverse proxy** con TLS terminado en el proxy:
+5. **Configurar reverse proxy Nginx** con TLS terminado en el proxy:
    - Redirigir HTTP → HTTPS
    - Proxy pass a `http://127.0.0.1:PORT`
    - La app usa `trust proxy` en producción para IP real y cookies seguras
+   - **Obligatorio para uploads admin** (la app acepta hasta ~50 MB):
+
+   ```nginx
+   client_max_body_size 55m;
+   proxy_read_timeout 120s;
+   proxy_set_header Host $host;
+   proxy_set_header X-Real-IP $remote_addr;
+   proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+   proxy_set_header X-Forwarded-Proto $scheme;
+   ```
 
 6. **Crear carpeta de uploads** con permisos de escritura para el usuario del proceso:
    ```text
@@ -192,11 +202,14 @@ En `NODE_ENV=production` la app valida la configuración al arrancar y **no inic
    ```bash
    npm start
    ```
-   Ejemplo con PM2:
+   Ejemplo con PM2 (recomendado):
    ```bash
-   pm2 start backend/server.js --name foodhub
+   pm2 start ecosystem.config.js --env production
    pm2 save
+   pm2 startup
    ```
+
+   El archivo `ecosystem.config.js` incluye: 1 instancia en modo `fork`, límite de memoria 512M y `kill_timeout` 10s.
 
 8. **Verificar arranque** — la consola debe mostrar el servidor en el puerto configurado sin errores de validación de entorno.
 
@@ -252,7 +265,7 @@ Detalle y modelo de datos: [`database/sqlserver/README.md`](database/sqlserver/R
 - [ ] `DB_PASSWORD` fuerte
 - [ ] `DB_TRUST_SERVER_CERTIFICATE=false`
 - [ ] `WHATSAPP_PHONE` configurado y válido
-- [ ] Contraseña del admin demo **cambiada** (no usar seed de desarrollo)
+- [ ] Contraseña del admin demo **cambiada** (mín. 12 caracteres, mayúscula, minúscula, número y símbolo)
 - [ ] `.env` **no** commiteado al repositorio
 
 ### Infraestructura
@@ -281,13 +294,24 @@ Detalle y modelo de datos: [`database/sqlserver/README.md`](database/sqlserver/R
 
 Programar backups **antes del go-live** y verificar restauración periódicamente.
 
+> **Importante:** la base de datos y la carpeta `uploads/` deben restaurarse **juntas**.  
+> La BD guarda rutas como `/uploads/productos/archivo.webp`; si restaurás solo SQL o solo archivos, las imágenes del menú, logo y Open Graph quedarán rotas.
+
 ### SQL Server
+
 - [ ] Backup **completo** de la base de datos del negocio (diario recomendado)
 - [ ] Backup de **log de transacciones** si aplica (recuperación point-in-time)
 - [ ] Copia off-site o en otro servidor / storage
 - [ ] Probar restauración en entorno de prueba al menos una vez
 
+Ejemplo con `sqlcmd` (ajustar servidor, usuario y nombre de BD):
+
+```bash
+sqlcmd -S localhost -U foodhub_app -P "$DB_PASSWORD" -Q "BACKUP DATABASE [FoodHub_Cliente] TO DISK = N'/var/backups/foodhub-full.bak' WITH INIT, COMPRESSION"
+```
+
 ### Carpeta uploads
+
 Los archivos subidos **no están en la base de datos**; viven en disco:
 
 ```text
@@ -299,9 +323,31 @@ frontend/public/uploads/
 └── og/
 ```
 
-- [ ] Backup periódico de `frontend/public/uploads/` (rsync, zip, blob storage, etc.)
-- [ ] Incluir uploads en el mismo cronograma que la BD o snapshot del servidor
-- [ ] Tras restaurar BD + código, verificar que las rutas `/uploads/...` sigan existiendo en disco
+- [ ] Backup periódico de `frontend/public/uploads/` (rsync, tar, blob storage, etc.)
+- [ ] Programar uploads en la **misma ventana** que el backup SQL o usar snapshot del VPS
+- [ ] Tras restaurar, verificar que las rutas `/uploads/...` respondan 200
+
+Ejemplo con `rsync`:
+
+```bash
+rsync -a frontend/public/uploads/ /var/backups/foodhub-uploads/
+```
+
+### Restauración coordinada
+
+1. Restaurar backup SQL en una BD vacía o de staging.
+2. Restaurar la carpeta `frontend/public/uploads/` del mismo punto en el tiempo.
+3. Verificar home, menú, logo en configuración e imágenes OG.
+
+---
+
+## Notas de producción
+
+### Productos destacados
+
+El límite configurado en `MENU_FEATURED_LIMIT` se valida al marcar/desmarcar destacados y al editar productos. La verificación en SQL evita superar el límite en uso normal del panel.
+
+Si en el futuro hubiera **altísima concurrencia** (varios admins marcando destacados al mismo instante), podría requerirse una transacción explícita o constraint en BD. Para el uso típico (un admin, un negocio) el comportamiento actual es suficiente.
 
 ---
 

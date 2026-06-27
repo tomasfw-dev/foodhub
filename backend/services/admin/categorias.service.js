@@ -6,6 +6,9 @@ const queries = require('../../database/queries/categorias.queries');
 const logger = require('../../utils/logger');
 const { parseOrden, mapOrden } = require('../../utils/orden.helpers');
 
+const CATEGORIA_CON_PRODUCTOS_ACTIVOS =
+  'No se puede eliminar esta categoría porque tiene productos activos. Primero mové o desactivá esos productos.';
+
 function createError(status, message) {
   const err = new Error(message);
   err.status = status;
@@ -91,9 +94,17 @@ exports.editar = async (id, datos) => {
 };
 
 exports.eliminar = async (id) => {
-  const rows = await db.query(queries.ELIMINAR, { id: Number(id) });
+  const categoriaId = Number(id);
+  const activos = await db.query(queries.CONTAR_PRODUCTOS_ACTIVOS, { categoriaId });
+  const totalActivos = Number(activos[0]?.total || 0);
+
+  if (totalActivos > 0) {
+    throw createError(400, CATEGORIA_CON_PRODUCTOS_ACTIVOS);
+  }
+
+  const rows = await db.query(queries.ELIMINAR, { id: categoriaId });
   if (!rows.length) throw createError(404, 'Categoría no encontrada');
 
-  logger.info('Categoría dada de baja en BD', { id });
+  logger.info('Categoría dada de baja en BD', { id: categoriaId });
   return { id: rows[0].id };
 };

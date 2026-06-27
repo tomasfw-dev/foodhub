@@ -7,9 +7,12 @@ const db = require('../../database/connection');
 const queries = require('../../database/queries/perfil.queries');
 const authService = require('../auth.service');
 const logger = require('../../utils/logger');
+const {
+  validateAdminPasswordPolicy,
+  POLICY_MESSAGE,
+} = require('../../utils/password.helpers');
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const MIN_PASSWORD_LENGTH = 6;
 const MIN_NOMBRE_LENGTH = 2;
 
 function createError(status, message) {
@@ -116,8 +119,13 @@ exports.validarCambioPassword = (datos) => {
     errors.push('Ingresá tu contraseña actual.');
   }
 
-  if (!nueva || nueva.length < MIN_PASSWORD_LENGTH) {
-    errors.push(`La nueva contraseña debe tener al menos ${MIN_PASSWORD_LENGTH} caracteres.`);
+  if (!nueva) {
+    errors.push('Ingresá la nueva contraseña.');
+  } else {
+    const policy = validateAdminPasswordPolicy(nueva);
+    if (!policy.valid) {
+      errors.push(POLICY_MESSAGE);
+    }
   }
 
   if (!confirmacion) {

@@ -108,7 +108,24 @@ module.exports = {
       INSERTED.orden
     INTO @updated
     WHERE id = @id
-      AND fecha_baja IS NULL;
+      AND fecha_baja IS NULL
+      AND (
+        @destacado = 0
+        OR EXISTS (
+          SELECT 1
+          FROM dbo.Productos p
+          WHERE p.id = @id
+            AND p.fecha_baja IS NULL
+            AND p.destacado = 1
+        )
+        OR (
+          SELECT COUNT(*)
+          FROM dbo.Productos
+          WHERE fecha_baja IS NULL
+            AND destacado = 1
+            AND id <> @id
+        ) < @limiteDestacados
+      );
 
     SELECT id, categoria_id, nombre, descripcion, precio, imagen, activo, destacado, orden
     FROM @updated;
@@ -141,7 +158,24 @@ module.exports = {
       INSERTED.orden
     INTO @updated
     WHERE id = @id
-      AND fecha_baja IS NULL;
+      AND fecha_baja IS NULL
+      AND (
+        @destacado = 0
+        OR EXISTS (
+          SELECT 1
+          FROM dbo.Productos p
+          WHERE p.id = @id
+            AND p.fecha_baja IS NULL
+            AND p.destacado = 1
+        )
+        OR (
+          SELECT COUNT(*)
+          FROM dbo.Productos
+          WHERE fecha_baja IS NULL
+            AND destacado = 1
+            AND id <> @id
+        ) < @limiteDestacados
+      );
 
     SELECT id, categoria_id, nombre, descripcion, precio, imagen, activo, destacado, orden
     FROM @updated;
